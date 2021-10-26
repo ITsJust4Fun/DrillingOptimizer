@@ -1294,8 +1294,8 @@ var app = (function () {
 
     function create_fragment$6(ctx) {
     	let current;
-    	const default_slot_template = /*#slots*/ ctx[7].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[6], null);
+    	const default_slot_template = /*#slots*/ ctx[8].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[7], null);
 
     	const block = {
     		c: function create() {
@@ -1313,15 +1313,15 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 64)) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 128)) {
     					update_slot_base(
     						default_slot,
     						default_slot_template,
     						ctx,
-    						/*$$scope*/ ctx[6],
+    						/*$$scope*/ ctx[7],
     						!current
-    						? get_all_dirty_from_scope(/*$$scope*/ ctx[6])
-    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[6], dirty, null),
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[7])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[7], dirty, null),
     						null
     					);
     				}
@@ -1418,6 +1418,11 @@ var app = (function () {
     		vertexes = [...vertexes, vertex];
     	}
 
+    	function removeAllVertexes() {
+    		edges = [];
+    		vertexes = [];
+    	}
+
     	function drawText(props) {
     		const { context, text, x, y } = props;
 
@@ -1473,7 +1478,7 @@ var app = (function () {
     		if ('showVertexLabel' in $$props) $$invalidate(2, showVertexLabel = $$props.showVertexLabel);
     		if ('vertexLabelColor' in $$props) $$invalidate(3, vertexLabelColor = $$props.vertexLabelColor);
     		if ('vertexLabelSize' in $$props) $$invalidate(4, vertexLabelSize = $$props.vertexLabelSize);
-    		if ('$$scope' in $$props) $$invalidate(6, $$scope = $$props.$$scope);
+    		if ('$$scope' in $$props) $$invalidate(7, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -1487,6 +1492,7 @@ var app = (function () {
     		edges,
     		minDistance,
     		handleClick,
+    		removeAllVertexes,
     		drawText,
     		getDistance,
     		getNearestVertex
@@ -1514,6 +1520,7 @@ var app = (function () {
     		vertexLabelColor,
     		vertexLabelSize,
     		handleClick,
+    		removeAllVertexes,
     		$$scope,
     		slots
     	];
@@ -1529,7 +1536,8 @@ var app = (function () {
     			showVertexLabel: 2,
     			vertexLabelColor: 3,
     			vertexLabelSize: 4,
-    			handleClick: 5
+    			handleClick: 5,
+    			removeAllVertexes: 6
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -1585,6 +1593,14 @@ var app = (function () {
     	}
 
     	set handleClick(value) {
+    		throw new Error("<Graph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get removeAllVertexes() {
+    		return this.$$.ctx[6];
+    	}
+
+    	set removeAllVertexes(value) {
     		throw new Error("<Graph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -2640,6 +2656,14 @@ var app = (function () {
         vertexLabelColor: {
             en: "Vertex label color",
             ru: "Цвет шрифта координат вершины",
+        },
+        fieldSettings: {
+            en: "Field settings",
+            ru: "Настройки поля",
+        },
+        removeAllVertexes: {
+            en: "Remove all vertexes",
+            ru: "Удалить все вершины",
         }
     };
 
@@ -2648,7 +2672,7 @@ var app = (function () {
     const { Object: Object_1 } = globals;
     const file = "src\\App.svelte";
 
-    // (48:1) <Background color='hsl(0, 0%, 10%)'>
+    // (52:1) <Background color='hsl(0, 0%, 10%)'>
     function create_default_slot_1(ctx) {
     	let dotgrid;
     	let current;
@@ -2688,14 +2712,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(48:1) <Background color='hsl(0, 0%, 10%)'>",
+    		source: "(52:1) <Background color='hsl(0, 0%, 10%)'>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (47:0) <Canvas onClick={graphClickHandler}>
+    // (51:0) <Canvas onClick={graphClickHandler}>
     function create_default_slot(ctx) {
     	let background;
     	let t0;
@@ -2716,11 +2740,11 @@ var app = (function () {
     		});
 
     	let graph_props = {
-    		vertexColor: /*COLORS*/ ctx[13][/*vertexColorId*/ ctx[4]],
-    		vertexSize: /*vertexSize*/ ctx[5],
+    		vertexColor: /*COLORS*/ ctx[13][/*vertexColorId*/ ctx[3]],
+    		vertexSize: /*vertexSize*/ ctx[4],
     		showVertexLabel: /*showVertexLabel*/ ctx[2],
-    		vertexLabelSize: /*vertexLabelSize*/ ctx[7],
-    		vertexLabelColor: /*COLORS*/ ctx[13][/*vertexLabelColorId*/ ctx[6]]
+    		vertexLabelSize: /*vertexLabelSize*/ ctx[6],
+    		vertexLabelColor: /*COLORS*/ ctx[13][/*vertexLabelColorId*/ ctx[5]]
     	};
 
     	graph = new Graph({ props: graph_props, $$inline: true });
@@ -2766,17 +2790,17 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const background_changes = {};
 
-    			if (dirty & /*$$scope*/ 1073741824) {
+    			if (dirty & /*$$scope*/ 33554432) {
     				background_changes.$$scope = { dirty, ctx };
     			}
 
     			background.$set(background_changes);
     			const graph_changes = {};
-    			if (dirty & /*vertexColorId*/ 16) graph_changes.vertexColor = /*COLORS*/ ctx[13][/*vertexColorId*/ ctx[4]];
-    			if (dirty & /*vertexSize*/ 32) graph_changes.vertexSize = /*vertexSize*/ ctx[5];
+    			if (dirty & /*vertexColorId*/ 8) graph_changes.vertexColor = /*COLORS*/ ctx[13][/*vertexColorId*/ ctx[3]];
+    			if (dirty & /*vertexSize*/ 16) graph_changes.vertexSize = /*vertexSize*/ ctx[4];
     			if (dirty & /*showVertexLabel*/ 4) graph_changes.showVertexLabel = /*showVertexLabel*/ ctx[2];
-    			if (dirty & /*vertexLabelSize*/ 128) graph_changes.vertexLabelSize = /*vertexLabelSize*/ ctx[7];
-    			if (dirty & /*vertexLabelColorId*/ 64) graph_changes.vertexLabelColor = /*COLORS*/ ctx[13][/*vertexLabelColorId*/ ctx[6]];
+    			if (dirty & /*vertexLabelSize*/ 64) graph_changes.vertexLabelSize = /*vertexLabelSize*/ ctx[6];
+    			if (dirty & /*vertexLabelColorId*/ 32) graph_changes.vertexLabelColor = /*COLORS*/ ctx[13][/*vertexLabelColorId*/ ctx[5]];
     			graph.$set(graph_changes);
     			const text_1_changes = {};
     			if (dirty & /*$width*/ 1024) text_1_changes.x = /*$width*/ ctx[10] - 20;
@@ -2817,14 +2841,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(47:0) <Canvas onClick={graphClickHandler}>",
+    		source: "(51:0) <Canvas onClick={graphClickHandler}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (191:1) {:else}
+    // (144:1) {:else}
     function create_else_block(ctx) {
     	let button;
     	let mounted;
@@ -2835,13 +2859,13 @@ var app = (function () {
     			button = element("button");
     			button.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "showSettings")}`;
     			attr_dev(button, "class", "svelte-kz9qu7");
-    			add_location(button, file, 191, 2, 4824);
+    			add_location(button, file, 144, 2, 3816);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_3*/ ctx[29], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler_1*/ ctx[23], false, false, false);
     				mounted = true;
     			}
     		},
@@ -2859,14 +2883,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(191:1) {:else}",
+    		source: "(144:1) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (70:1) {#if showSettings}
+    // (74:1) {#if showSettings}
     function create_if_block(ctx) {
     	let div1;
     	let div0;
@@ -2877,169 +2901,40 @@ var app = (function () {
     	let div3;
     	let h20;
     	let t5;
-    	let inputrange0;
-    	let updating_value;
-    	let t6;
-    	let inputrange1;
-    	let updating_value_1;
-    	let t7;
-    	let inputrange2;
-    	let updating_value_2;
-    	let t8;
-    	let inputrange3;
-    	let updating_value_3;
-    	let t9;
     	let div2;
     	let button2;
-    	let t11;
-    	let div5;
-    	let h21;
-    	let t13;
-    	let inputrange4;
-    	let updating_value_4;
-    	let t14;
-    	let inputrange5;
-    	let updating_value_5;
-    	let t15;
+    	let t7;
     	let div4;
-    	let button3;
-    	let t17;
-    	let div6;
-    	let h22;
-    	let t19;
+    	let h21;
+    	let t9;
     	let particleselector;
     	let updating_selectedId;
-    	let t20;
-    	let t21;
-    	let div7;
-    	let h23;
-    	let t23;
+    	let t10;
+    	let t11;
+    	let div5;
+    	let h22;
+    	let t13;
     	let checkbox0;
     	let updating_checked;
-    	let t24;
+    	let t14;
     	let checkbox1;
     	let updating_checked_1;
-    	let t25;
-    	let inputrange6;
-    	let updating_value_6;
-    	let t26;
+    	let t15;
+    	let inputrange;
+    	let updating_value;
+    	let t16;
     	let current;
     	let mounted;
     	let dispose;
 
-    	function inputrange0_value_binding(value) {
-    		/*inputrange0_value_binding*/ ctx[17](value);
-    	}
-
-    	let inputrange0_props = {
-    		name: /*getTranslation*/ ctx[12](/*lang*/ ctx[14], "simulationsPerFrame"),
-    		min: 1,
-    		max: 100
-    	};
-
-    	if (/*simulationsPerFrame*/ ctx[3] !== void 0) {
-    		inputrange0_props.value = /*simulationsPerFrame*/ ctx[3];
-    	}
-
-    	inputrange0 = new InputRange({ props: inputrange0_props, $$inline: true });
-    	binding_callbacks.push(() => bind(inputrange0, 'value', inputrange0_value_binding));
-
-    	function inputrange1_value_binding(value) {
-    		/*inputrange1_value_binding*/ ctx[18](value);
-    	}
-
-    	let inputrange1_props = {
-    		name: /*getTranslation*/ ctx[12](/*lang*/ ctx[14], "temperature"),
-    		min: 0.1,
-    		max: 40,
-    		step: 0.1
-    	};
-
-    	if (/*simulationsPerFrame*/ ctx[3] !== void 0) {
-    		inputrange1_props.value = /*simulationsPerFrame*/ ctx[3];
-    	}
-
-    	inputrange1 = new InputRange({ props: inputrange1_props, $$inline: true });
-    	binding_callbacks.push(() => bind(inputrange1, 'value', inputrange1_value_binding));
-
-    	function inputrange2_value_binding(value) {
-    		/*inputrange2_value_binding*/ ctx[19](value);
-    	}
-
-    	let inputrange2_props = {
-    		name: /*getTranslation*/ ctx[12](/*lang*/ ctx[14], "friction"),
-    		min: 0,
-    		max: 1,
-    		step: 0.01
-    	};
-
-    	if (/*simulationsPerFrame*/ ctx[3] !== void 0) {
-    		inputrange2_props.value = /*simulationsPerFrame*/ ctx[3];
-    	}
-
-    	inputrange2 = new InputRange({ props: inputrange2_props, $$inline: true });
-    	binding_callbacks.push(() => bind(inputrange2, 'value', inputrange2_value_binding));
-
-    	function inputrange3_value_binding(value) {
-    		/*inputrange3_value_binding*/ ctx[20](value);
-    	}
-
-    	let inputrange3_props = {
-    		name: /*getTranslation*/ ctx[12](/*lang*/ ctx[14], "particleRadius"),
-    		min: 3,
-    		max: 10,
-    		step: 0.01
-    	};
-
-    	if (/*simulationsPerFrame*/ ctx[3] !== void 0) {
-    		inputrange3_props.value = /*simulationsPerFrame*/ ctx[3];
-    	}
-
-    	inputrange3 = new InputRange({ props: inputrange3_props, $$inline: true });
-    	binding_callbacks.push(() => bind(inputrange3, 'value', inputrange3_value_binding));
-
-    	function inputrange4_value_binding(value) {
-    		/*inputrange4_value_binding*/ ctx[21](value);
-    	}
-
-    	let inputrange4_props = {
-    		name: /*getTranslation*/ ctx[12](/*lang*/ ctx[14], "particleTypesAmount"),
-    		min: 1,
-    		max: 100
-    	};
-
-    	if (/*simulationsPerFrame*/ ctx[3] !== void 0) {
-    		inputrange4_props.value = /*simulationsPerFrame*/ ctx[3];
-    	}
-
-    	inputrange4 = new InputRange({ props: inputrange4_props, $$inline: true });
-    	binding_callbacks.push(() => bind(inputrange4, 'value', inputrange4_value_binding));
-
-    	function inputrange5_value_binding(value) {
-    		/*inputrange5_value_binding*/ ctx[22](value);
-    	}
-
-    	let inputrange5_props = {
-    		name: /*getTranslation*/ ctx[12](/*lang*/ ctx[14], "particleCount"),
-    		min: 0,
-    		max: 5000
-    	};
-
-    	if (/*simulationsPerFrame*/ ctx[3] !== void 0) {
-    		inputrange5_props.value = /*simulationsPerFrame*/ ctx[3];
-    	}
-
-    	inputrange5 = new InputRange({ props: inputrange5_props, $$inline: true });
-    	binding_callbacks.push(() => bind(inputrange5, 'value', inputrange5_value_binding));
-
     	function particleselector_selectedId_binding(value) {
-    		/*particleselector_selectedId_binding*/ ctx[23](value);
+    		/*particleselector_selectedId_binding*/ ctx[17](value);
     	}
 
     	let particleselector_props = { colors: /*COLORS*/ ctx[13] };
 
-    	if (/*vertexColorId*/ ctx[4] !== void 0) {
-    		particleselector_props.selectedId = /*vertexColorId*/ ctx[4];
+    	if (/*vertexColorId*/ ctx[3] !== void 0) {
+    		particleselector_props.selectedId = /*vertexColorId*/ ctx[3];
     	}
 
     	particleselector = new ParticleSelector({
@@ -3051,7 +2946,7 @@ var app = (function () {
     	let if_block0 = /*showVertexLabel*/ ctx[2] && create_if_block_2(ctx);
 
     	function checkbox0_checked_binding(value) {
-    		/*checkbox0_checked_binding*/ ctx[25](value);
+    		/*checkbox0_checked_binding*/ ctx[19](value);
     	}
 
     	let checkbox0_props = {
@@ -3066,7 +2961,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(checkbox0, 'checked', checkbox0_checked_binding));
 
     	function checkbox1_checked_binding(value) {
-    		/*checkbox1_checked_binding*/ ctx[26](value);
+    		/*checkbox1_checked_binding*/ ctx[20](value);
     	}
 
     	let checkbox1_props = {
@@ -3080,23 +2975,23 @@ var app = (function () {
     	checkbox1 = new Checkbox({ props: checkbox1_props, $$inline: true });
     	binding_callbacks.push(() => bind(checkbox1, 'checked', checkbox1_checked_binding));
 
-    	function inputrange6_value_binding(value) {
-    		/*inputrange6_value_binding*/ ctx[27](value);
+    	function inputrange_value_binding(value) {
+    		/*inputrange_value_binding*/ ctx[21](value);
     	}
 
-    	let inputrange6_props = {
+    	let inputrange_props = {
     		name: /*getTranslation*/ ctx[12](/*lang*/ ctx[14], "vertexSize"),
     		min: 5,
     		max: 20,
     		step: 0.3
     	};
 
-    	if (/*vertexSize*/ ctx[5] !== void 0) {
-    		inputrange6_props.value = /*vertexSize*/ ctx[5];
+    	if (/*vertexSize*/ ctx[4] !== void 0) {
+    		inputrange_props.value = /*vertexSize*/ ctx[4];
     	}
 
-    	inputrange6 = new InputRange({ props: inputrange6_props, $$inline: true });
-    	binding_callbacks.push(() => bind(inputrange6, 'value', inputrange6_value_binding));
+    	inputrange = new InputRange({ props: inputrange_props, $$inline: true });
+    	binding_callbacks.push(() => bind(inputrange, 'value', inputrange_value_binding));
     	let if_block1 = /*showVertexLabel*/ ctx[2] && create_if_block_1(ctx);
 
     	const block = {
@@ -3111,83 +3006,55 @@ var app = (function () {
     			t3 = space();
     			div3 = element("div");
     			h20 = element("h2");
-    			h20.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "currentWorldSettings")}`;
+    			h20.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "fieldSettings")}`;
     			t5 = space();
-    			create_component(inputrange0.$$.fragment);
-    			t6 = space();
-    			create_component(inputrange1.$$.fragment);
-    			t7 = space();
-    			create_component(inputrange2.$$.fragment);
-    			t8 = space();
-    			create_component(inputrange3.$$.fragment);
-    			t9 = space();
     			div2 = element("div");
     			button2 = element("button");
-    			button2.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "killAllParticles")}`;
+    			button2.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "removeAllVertexes")}`;
+    			t7 = space();
+    			div4 = element("div");
+    			h21 = element("h2");
+    			h21.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "vertexColor")}`;
+    			t9 = space();
+    			create_component(particleselector.$$.fragment);
+    			t10 = space();
+    			if (if_block0) if_block0.c();
     			t11 = space();
     			div5 = element("div");
-    			h21 = element("h2");
-    			h21.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "newWorldSettings")}`;
-    			t13 = space();
-    			create_component(inputrange4.$$.fragment);
-    			t14 = space();
-    			create_component(inputrange5.$$.fragment);
-    			t15 = space();
-    			div4 = element("div");
-    			button3 = element("button");
-    			button3.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "createNewWorld")}`;
-    			t17 = space();
-    			div6 = element("div");
     			h22 = element("h2");
-    			h22.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "vertexColor")}`;
-    			t19 = space();
-    			create_component(particleselector.$$.fragment);
-    			t20 = space();
-    			if (if_block0) if_block0.c();
-    			t21 = space();
-    			div7 = element("div");
-    			h23 = element("h2");
-    			h23.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "graphicalSettings")}`;
-    			t23 = space();
+    			h22.textContent = `${/*getTranslation*/ ctx[12](/*lang*/ ctx[14], "graphicalSettings")}`;
+    			t13 = space();
     			create_component(checkbox0.$$.fragment);
-    			t24 = space();
+    			t14 = space();
     			create_component(checkbox1.$$.fragment);
-    			t25 = space();
-    			create_component(inputrange6.$$.fragment);
-    			t26 = space();
+    			t15 = space();
+    			create_component(inputrange.$$.fragment);
+    			t16 = space();
     			if (if_block1) if_block1.c();
     			attr_dev(button0, "class", "svelte-kz9qu7");
-    			add_location(button0, file, 72, 4, 2037);
+    			add_location(button0, file, 76, 4, 2171);
     			attr_dev(button1, "class", "svelte-kz9qu7");
-    			add_location(button1, file, 75, 4, 2148);
+    			add_location(button1, file, 79, 4, 2282);
     			attr_dev(div0, "class", "buttons-row svelte-kz9qu7");
-    			add_location(div0, file, 71, 3, 2007);
+    			add_location(div0, file, 75, 3, 2141);
     			attr_dev(div1, "class", "controls-block svelte-kz9qu7");
-    			add_location(div1, file, 70, 2, 1975);
+    			add_location(div1, file, 74, 2, 2109);
     			attr_dev(h20, "class", "controls-block__title svelte-kz9qu7");
-    			add_location(h20, file, 81, 3, 2278);
+    			add_location(h20, file, 85, 3, 2412);
     			attr_dev(button2, "class", "svelte-kz9qu7");
-    			add_location(button2, file, 112, 4, 3002);
+    			add_location(button2, file, 89, 4, 2533);
     			attr_dev(div2, "class", "buttons-row svelte-kz9qu7");
-    			add_location(div2, file, 111, 3, 2972);
+    			add_location(div2, file, 88, 3, 2503);
     			attr_dev(div3, "class", "controls-block svelte-kz9qu7");
-    			add_location(div3, file, 80, 2, 2246);
+    			add_location(div3, file, 84, 2, 2380);
     			attr_dev(h21, "class", "controls-block__title svelte-kz9qu7");
-    			add_location(h21, file, 120, 3, 3157);
-    			attr_dev(button3, "class", "svelte-kz9qu7");
-    			add_location(button3, file, 136, 4, 3562);
-    			attr_dev(div4, "class", "buttons-row svelte-kz9qu7");
-    			add_location(div4, file, 135, 3, 3532);
-    			attr_dev(div5, "class", "controls-block svelte-kz9qu7");
-    			add_location(div5, file, 119, 2, 3125);
+    			add_location(h21, file, 95, 3, 2696);
+    			attr_dev(div4, "class", "controls-block svelte-kz9qu7");
+    			add_location(div4, file, 94, 2, 2664);
     			attr_dev(h22, "class", "controls-block__title svelte-kz9qu7");
-    			add_location(h22, file, 142, 3, 3704);
-    			attr_dev(div6, "class", "controls-block svelte-kz9qu7");
-    			add_location(div6, file, 141, 2, 3672);
-    			attr_dev(h23, "class", "controls-block__title svelte-kz9qu7");
-    			add_location(h23, file, 162, 3, 4183);
-    			attr_dev(div7, "class", "controls-block svelte-kz9qu7");
-    			add_location(div7, file, 161, 2, 4151);
+    			add_location(h22, file, 115, 3, 3175);
+    			attr_dev(div5, "class", "controls-block svelte-kz9qu7");
+    			add_location(div5, file, 114, 2, 3143);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -3199,117 +3066,54 @@ var app = (function () {
     			insert_dev(target, div3, anchor);
     			append_dev(div3, h20);
     			append_dev(div3, t5);
-    			mount_component(inputrange0, div3, null);
-    			append_dev(div3, t6);
-    			mount_component(inputrange1, div3, null);
-    			append_dev(div3, t7);
-    			mount_component(inputrange2, div3, null);
-    			append_dev(div3, t8);
-    			mount_component(inputrange3, div3, null);
-    			append_dev(div3, t9);
     			append_dev(div3, div2);
     			append_dev(div2, button2);
+    			insert_dev(target, t7, anchor);
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, h21);
+    			append_dev(div4, t9);
+    			mount_component(particleselector, div4, null);
+    			insert_dev(target, t10, anchor);
+    			if (if_block0) if_block0.m(target, anchor);
     			insert_dev(target, t11, anchor);
     			insert_dev(target, div5, anchor);
-    			append_dev(div5, h21);
+    			append_dev(div5, h22);
     			append_dev(div5, t13);
-    			mount_component(inputrange4, div5, null);
+    			mount_component(checkbox0, div5, null);
     			append_dev(div5, t14);
-    			mount_component(inputrange5, div5, null);
+    			mount_component(checkbox1, div5, null);
     			append_dev(div5, t15);
-    			append_dev(div5, div4);
-    			append_dev(div4, button3);
-    			insert_dev(target, t17, anchor);
-    			insert_dev(target, div6, anchor);
-    			append_dev(div6, h22);
-    			append_dev(div6, t19);
-    			mount_component(particleselector, div6, null);
-    			insert_dev(target, t20, anchor);
-    			if (if_block0) if_block0.m(target, anchor);
-    			insert_dev(target, t21, anchor);
-    			insert_dev(target, div7, anchor);
-    			append_dev(div7, h23);
-    			append_dev(div7, t23);
-    			mount_component(checkbox0, div7, null);
-    			append_dev(div7, t24);
-    			mount_component(checkbox1, div7, null);
-    			append_dev(div7, t25);
-    			mount_component(inputrange6, div7, null);
-    			append_dev(div7, t26);
-    			if (if_block1) if_block1.m(div7, null);
+    			mount_component(inputrange, div5, null);
+    			append_dev(div5, t16);
+    			if (if_block1) if_block1.m(div5, null);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
     					listen_dev(button0, "click", /*click_handler*/ ctx[16], false, false, false),
     					listen_dev(button1, "click", {}, false, false, false),
-    					listen_dev(button2, "click", click_handler_1, false, false, false),
-    					listen_dev(button3, "click", click_handler_2, false, false, false)
+    					listen_dev(
+    						button2,
+    						"click",
+    						function () {
+    							if (is_function(/*graphRemoveVertexesHandler*/ ctx[9])) /*graphRemoveVertexesHandler*/ ctx[9].apply(this, arguments);
+    						},
+    						false,
+    						false,
+    						false
+    					)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, dirty) {
-    			const inputrange0_changes = {};
-
-    			if (!updating_value && dirty & /*simulationsPerFrame*/ 8) {
-    				updating_value = true;
-    				inputrange0_changes.value = /*simulationsPerFrame*/ ctx[3];
-    				add_flush_callback(() => updating_value = false);
-    			}
-
-    			inputrange0.$set(inputrange0_changes);
-    			const inputrange1_changes = {};
-
-    			if (!updating_value_1 && dirty & /*simulationsPerFrame*/ 8) {
-    				updating_value_1 = true;
-    				inputrange1_changes.value = /*simulationsPerFrame*/ ctx[3];
-    				add_flush_callback(() => updating_value_1 = false);
-    			}
-
-    			inputrange1.$set(inputrange1_changes);
-    			const inputrange2_changes = {};
-
-    			if (!updating_value_2 && dirty & /*simulationsPerFrame*/ 8) {
-    				updating_value_2 = true;
-    				inputrange2_changes.value = /*simulationsPerFrame*/ ctx[3];
-    				add_flush_callback(() => updating_value_2 = false);
-    			}
-
-    			inputrange2.$set(inputrange2_changes);
-    			const inputrange3_changes = {};
-
-    			if (!updating_value_3 && dirty & /*simulationsPerFrame*/ 8) {
-    				updating_value_3 = true;
-    				inputrange3_changes.value = /*simulationsPerFrame*/ ctx[3];
-    				add_flush_callback(() => updating_value_3 = false);
-    			}
-
-    			inputrange3.$set(inputrange3_changes);
-    			const inputrange4_changes = {};
-
-    			if (!updating_value_4 && dirty & /*simulationsPerFrame*/ 8) {
-    				updating_value_4 = true;
-    				inputrange4_changes.value = /*simulationsPerFrame*/ ctx[3];
-    				add_flush_callback(() => updating_value_4 = false);
-    			}
-
-    			inputrange4.$set(inputrange4_changes);
-    			const inputrange5_changes = {};
-
-    			if (!updating_value_5 && dirty & /*simulationsPerFrame*/ 8) {
-    				updating_value_5 = true;
-    				inputrange5_changes.value = /*simulationsPerFrame*/ ctx[3];
-    				add_flush_callback(() => updating_value_5 = false);
-    			}
-
-    			inputrange5.$set(inputrange5_changes);
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
     			const particleselector_changes = {};
 
-    			if (!updating_selectedId && dirty & /*vertexColorId*/ 16) {
+    			if (!updating_selectedId && dirty & /*vertexColorId*/ 8) {
     				updating_selectedId = true;
-    				particleselector_changes.selectedId = /*vertexColorId*/ ctx[4];
+    				particleselector_changes.selectedId = /*vertexColorId*/ ctx[3];
     				add_flush_callback(() => updating_selectedId = false);
     			}
 
@@ -3326,7 +3130,7 @@ var app = (function () {
     					if_block0 = create_if_block_2(ctx);
     					if_block0.c();
     					transition_in(if_block0, 1);
-    					if_block0.m(t21.parentNode, t21);
+    					if_block0.m(t11.parentNode, t11);
     				}
     			} else if (if_block0) {
     				group_outros();
@@ -3356,15 +3160,15 @@ var app = (function () {
     			}
 
     			checkbox1.$set(checkbox1_changes);
-    			const inputrange6_changes = {};
+    			const inputrange_changes = {};
 
-    			if (!updating_value_6 && dirty & /*vertexSize*/ 32) {
-    				updating_value_6 = true;
-    				inputrange6_changes.value = /*vertexSize*/ ctx[5];
-    				add_flush_callback(() => updating_value_6 = false);
+    			if (!updating_value && dirty & /*vertexSize*/ 16) {
+    				updating_value = true;
+    				inputrange_changes.value = /*vertexSize*/ ctx[4];
+    				add_flush_callback(() => updating_value = false);
     			}
 
-    			inputrange6.$set(inputrange6_changes);
+    			inputrange.$set(inputrange_changes);
 
     			if (/*showVertexLabel*/ ctx[2]) {
     				if (if_block1) {
@@ -3377,7 +3181,7 @@ var app = (function () {
     					if_block1 = create_if_block_1(ctx);
     					if_block1.c();
     					transition_in(if_block1, 1);
-    					if_block1.m(div7, null);
+    					if_block1.m(div5, null);
     				}
     			} else if (if_block1) {
     				group_outros();
@@ -3391,32 +3195,20 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(inputrange0.$$.fragment, local);
-    			transition_in(inputrange1.$$.fragment, local);
-    			transition_in(inputrange2.$$.fragment, local);
-    			transition_in(inputrange3.$$.fragment, local);
-    			transition_in(inputrange4.$$.fragment, local);
-    			transition_in(inputrange5.$$.fragment, local);
     			transition_in(particleselector.$$.fragment, local);
     			transition_in(if_block0);
     			transition_in(checkbox0.$$.fragment, local);
     			transition_in(checkbox1.$$.fragment, local);
-    			transition_in(inputrange6.$$.fragment, local);
+    			transition_in(inputrange.$$.fragment, local);
     			transition_in(if_block1);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(inputrange0.$$.fragment, local);
-    			transition_out(inputrange1.$$.fragment, local);
-    			transition_out(inputrange2.$$.fragment, local);
-    			transition_out(inputrange3.$$.fragment, local);
-    			transition_out(inputrange4.$$.fragment, local);
-    			transition_out(inputrange5.$$.fragment, local);
     			transition_out(particleselector.$$.fragment, local);
     			transition_out(if_block0);
     			transition_out(checkbox0.$$.fragment, local);
     			transition_out(checkbox1.$$.fragment, local);
-    			transition_out(inputrange6.$$.fragment, local);
+    			transition_out(inputrange.$$.fragment, local);
     			transition_out(if_block1);
     			current = false;
     		},
@@ -3424,24 +3216,16 @@ var app = (function () {
     			if (detaching) detach_dev(div1);
     			if (detaching) detach_dev(t3);
     			if (detaching) detach_dev(div3);
-    			destroy_component(inputrange0);
-    			destroy_component(inputrange1);
-    			destroy_component(inputrange2);
-    			destroy_component(inputrange3);
+    			if (detaching) detach_dev(t7);
+    			if (detaching) detach_dev(div4);
+    			destroy_component(particleselector);
+    			if (detaching) detach_dev(t10);
+    			if (if_block0) if_block0.d(detaching);
     			if (detaching) detach_dev(t11);
     			if (detaching) detach_dev(div5);
-    			destroy_component(inputrange4);
-    			destroy_component(inputrange5);
-    			if (detaching) detach_dev(t17);
-    			if (detaching) detach_dev(div6);
-    			destroy_component(particleselector);
-    			if (detaching) detach_dev(t20);
-    			if (if_block0) if_block0.d(detaching);
-    			if (detaching) detach_dev(t21);
-    			if (detaching) detach_dev(div7);
     			destroy_component(checkbox0);
     			destroy_component(checkbox1);
-    			destroy_component(inputrange6);
+    			destroy_component(inputrange);
     			if (if_block1) if_block1.d();
     			mounted = false;
     			run_all(dispose);
@@ -3452,14 +3236,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(70:1) {#if showSettings}",
+    		source: "(74:1) {#if showSettings}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (151:2) {#if showVertexLabel}
+    // (104:2) {#if showVertexLabel}
     function create_if_block_2(ctx) {
     	let div;
     	let h2;
@@ -3469,13 +3253,13 @@ var app = (function () {
     	let current;
 
     	function particleselector_selectedId_binding_1(value) {
-    		/*particleselector_selectedId_binding_1*/ ctx[24](value);
+    		/*particleselector_selectedId_binding_1*/ ctx[18](value);
     	}
 
     	let particleselector_props = { colors: /*COLORS*/ ctx[13] };
 
-    	if (/*vertexLabelColorId*/ ctx[6] !== void 0) {
-    		particleselector_props.selectedId = /*vertexLabelColorId*/ ctx[6];
+    	if (/*vertexLabelColorId*/ ctx[5] !== void 0) {
+    		particleselector_props.selectedId = /*vertexLabelColorId*/ ctx[5];
     	}
 
     	particleselector = new ParticleSelector({
@@ -3493,9 +3277,9 @@ var app = (function () {
     			t1 = space();
     			create_component(particleselector.$$.fragment);
     			attr_dev(h2, "class", "controls-block__title svelte-kz9qu7");
-    			add_location(h2, file, 152, 4, 3944);
+    			add_location(h2, file, 105, 4, 2936);
     			attr_dev(div, "class", "controls-block svelte-kz9qu7");
-    			add_location(div, file, 151, 3, 3911);
+    			add_location(div, file, 104, 3, 2903);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3507,9 +3291,9 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const particleselector_changes = {};
 
-    			if (!updating_selectedId && dirty & /*vertexLabelColorId*/ 64) {
+    			if (!updating_selectedId && dirty & /*vertexLabelColorId*/ 32) {
     				updating_selectedId = true;
-    				particleselector_changes.selectedId = /*vertexLabelColorId*/ ctx[6];
+    				particleselector_changes.selectedId = /*vertexLabelColorId*/ ctx[5];
     				add_flush_callback(() => updating_selectedId = false);
     			}
 
@@ -3534,21 +3318,21 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(151:2) {#if showVertexLabel}",
+    		source: "(104:2) {#if showVertexLabel}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (181:3) {#if showVertexLabel}
+    // (134:3) {#if showVertexLabel}
     function create_if_block_1(ctx) {
     	let inputrange;
     	let updating_value;
     	let current;
 
-    	function inputrange_value_binding(value) {
-    		/*inputrange_value_binding*/ ctx[28](value);
+    	function inputrange_value_binding_1(value) {
+    		/*inputrange_value_binding_1*/ ctx[22](value);
     	}
 
     	let inputrange_props = {
@@ -3558,12 +3342,12 @@ var app = (function () {
     		step: 1
     	};
 
-    	if (/*vertexLabelSize*/ ctx[7] !== void 0) {
-    		inputrange_props.value = /*vertexLabelSize*/ ctx[7];
+    	if (/*vertexLabelSize*/ ctx[6] !== void 0) {
+    		inputrange_props.value = /*vertexLabelSize*/ ctx[6];
     	}
 
     	inputrange = new InputRange({ props: inputrange_props, $$inline: true });
-    	binding_callbacks.push(() => bind(inputrange, 'value', inputrange_value_binding));
+    	binding_callbacks.push(() => bind(inputrange, 'value', inputrange_value_binding_1));
 
     	const block = {
     		c: function create() {
@@ -3576,9 +3360,9 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const inputrange_changes = {};
 
-    			if (!updating_value && dirty & /*vertexLabelSize*/ 128) {
+    			if (!updating_value && dirty & /*vertexLabelSize*/ 64) {
     				updating_value = true;
-    				inputrange_changes.value = /*vertexLabelSize*/ ctx[7];
+    				inputrange_changes.value = /*vertexLabelSize*/ ctx[6];
     				add_flush_callback(() => updating_value = false);
     			}
 
@@ -3602,7 +3386,7 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(181:3) {#if showVertexLabel}",
+    		source: "(134:3) {#if showVertexLabel}",
     		ctx
     	});
 
@@ -3619,7 +3403,7 @@ var app = (function () {
 
     	canvas = new Canvas({
     			props: {
-    				onClick: /*graphClickHandler*/ ctx[9],
+    				onClick: /*graphClickHandler*/ ctx[8],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},
@@ -3645,7 +3429,7 @@ var app = (function () {
     			if_block.c();
     			attr_dev(div, "class", "controls svelte-kz9qu7");
     			toggle_class(div, "controls_opened", /*showSettings*/ ctx[0]);
-    			add_location(div, file, 68, 0, 1893);
+    			add_location(div, file, 72, 0, 2027);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3659,9 +3443,9 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			const canvas_changes = {};
-    			if (dirty & /*graphClickHandler*/ 512) canvas_changes.onClick = /*graphClickHandler*/ ctx[9];
+    			if (dirty & /*graphClickHandler*/ 256) canvas_changes.onClick = /*graphClickHandler*/ ctx[8];
 
-    			if (dirty & /*$$scope, showFPS, $width, $height, vertexColorId, vertexSize, showVertexLabel, vertexLabelSize, vertexLabelColorId, graphComponent*/ 1073745398) {
+    			if (dirty & /*$$scope, showFPS, $width, $height, vertexColorId, vertexSize, showVertexLabel, vertexLabelSize, vertexLabelColorId, graphComponent*/ 33557758) {
     				canvas_changes.$$scope = { dirty, ctx };
     			}
 
@@ -3726,14 +3510,6 @@ var app = (function () {
     	return block;
     }
 
-    const click_handler_1 = () => {
-    	
-    };
-
-    const click_handler_2 = () => {
-    	
-    };
-
     function instance($$self, $$props, $$invalidate) {
     	let $width;
     	let $height;
@@ -3776,10 +3552,15 @@ var app = (function () {
     	let vertexLabelSize = 8;
     	let graphComponent;
     	let graphClickHandler;
+    	let graphRemoveVertexesHandler;
 
     	onMount(function () {
-    		$$invalidate(9, graphClickHandler = function (ev) {
+    		$$invalidate(8, graphClickHandler = function (ev) {
     			graphComponent.handleClick(ev);
+    		});
+
+    		$$invalidate(9, graphRemoveVertexesHandler = function () {
+    			graphComponent.removeAllVertexes();
     		});
     	});
 
@@ -3792,50 +3573,20 @@ var app = (function () {
     	function graph_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			graphComponent = $$value;
-    			$$invalidate(8, graphComponent);
+    			$$invalidate(7, graphComponent);
     		});
     	}
 
     	const click_handler = () => $$invalidate(0, showSettings = false);
 
-    	function inputrange0_value_binding(value) {
-    		simulationsPerFrame = value;
-    		$$invalidate(3, simulationsPerFrame);
-    	}
-
-    	function inputrange1_value_binding(value) {
-    		simulationsPerFrame = value;
-    		$$invalidate(3, simulationsPerFrame);
-    	}
-
-    	function inputrange2_value_binding(value) {
-    		simulationsPerFrame = value;
-    		$$invalidate(3, simulationsPerFrame);
-    	}
-
-    	function inputrange3_value_binding(value) {
-    		simulationsPerFrame = value;
-    		$$invalidate(3, simulationsPerFrame);
-    	}
-
-    	function inputrange4_value_binding(value) {
-    		simulationsPerFrame = value;
-    		$$invalidate(3, simulationsPerFrame);
-    	}
-
-    	function inputrange5_value_binding(value) {
-    		simulationsPerFrame = value;
-    		$$invalidate(3, simulationsPerFrame);
-    	}
-
     	function particleselector_selectedId_binding(value) {
     		vertexColorId = value;
-    		$$invalidate(4, vertexColorId);
+    		$$invalidate(3, vertexColorId);
     	}
 
     	function particleselector_selectedId_binding_1(value) {
     		vertexLabelColorId = value;
-    		$$invalidate(6, vertexLabelColorId);
+    		$$invalidate(5, vertexLabelColorId);
     	}
 
     	function checkbox0_checked_binding(value) {
@@ -3848,17 +3599,17 @@ var app = (function () {
     		$$invalidate(2, showVertexLabel);
     	}
 
-    	function inputrange6_value_binding(value) {
-    		vertexSize = value;
-    		$$invalidate(5, vertexSize);
-    	}
-
     	function inputrange_value_binding(value) {
-    		vertexLabelSize = value;
-    		$$invalidate(7, vertexLabelSize);
+    		vertexSize = value;
+    		$$invalidate(4, vertexSize);
     	}
 
-    	const click_handler_3 = () => $$invalidate(0, showSettings = true);
+    	function inputrange_value_binding_1(value) {
+    		vertexLabelSize = value;
+    		$$invalidate(6, vertexLabelSize);
+    	}
+
+    	const click_handler_1 = () => $$invalidate(0, showSettings = true);
 
     	$$self.$capture_state = () => ({
     		width,
@@ -3887,6 +3638,7 @@ var app = (function () {
     		vertexLabelSize,
     		graphComponent,
     		graphClickHandler,
+    		graphRemoveVertexesHandler,
     		$width,
     		$height
     	});
@@ -3896,13 +3648,14 @@ var app = (function () {
     		if ('showSettings' in $$props) $$invalidate(0, showSettings = $$props.showSettings);
     		if ('showFPS' in $$props) $$invalidate(1, showFPS = $$props.showFPS);
     		if ('showVertexLabel' in $$props) $$invalidate(2, showVertexLabel = $$props.showVertexLabel);
-    		if ('simulationsPerFrame' in $$props) $$invalidate(3, simulationsPerFrame = $$props.simulationsPerFrame);
-    		if ('vertexColorId' in $$props) $$invalidate(4, vertexColorId = $$props.vertexColorId);
-    		if ('vertexSize' in $$props) $$invalidate(5, vertexSize = $$props.vertexSize);
-    		if ('vertexLabelColorId' in $$props) $$invalidate(6, vertexLabelColorId = $$props.vertexLabelColorId);
-    		if ('vertexLabelSize' in $$props) $$invalidate(7, vertexLabelSize = $$props.vertexLabelSize);
-    		if ('graphComponent' in $$props) $$invalidate(8, graphComponent = $$props.graphComponent);
-    		if ('graphClickHandler' in $$props) $$invalidate(9, graphClickHandler = $$props.graphClickHandler);
+    		if ('simulationsPerFrame' in $$props) simulationsPerFrame = $$props.simulationsPerFrame;
+    		if ('vertexColorId' in $$props) $$invalidate(3, vertexColorId = $$props.vertexColorId);
+    		if ('vertexSize' in $$props) $$invalidate(4, vertexSize = $$props.vertexSize);
+    		if ('vertexLabelColorId' in $$props) $$invalidate(5, vertexLabelColorId = $$props.vertexLabelColorId);
+    		if ('vertexLabelSize' in $$props) $$invalidate(6, vertexLabelSize = $$props.vertexLabelSize);
+    		if ('graphComponent' in $$props) $$invalidate(7, graphComponent = $$props.graphComponent);
+    		if ('graphClickHandler' in $$props) $$invalidate(8, graphClickHandler = $$props.graphClickHandler);
+    		if ('graphRemoveVertexesHandler' in $$props) $$invalidate(9, graphRemoveVertexesHandler = $$props.graphRemoveVertexesHandler);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -3913,13 +3666,13 @@ var app = (function () {
     		showSettings,
     		showFPS,
     		showVertexLabel,
-    		simulationsPerFrame,
     		vertexColorId,
     		vertexSize,
     		vertexLabelColorId,
     		vertexLabelSize,
     		graphComponent,
     		graphClickHandler,
+    		graphRemoveVertexesHandler,
     		$width,
     		$height,
     		getTranslation,
@@ -3927,19 +3680,13 @@ var app = (function () {
     		lang,
     		graph_binding,
     		click_handler,
-    		inputrange0_value_binding,
-    		inputrange1_value_binding,
-    		inputrange2_value_binding,
-    		inputrange3_value_binding,
-    		inputrange4_value_binding,
-    		inputrange5_value_binding,
     		particleselector_selectedId_binding,
     		particleselector_selectedId_binding_1,
     		checkbox0_checked_binding,
     		checkbox1_checked_binding,
-    		inputrange6_value_binding,
     		inputrange_value_binding,
-    		click_handler_3
+    		inputrange_value_binding_1,
+    		click_handler_1
     	];
     }
 

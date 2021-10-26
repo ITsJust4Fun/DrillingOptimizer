@@ -94,5 +94,13 @@ export default {
   vertexLabelColor: {
     en: "Vertex label color",
     ru: "Цвет шрифта координат вершины",
+  },
+  fieldSettings: {
+    en: "Field settings",
+    ru: "Настройки поля",
+  },
+  removeAllVertexes: {
+    en: "Remove all vertexes",
+    ru: "Удалить все вершины",
   }
 } as { [phrase: string]: { [lang: string]: string } };

@@ -44,10 +44,14 @@
 
 	let graphComponent
 	let graphClickHandler
+	let graphRemoveVertexesHandler
 
 	onMount(function(){
 		graphClickHandler = function(ev){
 			graphComponent.handleClick(ev)
+		}
+		graphRemoveVertexesHandler = function(){
+			graphComponent.removeAllVertexes()
 		}
 	})
 
@@ -90,62 +94,11 @@
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">
-				{getTranslation(lang, "currentWorldSettings")}
+				{getTranslation(lang, "fieldSettings")}
 			</h2>
-			<InputRange
-					name={getTranslation(lang, "simulationsPerFrame")}
-					min={1}
-					max={100}
-					bind:value={simulationsPerFrame}
-			/>
-			<InputRange
-					name={getTranslation(lang, "temperature")}
-					min={0.1}
-					max={40}
-					step={0.1}
-					bind:value={simulationsPerFrame}
-			/>
-			<InputRange
-					name={getTranslation(lang, "friction")}
-					min={0}
-					max={1}
-					step={0.01}
-					bind:value={simulationsPerFrame}
-			/>
-			<InputRange
-					name={getTranslation(lang, "particleRadius")}
-					min={3}
-					max={10}
-					step={0.01}
-					bind:value={simulationsPerFrame}
-			/>
 			<div class="buttons-row">
-				<button
-						on:click={() => {}}
-				>
-					{getTranslation(lang, "killAllParticles")}
-				</button>
-			</div>
-		</div>
-		<div class="controls-block">
-			<h2 class="controls-block__title">
-				{getTranslation(lang, "newWorldSettings")}
-			</h2>
-			<InputRange
-					name={getTranslation(lang, "particleTypesAmount")}
-					bind:value={simulationsPerFrame}
-					min={1}
-					max={100}
-			/>
-			<InputRange
-					name={getTranslation(lang, "particleCount")}
-					bind:value={simulationsPerFrame}
-					min={0}
-					max={5000}
-			/>
-			<div class="buttons-row">
-				<button on:click={() => {}}>
-					{getTranslation(lang, "createNewWorld")}
+				<button on:click={graphRemoveVertexesHandler}>
+					{getTranslation(lang, "removeAllVertexes")}
 				</button>
 			</div>
 		</div>

@@ -56,6 +56,11 @@
         vertexes = [...vertexes, vertex]
     }
 
+    export function removeAllVertexes() {
+        edges = []
+        vertexes = []
+    }
+
     function drawText(props) {
         const { context, text, x, y } = props
 
