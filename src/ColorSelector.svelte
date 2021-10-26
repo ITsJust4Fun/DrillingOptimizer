@@ -1,28 +1,75 @@
 <script lang="ts">
-  export let colors: string[] = [];
-  export let selectedId: number = 0;
+  import { onMount } from 'svelte'
+
+  export let colors: string[] = []
+  export let selectedId: number = 0
+
+  let checkmarkColor = 'white'
+
+  onMount(function(){
+    checkmarkColor = invertColor(colors[selectedId])
+  })
+
+  function invertColor(hex) {
+    if (hex === 'white') {
+      hex = '#FFFFFF'
+    } else if (hex === 'black') {
+      hex = '#000000'
+    }
+
+    if (hex.indexOf('#') === 0) {
+      hex = hex.slice(1)
+    }
+    // convert 3-digit hex to 6-digits.
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+    }
+    if (hex.length !== 6) {
+      throw new Error('Invalid HEX color.')
+    }
+
+    let r = parseInt(hex.slice(0, 2), 16),
+            g = parseInt(hex.slice(2, 4), 16),
+            b = parseInt(hex.slice(4, 6), 16)
+
+    return (r * 0.299 + g * 0.587 + b * 0.114) > 186
+            ? 'black'
+            : 'white'
+  }
 </script>
 
 <div class="wrapper">
   {#each Array(...colors.entries()) as idAndColor}
     <button
-      class:selected={selectedId === idAndColor[0]}
+      class="{selectedId === idAndColor[0] ? 'selected' : ''} {checkmarkColor}"
       name="color"
       type="radio"
       style={`background-color: ${idAndColor[1]};`}
-      on:click={() => (selectedId = idAndColor[0])}
+      on:click={() => {
+        selectedId = idAndColor[0]
+        checkmarkColor = invertColor(colors[selectedId])
+      }}
     />
   {/each}
 </div>
 
 <style>
-  .selected:before {
+  .selected.white:before {
     content: "";
     display: block;
     width: 6px;
     height: 14px;
     border-bottom: 3px solid white;
     border-right: 3px solid white;
+    transform: translateY(-2px) rotate(45deg);
+  }
+  .selected.black:before {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 14px;
+    border-bottom: 3px solid black;
+    border-right: 3px solid black;
     transform: translateY(-2px) rotate(45deg);
   }
   .wrapper {

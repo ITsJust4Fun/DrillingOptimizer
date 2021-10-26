@@ -5,12 +5,12 @@
 	import Canvas from './Canvas.svelte'
 	import Background from './Background.svelte'
 	import DotGrid from './DotGrid.svelte'
-	import Graph, {generateVertexes, vertexesGenerationCount} from './Graph.svelte'
+	import Graph from './Graph.svelte'
 	import Text from './Text.svelte'
 	import FPS from './FPS.svelte'
 	import InputRange from "./InputRange.svelte"
 	import Checkbox from "./Checkbox.svelte"
-	import ParticleSelector from "./ParticleSelector.svelte"
+	import ColorSelector from "./ColorSelector.svelte"
 
 	import TRANSLATIONS from "./translations"
 
@@ -124,7 +124,7 @@
 			<h2 class="controls-block__title">
 				{getTranslation(lang, "vertexColor")}
 			</h2>
-			<ParticleSelector
+			<ColorSelector
 					colors={COLORS}
 					bind:selectedId={vertexColorId}
 			/>
@@ -134,7 +134,7 @@
 				<h2 class="controls-block__title">
 					{getTranslation(lang, "vertexLabelColor")}
 				</h2>
-				<ParticleSelector
+				<ColorSelector
 						colors={COLORS}
 						bind:selectedId={vertexLabelColorId}
 				/>
