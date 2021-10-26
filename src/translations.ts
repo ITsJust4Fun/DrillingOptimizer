@@ -39,9 +39,9 @@ export default {
     en: "Vertex label color",
     ru: "Цвет шрифта координат вершины",
   },
-  fieldSettings: {
-    en: "Field settings",
-    ru: "Настройки поля",
+  graphSettings: {
+    en: "Graph settings",
+    ru: "Настройки графа",
   },
   removeAllVertexes: {
     en: "Remove all vertexes",
@@ -54,5 +54,9 @@ export default {
   vertexesGenerationCount: {
     en: "Vertexes generation count",
     ru: "Количество генерируемых вершин",
+  },
+  fillEdgesInAddingOrder: {
+    en: "Fill edges in adding order",
+    ru: "Заполнить грани по порядку",
   }
 } as { [phrase: string]: { [lang: string]: string } };

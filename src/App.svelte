@@ -44,13 +44,18 @@
 
 	let graphComponent
 	let graphClickHandler
+	let graphMouseDownHandler
 	let graphRemoveVertexesHandler
 	let graphGenerateVertexesHandler
+	let graphFillEdgesInAddingOrderHandler
 
 
 	onMount(function(){
 		graphClickHandler = function(ev){
 			graphComponent.handleClick(ev)
+		}
+		graphMouseDownHandler = function(ev){
+			graphComponent.handleMouseDown(ev)
 		}
 		graphRemoveVertexesHandler = function(){
 			graphComponent.removeAllVertexes()
@@ -58,12 +63,15 @@
 		graphGenerateVertexesHandler = function(){
 			graphComponent.generateVertexes()
 		}
+		graphFillEdgesInAddingOrderHandler = function(){
+			graphComponent.fillEdgesInAddingOrder()
+		}
 	})
 
 
 </script>
 
-<Canvas onClick={graphClickHandler}>
+<Canvas onClick={graphClickHandler} onMouseDown={graphMouseDownHandler}>
 	<Background color='hsl(0, 0%, 10%)'>
 		<DotGrid divisions={30} color='hsla(0, 0%, 100%, 0.5)' />
 	</Background>
@@ -93,14 +101,14 @@
 				<button on:click={() => (showSettings = false)}>
 					{getTranslation(lang, "hideSettings")}
 				</button>
-				<button on:click={{}}>
+				<button on:click={() => {}}>
 					{getTranslation(lang, "copyLink")}
 				</button>
 			</div>
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">
-				{getTranslation(lang, "fieldSettings")}
+				{getTranslation(lang, "graphSettings")}
 			</h2>
 			<div class="buttons-row">
 				<button on:click={graphRemoveVertexesHandler}>
@@ -119,6 +127,11 @@
 					step={1}
 					bind:value={vertexesGenerationCount}
 			/>
+			<div class="buttons-row">
+				<button on:click={graphFillEdgesInAddingOrderHandler}>
+					{getTranslation(lang, "fillEdgesInAddingOrder")}
+				</button>
+			</div>
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">

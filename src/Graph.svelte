@@ -22,8 +22,23 @@
     let edges: Edge[] = []
     let minDistance = 80
 
+    let mouse: Vertex = null
+    let movingVertexId = -1
+    let mouseDown = false
+    let time = -1
+
+    const CLICK_TIME_MS = 100
+
     renderable((props) => {
         const { context } = props
+
+        if (mouseDown && movingVertexId !== -1 && Date.now() - time > CLICK_TIME_MS) {
+            vertexes[movingVertexId] = mouse
+        }
+
+        for (let edge of edges) {
+            drawLine(context, vertexes[edge.i], vertexes[edge.j])
+        }
 
         for (let vertex of vertexes) {
             context.lineCap = 'round'
@@ -40,21 +55,64 @@
     })
 
     export function handleClick(ev) {
+        if (Date.now() - time > CLICK_TIME_MS && time !== -1) {
+            time = -1
+            return
+        }
+
+        time = -1
+        edges = []
+
         let x = ev.clientX
         let y = ev.clientY
 
         let nearest = getNearestVertex(x, y)
 
-        if (nearest.value <= vertexSize + 10 && nearest.index != -1) {
+        if (nearest.value <= vertexSize && nearest.index !== -1) {
             vertexes = [...vertexes.slice(0, nearest.index), ...vertexes.slice(nearest.index + 1, vertexes.length)]
-        }
-
-        if (nearest.value < minDistance && nearest.index != -1) {
             return
         }
 
         let vertex: Vertex = { x, y }
         vertexes = [...vertexes, vertex]
+    }
+
+    export function handleMouseDown(ev) {
+        let x = ev.clientX
+        let y = ev.clientY
+
+        let nearest = getNearestVertex(x, y)
+
+        if (nearest.value > vertexSize || nearest.index === -1) {
+            return
+        }
+
+        movingVertexId = nearest.index
+        handleMouseMove(ev)
+        mouseDown = true
+        time = Date.now()
+    }
+
+    function handleMouseMove({ clientX, clientY }) {
+        if (clientX > $width) {
+            clientX = $width
+        } else if (clientX < 0) {
+            clientX = 0
+        }
+
+        if (clientY > $height) {
+            clientY = $height
+        } else if (clientY < 0) {
+            clientY = 0
+        }
+
+        mouse = { x: clientX, y: clientY }
+    }
+
+    function handleMouseUp(ev) {
+        handleMouseMove(ev)
+        mouseDown = false
+        movingVertexId = -1
     }
 
     export function removeAllVertexes() {
@@ -90,6 +148,18 @@
         console.log(`Generated ${vertexes.length} vertexes`)
     }
 
+    export function fillEdgesInAddingOrder() {
+        edges = []
+
+        for (let i = 0; i < vertexes.length; i++) {
+            let j = i + 1
+
+            if (j < vertexes.length) {
+                edges = [...edges, { i, j }]
+            }
+        }
+    }
+
     function drawText(props) {
         const { context, text, x, y } = props
 
@@ -108,6 +178,18 @@
             context.textBaseline = baseline
             context.fillText(text, x, y)
         }
+    }
+
+    function drawLine(context, vertexI: Vertex, vertexJ: Vertex) {
+        if (!context) {
+            return
+        }
+
+        context.beginPath()
+        context.moveTo(vertexI.x, vertexI.y)
+        context.lineTo(vertexJ.x, vertexJ.y)
+        context.strokeStyle = '#ff0000'
+        context.stroke();
     }
 
     function getDistance(vertexI: Vertex, vertexJ: Vertex): number {
@@ -141,6 +223,10 @@
         return { value: nearestValue, index: nearestIndex }
     }
 </script>
+
+<svelte:window
+        on:mouseup={handleMouseUp}
+        on:mousemove={handleMouseMove} />
 
 <!-- The following allows this component to nest children -->
 <slot></slot>
