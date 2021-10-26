@@ -1,8 +1,11 @@
 <script lang="ts">
     import { renderable, width, height } from './game.js'
 
-    export let color = '#ffe554'
-    export let size = 10
+    export let vertexColor = '#ffe554'
+    export let vertexSize = 10
+    export let showVertexLabel = true
+    export let vertexLabelColor = 'hsl(0, 0%, 100%)'
+    export let vertexLabelSize = 8
 
     interface Vertex {
         x: number
@@ -16,7 +19,7 @@
 
     let vertexes: Vertex[] = []
     let edges: Edge[] = []
-    let minDistance = 45
+    let minDistance = 80
 
     renderable((props) => {
         const { context } = props
@@ -24,14 +27,14 @@
         for (let vertex of vertexes) {
             context.lineCap = 'round'
             context.beginPath()
-            context.fillStyle = color
-            context.strokeStyle = color
+            context.fillStyle = vertexColor
+            context.strokeStyle = vertexColor
             context.lineWidth = 3
-            context.arc(vertex.x, vertex.y, size, 0, Math.PI * 2)
+            context.arc(vertex.x, vertex.y, vertexSize, 0, Math.PI * 2)
             context.fill()
 
             let text = `(${vertex.x}, ${vertex.y})`
-            drawText({ context, text, x: vertex.x, y: vertex.y + size + 10 })
+            drawText({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })
         }
     });
 
@@ -41,7 +44,7 @@
 
         let nearest = getNearestVertex(x, y)
 
-        if (nearest.value <= size && nearest.index != -1) {
+        if (nearest.value <= vertexSize + 10 && nearest.index != -1) {
             vertexes = [...vertexes.slice(0, nearest.index), ...vertexes.slice(nearest.index + 1, vertexes.length)]
         }
 
@@ -56,19 +59,20 @@
     function drawText(props) {
         const { context, text, x, y } = props
 
-        let color = 'hsl(0, 0%, 100%)';
-        let align = 'center';
-        let baseline = 'top';
+        if (!showVertexLabel) {
+            return
+        }
 
-        let fontSize = 8;
-        let fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica';
+        let align = 'center'
+        let baseline = 'top'
+        let fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica'
 
         if (text && context) {
-            context.fillStyle = color;
-            context.font = `${fontSize}px ${fontFamily}`;
-            context.textAlign = align;
-            context.textBaseline = baseline;
-            context.fillText(text, x, y);
+            context.fillStyle = vertexLabelColor
+            context.font = `${vertexLabelSize}px ${fontFamily}`
+            context.textAlign = align
+            context.textBaseline = baseline
+            context.fillText(text, x, y)
         }
     }
 

@@ -35,9 +35,12 @@
 	let lang = new URLSearchParams(location.search).get("lang") || "en"
 	let showSettings = true
 	let showFPS = true
+	let showVertexLabel = true
 	let simulationsPerFrame = 5
-	let drawConnections = true
-	let selectedId = 0
+	let vertexColorId = 0
+	let vertexSize = 10
+	let vertexLabelColorId = 9
+	let vertexLabelSize = 8
 
 	let graphComponent
 	let graphClickHandler
@@ -55,7 +58,14 @@
 	<Background color='hsl(0, 0%, 10%)'>
 		<DotGrid divisions={30} color='hsla(0, 0%, 100%, 0.5)' />
 	</Background>
-	<Graph bind:this={graphComponent} color={COLORS[selectedId]} />
+	<Graph
+			bind:this={graphComponent}
+			vertexColor={COLORS[vertexColorId]}
+			vertexSize={vertexSize}
+			showVertexLabel={showVertexLabel}
+			vertexLabelSize={vertexLabelSize}
+			vertexLabelColor={COLORS[vertexLabelColorId]}
+	/>
 	<Text
 			text='Click and drag around the page to move the character.'
 			fontSize={12}
@@ -68,7 +78,6 @@
 </Canvas>
 <div class="controls" class:controls_opened={showSettings}>
 	{#if showSettings}
-		<!-- <div class="controls__col"> -->
 		<div class="controls-block">
 			<div class="buttons-row">
 				<button on:click={() => (showSettings = false)}>
@@ -146,10 +155,20 @@
 			</h2>
 			<ParticleSelector
 					colors={COLORS}
-					bind:selectedId
+					bind:selectedId={vertexColorId}
 			/>
 		</div>
-
+		{#if showVertexLabel}
+			<div class="controls-block">
+				<h2 class="controls-block__title">
+					{getTranslation(lang, "vertexLabelColor")}
+				</h2>
+				<ParticleSelector
+						colors={COLORS}
+						bind:selectedId={vertexLabelColorId}
+				/>
+			</div>
+		{/if}
 		<div class="controls-block">
 			<h2 class="controls-block__title">
 				{getTranslation(lang, "graphicalSettings")}
@@ -159,16 +178,23 @@
 					bind:checked={showFPS}
 			/>
 			<Checkbox
-					title={getTranslation(lang, "changeFormBySpeed")}
-					bind:checked={drawConnections}
+					title={getTranslation(lang, "showVertexLabel")}
+					bind:checked={showVertexLabel}
 			/>
-			{#if drawConnections}
+			<InputRange
+					name={getTranslation(lang, "vertexSize")}
+					min={5}
+					max={20}
+					step={0.3}
+					bind:value={vertexSize}
+			/>
+			{#if showVertexLabel}
 				<InputRange
-						name={getTranslation(lang, "displacementMultiplier")}
-						min={1}
-						max={10}
+						name={getTranslation(lang, "vertexLabelSize")}
+						min={8}
+						max={16}
 						step={1}
-						bind:value={simulationsPerFrame}
+						bind:value={vertexLabelSize}
 				/>
 			{/if}
 		</div>

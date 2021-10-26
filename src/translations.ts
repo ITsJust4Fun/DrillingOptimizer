@@ -76,7 +76,23 @@ export default {
     ru: "Показать FPS",
   },
   vertexColor: {
-    en: "Vertex Color",
+    en: "Vertex color",
     ru: "Цвет вершин",
+  },
+  vertexSize: {
+    en: "Vertex size",
+    ru: "Размер вершин",
+  },
+  showVertexLabel: {
+    en: "Show vertex label",
+    ru: "Показывать координаты вершин",
+  },
+  vertexLabelSize: {
+    en: "Vertex label size",
+    ru: "Размер шрифта координат вершины",
+  },
+  vertexLabelColor: {
+    en: "Vertex label color",
+    ru: "Цвет шрифта координат вершины",
   }
 } as { [phrase: string]: { [lang: string]: string } };
