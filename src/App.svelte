@@ -55,7 +55,7 @@
 	<Background color='hsl(0, 0%, 10%)'>
 		<DotGrid divisions={30} color='hsla(0, 0%, 100%, 0.5)' />
 	</Background>
-	<Graph bind:this={graphComponent} />
+	<Graph bind:this={graphComponent} color={COLORS[selectedId]} />
 	<Text
 			text='Click and drag around the page to move the character.'
 			fontSize={12}
@@ -142,7 +142,7 @@
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">
-				{getTranslation(lang, "particleBrush")}
+				{getTranslation(lang, "vertexColor")}
 			</h2>
 			<ParticleSelector
 					colors={COLORS}

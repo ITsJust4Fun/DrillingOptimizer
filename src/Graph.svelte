@@ -104,10 +104,5 @@
     }
 </script>
 
-<svelte:component on:click={handleClick} this={this}/>
-
-<!--<svelte:window
-        on:mousedown={handleMouseDown}/> -->
-
 <!-- The following allows this component to nest children -->
 <slot></slot>

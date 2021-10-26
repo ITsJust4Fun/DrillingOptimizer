@@ -5,7 +5,6 @@
 	export let show = true
 
 	let text = ''
-	let elapsed = 0
 	let frames = 0
 	let prevTime = performance.now()
 

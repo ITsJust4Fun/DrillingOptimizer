@@ -74,5 +74,9 @@ export default {
   showFPS: {
     en: "Show FPS",
     ru: "Показать FPS",
+  },
+  vertexColor: {
+    en: "Vertex Color",
+    ru: "Цвет вершин",
   }
 } as { [phrase: string]: { [lang: string]: string } };
