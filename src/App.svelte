@@ -34,6 +34,7 @@
 
 	let lang = new URLSearchParams(location.search).get("lang") || "en"
 	let showSettings = true
+	let showFPS = true
 	let simulationsPerFrame = 5
 	let drawConnections = true
 	let selectedId = 0
@@ -61,8 +62,9 @@
 			align='right'
 			baseline='bottom'
 			x={$width - 20}
-			y={$height - 20} />
-	<FPS />
+			y={$height - 20}
+	/>
+	<FPS show={showFPS} />
 </Canvas>
 <div class="controls" class:controls_opened={showSettings}>
 	{#if showSettings}
@@ -153,8 +155,8 @@
 				{getTranslation(lang, "graphicalSettings")}
 			</h2>
 			<Checkbox
-					title={getTranslation(lang, "drawConnections")}
-					bind:checked={drawConnections}
+					title={getTranslation(lang, "showFPS")}
+					bind:checked={showFPS}
 			/>
 			<Checkbox
 					title={getTranslation(lang, "changeFormBySpeed")}

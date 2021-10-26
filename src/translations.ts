@@ -70,5 +70,9 @@ export default {
   displacementMultiplier: {
     en: "Displacement multiplier",
     ru: "Множитель искажения",
+  },
+  showFPS: {
+    en: "Show FPS",
+    ru: "Показать FPS",
   }
 } as { [phrase: string]: { [lang: string]: string } };
