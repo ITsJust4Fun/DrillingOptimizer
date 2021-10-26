@@ -6,6 +6,7 @@
     export let showVertexLabel = true
     export let vertexLabelColor = 'hsl(0, 0%, 100%)'
     export let vertexLabelSize = 8
+    export let vertexesGenerationCount = 30
 
     interface Vertex {
         x: number
@@ -36,7 +37,7 @@
             let text = `(${vertex.x}, ${vertex.y})`
             drawText({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })
         }
-    });
+    })
 
     export function handleClick(ev) {
         let x = ev.clientX
@@ -59,6 +60,34 @@
     export function removeAllVertexes() {
         edges = []
         vertexes = []
+    }
+
+    function getRandomInt(min: number, max:number): number {
+        return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+
+    export function generateVertexes() {
+        removeAllVertexes()
+        let attempts = 0
+
+        while (vertexes.length !== vertexesGenerationCount && attempts !== 5000) {
+            let x = getRandomInt(0, $width - 1)
+            let y = getRandomInt(0, $height - 1)
+
+            let nearest = getNearestVertex(x, y)
+
+            if (nearest.value < minDistance && nearest.index != -1) {
+                attempts++
+                continue
+            }
+
+            let vertex: Vertex = { x, y }
+            vertexes = [...vertexes, vertex]
+
+            attempts = 0
+        }
+
+        console.log(`Generated ${vertexes.length} vertexes`)
     }
 
     function drawText(props) {

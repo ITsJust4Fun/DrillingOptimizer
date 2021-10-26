@@ -102,5 +102,13 @@ export default {
   removeAllVertexes: {
     en: "Remove all vertexes",
     ru: "Удалить все вершины",
+  },
+  generateVertexes: {
+    en: "Generate vertexes",
+    ru: "Генерировать вершины",
+  },
+  vertexesGenerationCount: {
+    en: "Vertexes generation count",
+    ru: "Количество генерируемых вершин",
   }
 } as { [phrase: string]: { [lang: string]: string } };

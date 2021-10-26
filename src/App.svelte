@@ -5,7 +5,7 @@
 	import Canvas from './Canvas.svelte'
 	import Background from './Background.svelte'
 	import DotGrid from './DotGrid.svelte'
-	import Graph from './Graph.svelte'
+	import Graph, {generateVertexes, vertexesGenerationCount} from './Graph.svelte'
 	import Text from './Text.svelte'
 	import FPS from './FPS.svelte'
 	import InputRange from "./InputRange.svelte"
@@ -36,15 +36,17 @@
 	let showSettings = true
 	let showFPS = true
 	let showVertexLabel = true
-	let simulationsPerFrame = 5
 	let vertexColorId = 0
 	let vertexSize = 10
 	let vertexLabelColorId = 9
 	let vertexLabelSize = 8
+	let vertexesGenerationCount = 30
 
 	let graphComponent
 	let graphClickHandler
 	let graphRemoveVertexesHandler
+	let graphGenerateVertexesHandler
+
 
 	onMount(function(){
 		graphClickHandler = function(ev){
@@ -52,6 +54,9 @@
 		}
 		graphRemoveVertexesHandler = function(){
 			graphComponent.removeAllVertexes()
+		}
+		graphGenerateVertexesHandler = function(){
+			graphComponent.generateVertexes()
 		}
 	})
 
@@ -69,6 +74,7 @@
 			showVertexLabel={showVertexLabel}
 			vertexLabelSize={vertexLabelSize}
 			vertexLabelColor={COLORS[vertexLabelColorId]}
+			vertexesGenerationCount={vertexesGenerationCount}
 	/>
 	<Text
 			text='Click and drag around the page to move the character.'
@@ -101,6 +107,18 @@
 					{getTranslation(lang, "removeAllVertexes")}
 				</button>
 			</div>
+			<div class="buttons-row">
+				<button on:click={graphGenerateVertexesHandler}>
+					{getTranslation(lang, "generateVertexes")}
+				</button>
+			</div>
+			<InputRange
+					name={getTranslation(lang, "vertexesGenerationCount")}
+					min={2}
+					max={100}
+					step={1}
+					bind:value={vertexesGenerationCount}
+			/>
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">
@@ -212,6 +230,7 @@
 	}
 	.buttons-row {
 		display: flex;
+		margin-bottom: 10px;
 	}
 	.buttons-row button {
 		width: 100%;
