@@ -57,7 +57,7 @@
             context.fill()
 
             let text = `(${vertex.x}, ${vertex.y})`
-            drawText({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })
+            drawVertexLabel({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })
         }
     })
 
@@ -171,7 +171,7 @@
         }
     }
 
-    function drawText(props) {
+    function drawVertexLabel(props) {
         const { context, text, x, y } = props
 
         if (!showVertexLabel) {
@@ -201,7 +201,43 @@
         context.lineTo(vertexJ.x, vertexJ.y)
         context.strokeStyle = edgeColor
         context.lineWidth = edgeSize
-        context.stroke();
+        context.stroke()
+
+        drawEdgeLabel(context, vertexI, vertexJ)
+    }
+
+    function drawEdgeLabel(context, vertexI: Vertex, vertexJ: Vertex) {
+        if (!context) {
+            return
+        }
+
+        let label = String(Math.round(getDistance(vertexI, vertexJ)))
+        let x = (vertexI.x + vertexJ.x) / 2
+        let y = (vertexI.y + vertexJ.y + 10) / 2
+
+        let align = 'center'
+        let baseline = 'top'
+        let fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica'
+
+        context.beginPath()
+        context.fillStyle = vertexLabelColor
+        context.font = `${vertexLabelSize}px ${fontFamily}`
+        context.textAlign = align
+        context.textBaseline = baseline
+        context.save()
+        context.translate(x, y)
+        context.rotate(angle(vertexI.x, vertexI.y, vertexJ.x, vertexJ.y))
+        context.fillText(label, 0, 0)
+        context.restore()
+    }
+
+    function angle(cx, cy, ex, ey) {
+        let dy = ey - cy
+        let dx = ex - cx
+        let theta = Math.atan2(dy, dx) // range (-PI, PI]
+        //theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
+        //if (theta < 0) theta = 360 + theta; // range [0, 360)
+        return theta >= -(Math.PI/2) && theta <= (Math.PI/2) ? theta : theta + Math.PI
     }
 
     function getDistance(vertexI: Vertex, vertexJ: Vertex): number {
