@@ -5,7 +5,7 @@
 	import Canvas from './Canvas.svelte'
 	import Background from './Background.svelte'
 	import DotGrid from './DotGrid.svelte'
-	import Graph from './Graph.svelte'
+	import Graph, {removeAllEdges} from './Graph.svelte'
 	import Text from './Text.svelte'
 	import FPS from './FPS.svelte'
 	import InputRange from "./InputRange.svelte"
@@ -36,6 +36,7 @@
 	let showSettings = true
 	let showFPS = true
 	let showVertexLabel = true
+	let removeEdgesOnMoving = false
 	let vertexColorId = 0
 	let vertexSize = 10
 	let vertexLabelColorId = 9
@@ -46,6 +47,7 @@
 	let graphClickHandler
 	let graphMouseDownHandler
 	let graphRemoveVertexesHandler
+	let graphRemoveEdgesHandler
 	let graphGenerateVertexesHandler
 	let graphFillEdgesInAddingOrderHandler
 
@@ -59,6 +61,9 @@
 		}
 		graphRemoveVertexesHandler = function(){
 			graphComponent.removeAllVertexes()
+		}
+		graphRemoveEdgesHandler = function(){
+			graphComponent.removeAllEdges()
 		}
 		graphGenerateVertexesHandler = function(){
 			graphComponent.generateVertexes()
@@ -80,6 +85,7 @@
 			vertexColor={COLORS[vertexColorId]}
 			vertexSize={vertexSize}
 			showVertexLabel={showVertexLabel}
+			removeEdgesOnMoving={removeEdgesOnMoving}
 			vertexLabelSize={vertexLabelSize}
 			vertexLabelColor={COLORS[vertexLabelColorId]}
 			vertexesGenerationCount={vertexesGenerationCount}
@@ -110,9 +116,18 @@
 			<h2 class="controls-block__title">
 				{getTranslation(lang, "graphSettings")}
 			</h2>
+			<Checkbox
+					title={getTranslation(lang, "removeEdgesOnMoving")}
+					bind:checked={removeEdgesOnMoving}
+			/>
 			<div class="buttons-row">
 				<button on:click={graphRemoveVertexesHandler}>
 					{getTranslation(lang, "removeAllVertexes")}
+				</button>
+			</div>
+			<div class="buttons-row">
+				<button on:click={graphRemoveEdgesHandler}>
+					{getTranslation(lang, "removeAllEdges")}
 				</button>
 			</div>
 			<div class="buttons-row">

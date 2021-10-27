@@ -4,6 +4,7 @@
     export let vertexColor = '#ffe554'
     export let vertexSize = 10
     export let showVertexLabel = true
+    export let removeEdgesOnMoving = false
     export let vertexLabelColor = 'hsl(0, 0%, 100%)'
     export let vertexLabelSize = 8
     export let vertexesGenerationCount = 30
@@ -34,6 +35,10 @@
 
         if (mouseDown && movingVertexId !== -1 && Date.now() - time > CLICK_TIME_MS) {
             vertexes[movingVertexId] = mouse
+
+            if (removeEdgesOnMoving) {
+                edges = []
+            }
         }
 
         for (let edge of edges) {
@@ -113,6 +118,10 @@
         handleMouseMove(ev)
         mouseDown = false
         movingVertexId = -1
+    }
+
+    export function removeAllEdges() {
+        edges = []
     }
 
     export function removeAllVertexes() {

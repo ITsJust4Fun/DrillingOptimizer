@@ -47,6 +47,10 @@ export default {
     en: "Remove all vertexes",
     ru: "Удалить все вершины",
   },
+  removeAllEdges: {
+    en: "Remove all edges",
+    ru: "Удалить все грани",
+  },
   generateVertexes: {
     en: "Generate vertexes",
     ru: "Генерировать вершины",
@@ -58,5 +62,9 @@ export default {
   fillEdgesInAddingOrder: {
     en: "Fill edges in adding order",
     ru: "Заполнить грани по порядку",
+  },
+  removeEdgesOnMoving: {
+    en: "Remove edges on moving",
+    ru: "Удалять грани при перемещении",
   }
 } as { [phrase: string]: { [lang: string]: string } };
