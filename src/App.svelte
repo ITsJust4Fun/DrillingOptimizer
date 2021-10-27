@@ -95,7 +95,7 @@
 			vertexesGenerationCount={vertexesGenerationCount}
 	/>
 	<Text
-			text='Click and drag around the page to move the character.'
+			text='Click to add vertex.'
 			fontSize={12}
 			align='right'
 			baseline='bottom'

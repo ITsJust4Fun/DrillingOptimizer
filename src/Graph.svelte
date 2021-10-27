@@ -235,8 +235,6 @@
         let dy = ey - cy
         let dx = ex - cx
         let theta = Math.atan2(dy, dx) // range (-PI, PI]
-        //theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
-        //if (theta < 0) theta = 360 + theta; // range [0, 360)
         return theta >= -(Math.PI/2) && theta <= (Math.PI/2) ? theta : theta + Math.PI
     }
 
