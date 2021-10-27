@@ -1331,8 +1331,8 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	const default_slot_template = /*#slots*/ ctx[16].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[15], null);
+    	const default_slot_template = /*#slots*/ ctx[18].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[17], null);
 
     	const block = {
     		c: function create() {
@@ -1359,15 +1359,15 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 32768)) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 131072)) {
     					update_slot_base(
     						default_slot,
     						default_slot_template,
     						ctx,
-    						/*$$scope*/ ctx[15],
+    						/*$$scope*/ ctx[17],
     						!current
-    						? get_all_dirty_from_scope(/*$$scope*/ ctx[15])
-    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[15], dirty, null),
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[17])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[17], dirty, null),
     						null
     					);
     				}
@@ -1406,18 +1406,6 @@ var app = (function () {
     	return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function drawLine(context, vertexI, vertexJ) {
-    	if (!context) {
-    		return;
-    	}
-
-    	context.beginPath();
-    	context.moveTo(vertexI.x, vertexI.y);
-    	context.lineTo(vertexJ.x, vertexJ.y);
-    	context.strokeStyle = '#ff0000';
-    	context.stroke();
-    }
-
     function getDistance(vertexI, vertexJ) {
     	if (vertexI.x === vertexJ.x && vertexI.y === vertexJ.y) {
     		return 0;
@@ -1434,13 +1422,15 @@ var app = (function () {
     	let $height;
     	let $width;
     	validate_store(height, 'height');
-    	component_subscribe($$self, height, $$value => $$invalidate(23, $height = $$value));
+    	component_subscribe($$self, height, $$value => $$invalidate(25, $height = $$value));
     	validate_store(width, 'width');
-    	component_subscribe($$self, width, $$value => $$invalidate(24, $width = $$value));
+    	component_subscribe($$self, width, $$value => $$invalidate(26, $width = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Graph', slots, ['default']);
     	let { vertexColor = '#ffe554' } = $$props;
+    	let { edgeColor = '#ffe554' } = $$props;
     	let { vertexSize = 10 } = $$props;
+    	let { edgeSize = 3 } = $$props;
     	let { showVertexLabel = true } = $$props;
     	let { removeEdgesOnMoving = false } = $$props;
     	let { vertexLabelColor = 'hsl(0, 0%, 100%)' } = $$props;
@@ -1613,6 +1603,19 @@ var app = (function () {
     		}
     	}
 
+    	function drawLine(context, vertexI, vertexJ) {
+    		if (!context) {
+    			return;
+    		}
+
+    		context.beginPath();
+    		context.moveTo(vertexI.x, vertexI.y);
+    		context.lineTo(vertexJ.x, vertexJ.y);
+    		context.strokeStyle = edgeColor;
+    		context.lineWidth = edgeSize;
+    		context.stroke();
+    	}
+
     	function getNearestVertex(x, y) {
     		let nearestIndex = -1;
     		let nearestValue = -1;
@@ -1632,7 +1635,9 @@ var app = (function () {
 
     	const writable_props = [
     		'vertexColor',
+    		'edgeColor',
     		'vertexSize',
+    		'edgeSize',
     		'showVertexLabel',
     		'removeEdgesOnMoving',
     		'vertexLabelColor',
@@ -1646,13 +1651,15 @@ var app = (function () {
 
     	$$self.$$set = $$props => {
     		if ('vertexColor' in $$props) $$invalidate(2, vertexColor = $$props.vertexColor);
-    		if ('vertexSize' in $$props) $$invalidate(3, vertexSize = $$props.vertexSize);
-    		if ('showVertexLabel' in $$props) $$invalidate(4, showVertexLabel = $$props.showVertexLabel);
-    		if ('removeEdgesOnMoving' in $$props) $$invalidate(5, removeEdgesOnMoving = $$props.removeEdgesOnMoving);
-    		if ('vertexLabelColor' in $$props) $$invalidate(6, vertexLabelColor = $$props.vertexLabelColor);
-    		if ('vertexLabelSize' in $$props) $$invalidate(7, vertexLabelSize = $$props.vertexLabelSize);
-    		if ('vertexesGenerationCount' in $$props) $$invalidate(8, vertexesGenerationCount = $$props.vertexesGenerationCount);
-    		if ('$$scope' in $$props) $$invalidate(15, $$scope = $$props.$$scope);
+    		if ('edgeColor' in $$props) $$invalidate(3, edgeColor = $$props.edgeColor);
+    		if ('vertexSize' in $$props) $$invalidate(4, vertexSize = $$props.vertexSize);
+    		if ('edgeSize' in $$props) $$invalidate(5, edgeSize = $$props.edgeSize);
+    		if ('showVertexLabel' in $$props) $$invalidate(6, showVertexLabel = $$props.showVertexLabel);
+    		if ('removeEdgesOnMoving' in $$props) $$invalidate(7, removeEdgesOnMoving = $$props.removeEdgesOnMoving);
+    		if ('vertexLabelColor' in $$props) $$invalidate(8, vertexLabelColor = $$props.vertexLabelColor);
+    		if ('vertexLabelSize' in $$props) $$invalidate(9, vertexLabelSize = $$props.vertexLabelSize);
+    		if ('vertexesGenerationCount' in $$props) $$invalidate(10, vertexesGenerationCount = $$props.vertexesGenerationCount);
+    		if ('$$scope' in $$props) $$invalidate(17, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -1660,7 +1667,9 @@ var app = (function () {
     		width,
     		height,
     		vertexColor,
+    		edgeColor,
     		vertexSize,
+    		edgeSize,
     		showVertexLabel,
     		removeEdgesOnMoving,
     		vertexLabelColor,
@@ -1693,12 +1702,14 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ('vertexColor' in $$props) $$invalidate(2, vertexColor = $$props.vertexColor);
-    		if ('vertexSize' in $$props) $$invalidate(3, vertexSize = $$props.vertexSize);
-    		if ('showVertexLabel' in $$props) $$invalidate(4, showVertexLabel = $$props.showVertexLabel);
-    		if ('removeEdgesOnMoving' in $$props) $$invalidate(5, removeEdgesOnMoving = $$props.removeEdgesOnMoving);
-    		if ('vertexLabelColor' in $$props) $$invalidate(6, vertexLabelColor = $$props.vertexLabelColor);
-    		if ('vertexLabelSize' in $$props) $$invalidate(7, vertexLabelSize = $$props.vertexLabelSize);
-    		if ('vertexesGenerationCount' in $$props) $$invalidate(8, vertexesGenerationCount = $$props.vertexesGenerationCount);
+    		if ('edgeColor' in $$props) $$invalidate(3, edgeColor = $$props.edgeColor);
+    		if ('vertexSize' in $$props) $$invalidate(4, vertexSize = $$props.vertexSize);
+    		if ('edgeSize' in $$props) $$invalidate(5, edgeSize = $$props.edgeSize);
+    		if ('showVertexLabel' in $$props) $$invalidate(6, showVertexLabel = $$props.showVertexLabel);
+    		if ('removeEdgesOnMoving' in $$props) $$invalidate(7, removeEdgesOnMoving = $$props.removeEdgesOnMoving);
+    		if ('vertexLabelColor' in $$props) $$invalidate(8, vertexLabelColor = $$props.vertexLabelColor);
+    		if ('vertexLabelSize' in $$props) $$invalidate(9, vertexLabelSize = $$props.vertexLabelSize);
+    		if ('vertexesGenerationCount' in $$props) $$invalidate(10, vertexesGenerationCount = $$props.vertexesGenerationCount);
     		if ('vertexes' in $$props) vertexes = $$props.vertexes;
     		if ('edges' in $$props) edges = $$props.edges;
     		if ('minDistance' in $$props) minDistance = $$props.minDistance;
@@ -1716,7 +1727,9 @@ var app = (function () {
     		handleMouseMove,
     		handleMouseUp,
     		vertexColor,
+    		edgeColor,
     		vertexSize,
+    		edgeSize,
     		showVertexLabel,
     		removeEdgesOnMoving,
     		vertexLabelColor,
@@ -1739,18 +1752,20 @@ var app = (function () {
 
     		init(this, options, instance$6, create_fragment$6, safe_not_equal, {
     			vertexColor: 2,
-    			vertexSize: 3,
-    			showVertexLabel: 4,
-    			removeEdgesOnMoving: 5,
-    			vertexLabelColor: 6,
-    			vertexLabelSize: 7,
-    			vertexesGenerationCount: 8,
-    			handleClick: 9,
-    			handleMouseDown: 10,
-    			removeAllEdges: 11,
-    			removeAllVertexes: 12,
-    			generateVertexes: 13,
-    			fillEdgesInAddingOrder: 14
+    			edgeColor: 3,
+    			vertexSize: 4,
+    			edgeSize: 5,
+    			showVertexLabel: 6,
+    			removeEdgesOnMoving: 7,
+    			vertexLabelColor: 8,
+    			vertexLabelSize: 9,
+    			vertexesGenerationCount: 10,
+    			handleClick: 11,
+    			handleMouseDown: 12,
+    			removeAllEdges: 13,
+    			removeAllVertexes: 14,
+    			generateVertexes: 15,
+    			fillEdgesInAddingOrder: 16
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -1769,11 +1784,27 @@ var app = (function () {
     		throw new Error("<Graph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
+    	get edgeColor() {
+    		throw new Error("<Graph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set edgeColor(value) {
+    		throw new Error("<Graph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
     	get vertexSize() {
     		throw new Error("<Graph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	set vertexSize(value) {
+    		throw new Error("<Graph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get edgeSize() {
+    		throw new Error("<Graph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set edgeSize(value) {
     		throw new Error("<Graph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
@@ -1818,7 +1849,7 @@ var app = (function () {
     	}
 
     	get handleClick() {
-    		return this.$$.ctx[9];
+    		return this.$$.ctx[11];
     	}
 
     	set handleClick(value) {
@@ -1826,7 +1857,7 @@ var app = (function () {
     	}
 
     	get handleMouseDown() {
-    		return this.$$.ctx[10];
+    		return this.$$.ctx[12];
     	}
 
     	set handleMouseDown(value) {
@@ -1834,7 +1865,7 @@ var app = (function () {
     	}
 
     	get removeAllEdges() {
-    		return this.$$.ctx[11];
+    		return this.$$.ctx[13];
     	}
 
     	set removeAllEdges(value) {
@@ -1842,7 +1873,7 @@ var app = (function () {
     	}
 
     	get removeAllVertexes() {
-    		return this.$$.ctx[12];
+    		return this.$$.ctx[14];
     	}
 
     	set removeAllVertexes(value) {
@@ -1850,7 +1881,7 @@ var app = (function () {
     	}
 
     	get generateVertexes() {
-    		return this.$$.ctx[13];
+    		return this.$$.ctx[15];
     	}
 
     	set generateVertexes(value) {
@@ -1858,7 +1889,7 @@ var app = (function () {
     	}
 
     	get fillEdgesInAddingOrder() {
-    		return this.$$.ctx[14];
+    		return this.$$.ctx[16];
     	}
 
     	set fillEdgesInAddingOrder(value) {
@@ -2100,16 +2131,16 @@ var app = (function () {
     				text: /*text*/ ctx[0],
     				fontSize: "12",
     				fontFamily: "Courier New",
-    				align: "right",
+    				align: "left",
     				baseline: "top",
-    				x: /*$width*/ ctx[1] - 20,
+    				x: 20,
     				y: 20
     			},
     			$$inline: true
     		});
 
-    	const default_slot_template = /*#slots*/ ctx[4].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[3], null);
+    	const default_slot_template = /*#slots*/ ctx[3].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[2], null);
 
     	const block = {
     		c: function create() {
@@ -2133,19 +2164,18 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			const text_1_changes = {};
     			if (dirty & /*text*/ 1) text_1_changes.text = /*text*/ ctx[0];
-    			if (dirty & /*$width*/ 2) text_1_changes.x = /*$width*/ ctx[1] - 20;
     			text_1.$set(text_1_changes);
 
     			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 8)) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 4)) {
     					update_slot_base(
     						default_slot,
     						default_slot_template,
     						ctx,
-    						/*$$scope*/ ctx[3],
+    						/*$$scope*/ ctx[2],
     						!current
-    						? get_all_dirty_from_scope(/*$$scope*/ ctx[3])
-    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[3], dirty, null),
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[2])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[2], dirty, null),
     						null
     					);
     				}
@@ -2181,9 +2211,6 @@ var app = (function () {
     }
 
     function instance$4($$self, $$props, $$invalidate) {
-    	let $width;
-    	validate_store(width, 'width');
-    	component_subscribe($$self, width, $$value => $$invalidate(1, $width = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('FPS', slots, ['default']);
     	let { show = true } = $$props;
@@ -2214,8 +2241,8 @@ var app = (function () {
     	});
 
     	$$self.$$set = $$props => {
-    		if ('show' in $$props) $$invalidate(2, show = $$props.show);
-    		if ('$$scope' in $$props) $$invalidate(3, $$scope = $$props.$$scope);
+    		if ('show' in $$props) $$invalidate(1, show = $$props.show);
+    		if ('$$scope' in $$props) $$invalidate(2, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -2225,12 +2252,11 @@ var app = (function () {
     		show,
     		text,
     		frames,
-    		prevTime,
-    		$width
+    		prevTime
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('show' in $$props) $$invalidate(2, show = $$props.show);
+    		if ('show' in $$props) $$invalidate(1, show = $$props.show);
     		if ('text' in $$props) $$invalidate(0, text = $$props.text);
     		if ('frames' in $$props) frames = $$props.frames;
     		if ('prevTime' in $$props) prevTime = $$props.prevTime;
@@ -2240,13 +2266,13 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [text, $width, show, $$scope, slots];
+    	return [text, show, $$scope, slots];
     }
 
     class FPS extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { show: 2 });
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { show: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -2882,9 +2908,9 @@ var app = (function () {
             en: "Hide settings",
             ru: "Скрыть настройки"
         },
-        copyLink: {
-            en: "Copy link",
-            ru: "Копировать ссылку"
+        about: {
+            en: "About",
+            ru: "О программе"
         },
         graphicalSettings: {
             en: "Graphical settings",
@@ -2898,9 +2924,17 @@ var app = (function () {
             en: "Vertex color",
             ru: "Цвет вершин",
         },
+        edgeColor: {
+            en: "Edge color",
+            ru: "Цвет граней",
+        },
         vertexSize: {
             en: "Vertex size",
             ru: "Размер вершин",
+        },
+        edgeSize: {
+            en: "Edge size",
+            ru: "Размер грани",
         },
         showVertexLabel: {
             en: "Show vertex label",
@@ -2949,7 +2983,7 @@ var app = (function () {
     const { Object: Object_1 } = globals;
     const file = "src\\App.svelte";
 
-    // (69:1) <Background color='hsl(0, 0%, 10%)'>
+    // (71:1) <Background color='hsl(0, 0%, 10%)'>
     function create_default_slot_1(ctx) {
     	let dotgrid;
     	let current;
@@ -2989,14 +3023,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(69:1) <Background color='hsl(0, 0%, 10%)'>",
+    		source: "(71:1) <Background color='hsl(0, 0%, 10%)'>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (68:0) <Canvas onClick={graphClickHandler} onMouseDown={graphMouseDownHandler}>
+    // (70:0) <Canvas onClick={graphClickHandler} onMouseDown={graphMouseDownHandler}>
     function create_default_slot(ctx) {
     	let background;
     	let t0;
@@ -3017,17 +3051,19 @@ var app = (function () {
     		});
 
     	let graph_props = {
-    		vertexColor: /*COLORS*/ ctx[19][/*vertexColorId*/ ctx[4]],
-    		vertexSize: /*vertexSize*/ ctx[5],
+    		vertexColor: /*COLORS*/ ctx[21][/*vertexColorId*/ ctx[4]],
+    		edgeColor: /*COLORS*/ ctx[21][/*edgeColorId*/ ctx[5]],
+    		vertexSize: /*vertexSize*/ ctx[6],
+    		edgeSize: /*edgeSize*/ ctx[7],
     		showVertexLabel: /*showVertexLabel*/ ctx[2],
     		removeEdgesOnMoving: /*removeEdgesOnMoving*/ ctx[3],
-    		vertexLabelSize: /*vertexLabelSize*/ ctx[7],
-    		vertexLabelColor: /*COLORS*/ ctx[19][/*vertexLabelColorId*/ ctx[6]],
-    		vertexesGenerationCount: /*vertexesGenerationCount*/ ctx[8]
+    		vertexLabelSize: /*vertexLabelSize*/ ctx[9],
+    		vertexLabelColor: /*COLORS*/ ctx[21][/*vertexLabelColorId*/ ctx[8]],
+    		vertexesGenerationCount: /*vertexesGenerationCount*/ ctx[10]
     	};
 
     	graph = new Graph({ props: graph_props, $$inline: true });
-    	/*graph_binding*/ ctx[21](graph);
+    	/*graph_binding*/ ctx[23](graph);
 
     	text_1 = new Text({
     			props: {
@@ -3035,8 +3071,8 @@ var app = (function () {
     				fontSize: 12,
     				align: "right",
     				baseline: "bottom",
-    				x: /*$width*/ ctx[16] - 20,
-    				y: /*$height*/ ctx[17] - 20
+    				x: /*$width*/ ctx[18] - 20,
+    				y: /*$height*/ ctx[19] - 20
     			},
     			$$inline: true
     		});
@@ -3069,23 +3105,25 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const background_changes = {};
 
-    			if (dirty[1] & /*$$scope*/ 2) {
+    			if (dirty[1] & /*$$scope*/ 64) {
     				background_changes.$$scope = { dirty, ctx };
     			}
 
     			background.$set(background_changes);
     			const graph_changes = {};
-    			if (dirty[0] & /*vertexColorId*/ 16) graph_changes.vertexColor = /*COLORS*/ ctx[19][/*vertexColorId*/ ctx[4]];
-    			if (dirty[0] & /*vertexSize*/ 32) graph_changes.vertexSize = /*vertexSize*/ ctx[5];
+    			if (dirty[0] & /*vertexColorId*/ 16) graph_changes.vertexColor = /*COLORS*/ ctx[21][/*vertexColorId*/ ctx[4]];
+    			if (dirty[0] & /*edgeColorId*/ 32) graph_changes.edgeColor = /*COLORS*/ ctx[21][/*edgeColorId*/ ctx[5]];
+    			if (dirty[0] & /*vertexSize*/ 64) graph_changes.vertexSize = /*vertexSize*/ ctx[6];
+    			if (dirty[0] & /*edgeSize*/ 128) graph_changes.edgeSize = /*edgeSize*/ ctx[7];
     			if (dirty[0] & /*showVertexLabel*/ 4) graph_changes.showVertexLabel = /*showVertexLabel*/ ctx[2];
     			if (dirty[0] & /*removeEdgesOnMoving*/ 8) graph_changes.removeEdgesOnMoving = /*removeEdgesOnMoving*/ ctx[3];
-    			if (dirty[0] & /*vertexLabelSize*/ 128) graph_changes.vertexLabelSize = /*vertexLabelSize*/ ctx[7];
-    			if (dirty[0] & /*vertexLabelColorId*/ 64) graph_changes.vertexLabelColor = /*COLORS*/ ctx[19][/*vertexLabelColorId*/ ctx[6]];
-    			if (dirty[0] & /*vertexesGenerationCount*/ 256) graph_changes.vertexesGenerationCount = /*vertexesGenerationCount*/ ctx[8];
+    			if (dirty[0] & /*vertexLabelSize*/ 512) graph_changes.vertexLabelSize = /*vertexLabelSize*/ ctx[9];
+    			if (dirty[0] & /*vertexLabelColorId*/ 256) graph_changes.vertexLabelColor = /*COLORS*/ ctx[21][/*vertexLabelColorId*/ ctx[8]];
+    			if (dirty[0] & /*vertexesGenerationCount*/ 1024) graph_changes.vertexesGenerationCount = /*vertexesGenerationCount*/ ctx[10];
     			graph.$set(graph_changes);
     			const text_1_changes = {};
-    			if (dirty[0] & /*$width*/ 65536) text_1_changes.x = /*$width*/ ctx[16] - 20;
-    			if (dirty[0] & /*$height*/ 131072) text_1_changes.y = /*$height*/ ctx[17] - 20;
+    			if (dirty[0] & /*$width*/ 262144) text_1_changes.x = /*$width*/ ctx[18] - 20;
+    			if (dirty[0] & /*$height*/ 524288) text_1_changes.y = /*$height*/ ctx[19] - 20;
     			text_1.$set(text_1_changes);
     			const fps_changes = {};
     			if (dirty[0] & /*showFPS*/ 2) fps_changes.show = /*showFPS*/ ctx[1];
@@ -3109,7 +3147,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			destroy_component(background, detaching);
     			if (detaching) detach_dev(t0);
-    			/*graph_binding*/ ctx[21](null);
+    			/*graph_binding*/ ctx[23](null);
     			destroy_component(graph, detaching);
     			if (detaching) detach_dev(t1);
     			destroy_component(text_1, detaching);
@@ -3122,14 +3160,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(68:0) <Canvas onClick={graphClickHandler} onMouseDown={graphMouseDownHandler}>",
+    		source: "(70:0) <Canvas onClick={graphClickHandler} onMouseDown={graphMouseDownHandler}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (189:1) {:else}
+    // (211:1) {:else}
     function create_else_block(ctx) {
     	let button;
     	let mounted;
@@ -3138,15 +3176,15 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			button = element("button");
-    			button.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "showSettings")}`;
-    			attr_dev(button, "class", "svelte-kjw3bp");
-    			add_location(button, file, 189, 2, 5274);
+    			button.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "showSettings")}`;
+    			attr_dev(button, "class", "svelte-9ys6l6");
+    			add_location(button, file, 211, 2, 5759);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_2*/ ctx[31], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler_2*/ ctx[36], false, false, false);
     				mounted = true;
     			}
     		},
@@ -3164,14 +3202,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(189:1) {:else}",
+    		source: "(211:1) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (93:1) {#if showSettings}
+    // (97:1) {#if showSettings}
     function create_if_block(ctx) {
     	let div1;
     	let div0;
@@ -3203,32 +3241,41 @@ var app = (function () {
     	let div7;
     	let h21;
     	let t17;
-    	let colorselector;
+    	let colorselector0;
     	let updating_selectedId;
     	let t18;
     	let t19;
     	let div8;
     	let h22;
     	let t21;
+    	let colorselector1;
+    	let updating_selectedId_1;
+    	let t22;
+    	let div9;
+    	let h23;
+    	let t24;
     	let checkbox1;
     	let updating_checked_1;
-    	let t22;
+    	let t25;
     	let checkbox2;
     	let updating_checked_2;
-    	let t23;
+    	let t26;
     	let inputrange1;
     	let updating_value_1;
-    	let t24;
+    	let t27;
+    	let inputrange2;
+    	let updating_value_2;
+    	let t28;
     	let current;
     	let mounted;
     	let dispose;
 
     	function checkbox0_checked_binding(value) {
-    		/*checkbox0_checked_binding*/ ctx[23](value);
+    		/*checkbox0_checked_binding*/ ctx[26](value);
     	}
 
     	let checkbox0_props = {
-    		title: /*getTranslation*/ ctx[18](/*lang*/ ctx[20], "removeEdgesOnMoving")
+    		title: /*getTranslation*/ ctx[20](/*lang*/ ctx[22], "removeEdgesOnMoving")
     	};
 
     	if (/*removeEdgesOnMoving*/ ctx[3] !== void 0) {
@@ -3239,47 +3286,64 @@ var app = (function () {
     	binding_callbacks.push(() => bind(checkbox0, 'checked', checkbox0_checked_binding));
 
     	function inputrange0_value_binding(value) {
-    		/*inputrange0_value_binding*/ ctx[24](value);
+    		/*inputrange0_value_binding*/ ctx[27](value);
     	}
 
     	let inputrange0_props = {
-    		name: /*getTranslation*/ ctx[18](/*lang*/ ctx[20], "vertexesGenerationCount"),
+    		name: /*getTranslation*/ ctx[20](/*lang*/ ctx[22], "vertexesGenerationCount"),
     		min: 2,
     		max: 100,
     		step: 1
     	};
 
-    	if (/*vertexesGenerationCount*/ ctx[8] !== void 0) {
-    		inputrange0_props.value = /*vertexesGenerationCount*/ ctx[8];
+    	if (/*vertexesGenerationCount*/ ctx[10] !== void 0) {
+    		inputrange0_props.value = /*vertexesGenerationCount*/ ctx[10];
     	}
 
     	inputrange0 = new InputRange({ props: inputrange0_props, $$inline: true });
     	binding_callbacks.push(() => bind(inputrange0, 'value', inputrange0_value_binding));
 
-    	function colorselector_selectedId_binding(value) {
-    		/*colorselector_selectedId_binding*/ ctx[25](value);
+    	function colorselector0_selectedId_binding(value) {
+    		/*colorselector0_selectedId_binding*/ ctx[28](value);
     	}
 
-    	let colorselector_props = { colors: /*COLORS*/ ctx[19] };
+    	let colorselector0_props = { colors: /*COLORS*/ ctx[21] };
 
     	if (/*vertexColorId*/ ctx[4] !== void 0) {
-    		colorselector_props.selectedId = /*vertexColorId*/ ctx[4];
+    		colorselector0_props.selectedId = /*vertexColorId*/ ctx[4];
     	}
 
-    	colorselector = new ColorSelector({
-    			props: colorselector_props,
+    	colorselector0 = new ColorSelector({
+    			props: colorselector0_props,
     			$$inline: true
     		});
 
-    	binding_callbacks.push(() => bind(colorselector, 'selectedId', colorselector_selectedId_binding));
+    	binding_callbacks.push(() => bind(colorselector0, 'selectedId', colorselector0_selectedId_binding));
     	let if_block0 = /*showVertexLabel*/ ctx[2] && create_if_block_2(ctx);
 
+    	function colorselector1_selectedId_binding(value) {
+    		/*colorselector1_selectedId_binding*/ ctx[30](value);
+    	}
+
+    	let colorselector1_props = { colors: /*COLORS*/ ctx[21] };
+
+    	if (/*edgeColorId*/ ctx[5] !== void 0) {
+    		colorselector1_props.selectedId = /*edgeColorId*/ ctx[5];
+    	}
+
+    	colorselector1 = new ColorSelector({
+    			props: colorselector1_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(colorselector1, 'selectedId', colorselector1_selectedId_binding));
+
     	function checkbox1_checked_binding(value) {
-    		/*checkbox1_checked_binding*/ ctx[27](value);
+    		/*checkbox1_checked_binding*/ ctx[31](value);
     	}
 
     	let checkbox1_props = {
-    		title: /*getTranslation*/ ctx[18](/*lang*/ ctx[20], "showFPS")
+    		title: /*getTranslation*/ ctx[20](/*lang*/ ctx[22], "showFPS")
     	};
 
     	if (/*showFPS*/ ctx[1] !== void 0) {
@@ -3290,11 +3354,11 @@ var app = (function () {
     	binding_callbacks.push(() => bind(checkbox1, 'checked', checkbox1_checked_binding));
 
     	function checkbox2_checked_binding(value) {
-    		/*checkbox2_checked_binding*/ ctx[28](value);
+    		/*checkbox2_checked_binding*/ ctx[32](value);
     	}
 
     	let checkbox2_props = {
-    		title: /*getTranslation*/ ctx[18](/*lang*/ ctx[20], "showVertexLabel")
+    		title: /*getTranslation*/ ctx[20](/*lang*/ ctx[22], "showVertexLabel")
     	};
 
     	if (/*showVertexLabel*/ ctx[2] !== void 0) {
@@ -3305,22 +3369,40 @@ var app = (function () {
     	binding_callbacks.push(() => bind(checkbox2, 'checked', checkbox2_checked_binding));
 
     	function inputrange1_value_binding(value) {
-    		/*inputrange1_value_binding*/ ctx[29](value);
+    		/*inputrange1_value_binding*/ ctx[33](value);
     	}
 
     	let inputrange1_props = {
-    		name: /*getTranslation*/ ctx[18](/*lang*/ ctx[20], "vertexSize"),
+    		name: /*getTranslation*/ ctx[20](/*lang*/ ctx[22], "vertexSize"),
     		min: 5,
     		max: 20,
     		step: 0.3
     	};
 
-    	if (/*vertexSize*/ ctx[5] !== void 0) {
-    		inputrange1_props.value = /*vertexSize*/ ctx[5];
+    	if (/*vertexSize*/ ctx[6] !== void 0) {
+    		inputrange1_props.value = /*vertexSize*/ ctx[6];
     	}
 
     	inputrange1 = new InputRange({ props: inputrange1_props, $$inline: true });
     	binding_callbacks.push(() => bind(inputrange1, 'value', inputrange1_value_binding));
+
+    	function inputrange2_value_binding(value) {
+    		/*inputrange2_value_binding*/ ctx[34](value);
+    	}
+
+    	let inputrange2_props = {
+    		name: /*getTranslation*/ ctx[20](/*lang*/ ctx[22], "edgeSize"),
+    		min: 1,
+    		max: 10,
+    		step: 0.3
+    	};
+
+    	if (/*edgeSize*/ ctx[7] !== void 0) {
+    		inputrange2_props.value = /*edgeSize*/ ctx[7];
+    	}
+
+    	inputrange2 = new InputRange({ props: inputrange2_props, $$inline: true });
+    	binding_callbacks.push(() => bind(inputrange2, 'value', inputrange2_value_binding));
     	let if_block1 = /*showVertexLabel*/ ctx[2] && create_if_block_1(ctx);
 
     	const block = {
@@ -3328,90 +3410,102 @@ var app = (function () {
     			div1 = element("div");
     			div0 = element("div");
     			button0 = element("button");
-    			button0.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "hideSettings")}`;
+    			button0.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "about")}`;
     			t1 = space();
     			button1 = element("button");
-    			button1.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "copyLink")}`;
+    			button1.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "hideSettings")}`;
     			t3 = space();
     			div6 = element("div");
     			h20 = element("h2");
-    			h20.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "graphSettings")}`;
+    			h20.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "graphSettings")}`;
     			t5 = space();
     			create_component(checkbox0.$$.fragment);
     			t6 = space();
     			div2 = element("div");
     			button2 = element("button");
-    			button2.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "removeAllVertexes")}`;
+    			button2.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "removeAllVertexes")}`;
     			t8 = space();
     			div3 = element("div");
     			button3 = element("button");
-    			button3.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "removeAllEdges")}`;
+    			button3.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "removeAllEdges")}`;
     			t10 = space();
     			div4 = element("div");
     			button4 = element("button");
-    			button4.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "generateVertexes")}`;
+    			button4.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "generateVertexes")}`;
     			t12 = space();
     			create_component(inputrange0.$$.fragment);
     			t13 = space();
     			div5 = element("div");
     			button5 = element("button");
-    			button5.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "fillEdgesInAddingOrder")}`;
+    			button5.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "fillEdgesInAddingOrder")}`;
     			t15 = space();
     			div7 = element("div");
     			h21 = element("h2");
-    			h21.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "vertexColor")}`;
+    			h21.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "vertexColor")}`;
     			t17 = space();
-    			create_component(colorselector.$$.fragment);
+    			create_component(colorselector0.$$.fragment);
     			t18 = space();
     			if (if_block0) if_block0.c();
     			t19 = space();
     			div8 = element("div");
     			h22 = element("h2");
-    			h22.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "graphicalSettings")}`;
+    			h22.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "edgeColor")}`;
     			t21 = space();
-    			create_component(checkbox1.$$.fragment);
+    			create_component(colorselector1.$$.fragment);
     			t22 = space();
-    			create_component(checkbox2.$$.fragment);
-    			t23 = space();
-    			create_component(inputrange1.$$.fragment);
+    			div9 = element("div");
+    			h23 = element("h2");
+    			h23.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "graphicalSettings")}`;
     			t24 = space();
+    			create_component(checkbox1.$$.fragment);
+    			t25 = space();
+    			create_component(checkbox2.$$.fragment);
+    			t26 = space();
+    			create_component(inputrange1.$$.fragment);
+    			t27 = space();
+    			create_component(inputrange2.$$.fragment);
+    			t28 = space();
     			if (if_block1) if_block1.c();
-    			attr_dev(button0, "class", "svelte-kjw3bp");
-    			add_location(button0, file, 95, 4, 2881);
-    			attr_dev(button1, "class", "svelte-kjw3bp");
-    			add_location(button1, file, 98, 4, 2992);
-    			attr_dev(div0, "class", "buttons-row svelte-kjw3bp");
-    			add_location(div0, file, 94, 3, 2851);
-    			attr_dev(div1, "class", "controls-block svelte-kjw3bp");
-    			add_location(div1, file, 93, 2, 2819);
-    			attr_dev(h20, "class", "controls-block__title svelte-kjw3bp");
-    			add_location(h20, file, 104, 3, 3128);
-    			attr_dev(button2, "class", "svelte-kjw3bp");
-    			add_location(button2, file, 112, 4, 3365);
-    			attr_dev(div2, "class", "buttons-row svelte-kjw3bp");
-    			add_location(div2, file, 111, 3, 3335);
-    			attr_dev(button3, "class", "svelte-kjw3bp");
-    			add_location(button3, file, 117, 4, 3518);
-    			attr_dev(div3, "class", "buttons-row svelte-kjw3bp");
-    			add_location(div3, file, 116, 3, 3488);
-    			attr_dev(button4, "class", "svelte-kjw3bp");
-    			add_location(button4, file, 122, 4, 3665);
-    			attr_dev(div4, "class", "buttons-row svelte-kjw3bp");
-    			add_location(div4, file, 121, 3, 3635);
-    			attr_dev(button5, "class", "svelte-kjw3bp");
-    			add_location(button5, file, 134, 4, 3984);
-    			attr_dev(div5, "class", "buttons-row svelte-kjw3bp");
-    			add_location(div5, file, 133, 3, 3954);
-    			attr_dev(div6, "class", "controls-block svelte-kjw3bp");
-    			add_location(div6, file, 103, 2, 3096);
-    			attr_dev(h21, "class", "controls-block__title svelte-kjw3bp");
-    			add_location(h21, file, 140, 3, 4160);
-    			attr_dev(div7, "class", "controls-block svelte-kjw3bp");
-    			add_location(div7, file, 139, 2, 4128);
-    			attr_dev(h22, "class", "controls-block__title svelte-kjw3bp");
-    			add_location(h22, file, 160, 3, 4633);
-    			attr_dev(div8, "class", "controls-block svelte-kjw3bp");
-    			add_location(div8, file, 159, 2, 4601);
+    			attr_dev(button0, "class", "svelte-9ys6l6");
+    			add_location(button0, file, 99, 4, 2980);
+    			attr_dev(button1, "class", "svelte-9ys6l6");
+    			add_location(button1, file, 104, 4, 3110);
+    			attr_dev(div0, "class", "buttons-row svelte-9ys6l6");
+    			add_location(div0, file, 98, 3, 2950);
+    			attr_dev(div1, "class", "controls-block svelte-9ys6l6");
+    			add_location(div1, file, 97, 2, 2918);
+    			attr_dev(h20, "class", "controls-block__title svelte-9ys6l6");
+    			add_location(h20, file, 110, 3, 3270);
+    			attr_dev(button2, "class", "svelte-9ys6l6");
+    			add_location(button2, file, 118, 4, 3507);
+    			attr_dev(div2, "class", "buttons-row svelte-9ys6l6");
+    			add_location(div2, file, 117, 3, 3477);
+    			attr_dev(button3, "class", "svelte-9ys6l6");
+    			add_location(button3, file, 123, 4, 3660);
+    			attr_dev(div3, "class", "buttons-row svelte-9ys6l6");
+    			add_location(div3, file, 122, 3, 3630);
+    			attr_dev(button4, "class", "svelte-9ys6l6");
+    			add_location(button4, file, 128, 4, 3807);
+    			attr_dev(div4, "class", "buttons-row svelte-9ys6l6");
+    			add_location(div4, file, 127, 3, 3777);
+    			attr_dev(button5, "class", "svelte-9ys6l6");
+    			add_location(button5, file, 140, 4, 4126);
+    			attr_dev(div5, "class", "buttons-row svelte-9ys6l6");
+    			add_location(div5, file, 139, 3, 4096);
+    			attr_dev(div6, "class", "controls-block svelte-9ys6l6");
+    			add_location(div6, file, 109, 2, 3238);
+    			attr_dev(h21, "class", "controls-block__title svelte-9ys6l6");
+    			add_location(h21, file, 146, 3, 4302);
+    			attr_dev(div7, "class", "controls-block svelte-9ys6l6");
+    			add_location(div7, file, 145, 2, 4270);
+    			attr_dev(h22, "class", "controls-block__title svelte-9ys6l6");
+    			add_location(h22, file, 166, 3, 4775);
+    			attr_dev(div8, "class", "controls-block svelte-9ys6l6");
+    			add_location(div8, file, 165, 2, 4743);
+    			attr_dev(h23, "class", "controls-block__title svelte-9ys6l6");
+    			add_location(h23, file, 175, 3, 4982);
+    			attr_dev(div9, "class", "controls-block svelte-9ys6l6");
+    			add_location(div9, file, 174, 2, 4950);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -3442,31 +3536,38 @@ var app = (function () {
     			insert_dev(target, div7, anchor);
     			append_dev(div7, h21);
     			append_dev(div7, t17);
-    			mount_component(colorselector, div7, null);
+    			mount_component(colorselector0, div7, null);
     			insert_dev(target, t18, anchor);
     			if (if_block0) if_block0.m(target, anchor);
     			insert_dev(target, t19, anchor);
     			insert_dev(target, div8, anchor);
     			append_dev(div8, h22);
     			append_dev(div8, t21);
-    			mount_component(checkbox1, div8, null);
-    			append_dev(div8, t22);
-    			mount_component(checkbox2, div8, null);
-    			append_dev(div8, t23);
-    			mount_component(inputrange1, div8, null);
-    			append_dev(div8, t24);
-    			if (if_block1) if_block1.m(div8, null);
+    			mount_component(colorselector1, div8, null);
+    			insert_dev(target, t22, anchor);
+    			insert_dev(target, div9, anchor);
+    			append_dev(div9, h23);
+    			append_dev(div9, t24);
+    			mount_component(checkbox1, div9, null);
+    			append_dev(div9, t25);
+    			mount_component(checkbox2, div9, null);
+    			append_dev(div9, t26);
+    			mount_component(inputrange1, div9, null);
+    			append_dev(div9, t27);
+    			mount_component(inputrange2, div9, null);
+    			append_dev(div9, t28);
+    			if (if_block1) if_block1.m(div9, null);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*click_handler*/ ctx[22], false, false, false),
-    					listen_dev(button1, "click", click_handler_1, false, false, false),
+    					listen_dev(button0, "click", /*click_handler*/ ctx[24], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_1*/ ctx[25], false, false, false),
     					listen_dev(
     						button2,
     						"click",
     						function () {
-    							if (is_function(/*graphRemoveVertexesHandler*/ ctx[12])) /*graphRemoveVertexesHandler*/ ctx[12].apply(this, arguments);
+    							if (is_function(/*graphRemoveVertexesHandler*/ ctx[14])) /*graphRemoveVertexesHandler*/ ctx[14].apply(this, arguments);
     						},
     						false,
     						false,
@@ -3476,7 +3577,7 @@ var app = (function () {
     						button3,
     						"click",
     						function () {
-    							if (is_function(/*graphRemoveEdgesHandler*/ ctx[13])) /*graphRemoveEdgesHandler*/ ctx[13].apply(this, arguments);
+    							if (is_function(/*graphRemoveEdgesHandler*/ ctx[15])) /*graphRemoveEdgesHandler*/ ctx[15].apply(this, arguments);
     						},
     						false,
     						false,
@@ -3486,7 +3587,7 @@ var app = (function () {
     						button4,
     						"click",
     						function () {
-    							if (is_function(/*graphGenerateVertexesHandler*/ ctx[14])) /*graphGenerateVertexesHandler*/ ctx[14].apply(this, arguments);
+    							if (is_function(/*graphGenerateVertexesHandler*/ ctx[16])) /*graphGenerateVertexesHandler*/ ctx[16].apply(this, arguments);
     						},
     						false,
     						false,
@@ -3496,7 +3597,7 @@ var app = (function () {
     						button5,
     						"click",
     						function () {
-    							if (is_function(/*graphFillEdgesInAddingOrderHandler*/ ctx[15])) /*graphFillEdgesInAddingOrderHandler*/ ctx[15].apply(this, arguments);
+    							if (is_function(/*graphFillEdgesInAddingOrderHandler*/ ctx[17])) /*graphFillEdgesInAddingOrderHandler*/ ctx[17].apply(this, arguments);
     						},
     						false,
     						false,
@@ -3520,22 +3621,22 @@ var app = (function () {
     			checkbox0.$set(checkbox0_changes);
     			const inputrange0_changes = {};
 
-    			if (!updating_value && dirty[0] & /*vertexesGenerationCount*/ 256) {
+    			if (!updating_value && dirty[0] & /*vertexesGenerationCount*/ 1024) {
     				updating_value = true;
-    				inputrange0_changes.value = /*vertexesGenerationCount*/ ctx[8];
+    				inputrange0_changes.value = /*vertexesGenerationCount*/ ctx[10];
     				add_flush_callback(() => updating_value = false);
     			}
 
     			inputrange0.$set(inputrange0_changes);
-    			const colorselector_changes = {};
+    			const colorselector0_changes = {};
 
     			if (!updating_selectedId && dirty[0] & /*vertexColorId*/ 16) {
     				updating_selectedId = true;
-    				colorselector_changes.selectedId = /*vertexColorId*/ ctx[4];
+    				colorselector0_changes.selectedId = /*vertexColorId*/ ctx[4];
     				add_flush_callback(() => updating_selectedId = false);
     			}
 
-    			colorselector.$set(colorselector_changes);
+    			colorselector0.$set(colorselector0_changes);
 
     			if (/*showVertexLabel*/ ctx[2]) {
     				if (if_block0) {
@@ -3560,6 +3661,15 @@ var app = (function () {
     				check_outros();
     			}
 
+    			const colorselector1_changes = {};
+
+    			if (!updating_selectedId_1 && dirty[0] & /*edgeColorId*/ 32) {
+    				updating_selectedId_1 = true;
+    				colorselector1_changes.selectedId = /*edgeColorId*/ ctx[5];
+    				add_flush_callback(() => updating_selectedId_1 = false);
+    			}
+
+    			colorselector1.$set(colorselector1_changes);
     			const checkbox1_changes = {};
 
     			if (!updating_checked_1 && dirty[0] & /*showFPS*/ 2) {
@@ -3580,13 +3690,22 @@ var app = (function () {
     			checkbox2.$set(checkbox2_changes);
     			const inputrange1_changes = {};
 
-    			if (!updating_value_1 && dirty[0] & /*vertexSize*/ 32) {
+    			if (!updating_value_1 && dirty[0] & /*vertexSize*/ 64) {
     				updating_value_1 = true;
-    				inputrange1_changes.value = /*vertexSize*/ ctx[5];
+    				inputrange1_changes.value = /*vertexSize*/ ctx[6];
     				add_flush_callback(() => updating_value_1 = false);
     			}
 
     			inputrange1.$set(inputrange1_changes);
+    			const inputrange2_changes = {};
+
+    			if (!updating_value_2 && dirty[0] & /*edgeSize*/ 128) {
+    				updating_value_2 = true;
+    				inputrange2_changes.value = /*edgeSize*/ ctx[7];
+    				add_flush_callback(() => updating_value_2 = false);
+    			}
+
+    			inputrange2.$set(inputrange2_changes);
 
     			if (/*showVertexLabel*/ ctx[2]) {
     				if (if_block1) {
@@ -3599,7 +3718,7 @@ var app = (function () {
     					if_block1 = create_if_block_1(ctx);
     					if_block1.c();
     					transition_in(if_block1, 1);
-    					if_block1.m(div8, null);
+    					if_block1.m(div9, null);
     				}
     			} else if (if_block1) {
     				group_outros();
@@ -3615,22 +3734,26 @@ var app = (function () {
     			if (current) return;
     			transition_in(checkbox0.$$.fragment, local);
     			transition_in(inputrange0.$$.fragment, local);
-    			transition_in(colorselector.$$.fragment, local);
+    			transition_in(colorselector0.$$.fragment, local);
     			transition_in(if_block0);
+    			transition_in(colorselector1.$$.fragment, local);
     			transition_in(checkbox1.$$.fragment, local);
     			transition_in(checkbox2.$$.fragment, local);
     			transition_in(inputrange1.$$.fragment, local);
+    			transition_in(inputrange2.$$.fragment, local);
     			transition_in(if_block1);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(checkbox0.$$.fragment, local);
     			transition_out(inputrange0.$$.fragment, local);
-    			transition_out(colorselector.$$.fragment, local);
+    			transition_out(colorselector0.$$.fragment, local);
     			transition_out(if_block0);
+    			transition_out(colorselector1.$$.fragment, local);
     			transition_out(checkbox1.$$.fragment, local);
     			transition_out(checkbox2.$$.fragment, local);
     			transition_out(inputrange1.$$.fragment, local);
+    			transition_out(inputrange2.$$.fragment, local);
     			transition_out(if_block1);
     			current = false;
     		},
@@ -3642,14 +3765,18 @@ var app = (function () {
     			destroy_component(inputrange0);
     			if (detaching) detach_dev(t15);
     			if (detaching) detach_dev(div7);
-    			destroy_component(colorselector);
+    			destroy_component(colorselector0);
     			if (detaching) detach_dev(t18);
     			if (if_block0) if_block0.d(detaching);
     			if (detaching) detach_dev(t19);
     			if (detaching) detach_dev(div8);
+    			destroy_component(colorselector1);
+    			if (detaching) detach_dev(t22);
+    			if (detaching) detach_dev(div9);
     			destroy_component(checkbox1);
     			destroy_component(checkbox2);
     			destroy_component(inputrange1);
+    			destroy_component(inputrange2);
     			if (if_block1) if_block1.d();
     			mounted = false;
     			run_all(dispose);
@@ -3660,14 +3787,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(93:1) {#if showSettings}",
+    		source: "(97:1) {#if showSettings}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (149:2) {#if showVertexLabel}
+    // (155:2) {#if showVertexLabel}
     function create_if_block_2(ctx) {
     	let div;
     	let h2;
@@ -3676,14 +3803,14 @@ var app = (function () {
     	let updating_selectedId;
     	let current;
 
-    	function colorselector_selectedId_binding_1(value) {
-    		/*colorselector_selectedId_binding_1*/ ctx[26](value);
+    	function colorselector_selectedId_binding(value) {
+    		/*colorselector_selectedId_binding*/ ctx[29](value);
     	}
 
-    	let colorselector_props = { colors: /*COLORS*/ ctx[19] };
+    	let colorselector_props = { colors: /*COLORS*/ ctx[21] };
 
-    	if (/*vertexLabelColorId*/ ctx[6] !== void 0) {
-    		colorselector_props.selectedId = /*vertexLabelColorId*/ ctx[6];
+    	if (/*vertexLabelColorId*/ ctx[8] !== void 0) {
+    		colorselector_props.selectedId = /*vertexLabelColorId*/ ctx[8];
     	}
 
     	colorselector = new ColorSelector({
@@ -3691,19 +3818,19 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	binding_callbacks.push(() => bind(colorselector, 'selectedId', colorselector_selectedId_binding_1));
+    	binding_callbacks.push(() => bind(colorselector, 'selectedId', colorselector_selectedId_binding));
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			h2 = element("h2");
-    			h2.textContent = `${/*getTranslation*/ ctx[18](/*lang*/ ctx[20], "vertexLabelColor")}`;
+    			h2.textContent = `${/*getTranslation*/ ctx[20](/*lang*/ ctx[22], "vertexLabelColor")}`;
     			t1 = space();
     			create_component(colorselector.$$.fragment);
-    			attr_dev(h2, "class", "controls-block__title svelte-kjw3bp");
-    			add_location(h2, file, 150, 4, 4397);
-    			attr_dev(div, "class", "controls-block svelte-kjw3bp");
-    			add_location(div, file, 149, 3, 4364);
+    			attr_dev(h2, "class", "controls-block__title svelte-9ys6l6");
+    			add_location(h2, file, 156, 4, 4539);
+    			attr_dev(div, "class", "controls-block svelte-9ys6l6");
+    			add_location(div, file, 155, 3, 4506);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3715,9 +3842,9 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const colorselector_changes = {};
 
-    			if (!updating_selectedId && dirty[0] & /*vertexLabelColorId*/ 64) {
+    			if (!updating_selectedId && dirty[0] & /*vertexLabelColorId*/ 256) {
     				updating_selectedId = true;
-    				colorselector_changes.selectedId = /*vertexLabelColorId*/ ctx[6];
+    				colorselector_changes.selectedId = /*vertexLabelColorId*/ ctx[8];
     				add_flush_callback(() => updating_selectedId = false);
     			}
 
@@ -3742,32 +3869,32 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(149:2) {#if showVertexLabel}",
+    		source: "(155:2) {#if showVertexLabel}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (179:3) {#if showVertexLabel}
+    // (201:3) {#if showVertexLabel}
     function create_if_block_1(ctx) {
     	let inputrange;
     	let updating_value;
     	let current;
 
     	function inputrange_value_binding(value) {
-    		/*inputrange_value_binding*/ ctx[30](value);
+    		/*inputrange_value_binding*/ ctx[35](value);
     	}
 
     	let inputrange_props = {
-    		name: /*getTranslation*/ ctx[18](/*lang*/ ctx[20], "vertexLabelSize"),
+    		name: /*getTranslation*/ ctx[20](/*lang*/ ctx[22], "vertexLabelSize"),
     		min: 8,
     		max: 16,
     		step: 1
     	};
 
-    	if (/*vertexLabelSize*/ ctx[7] !== void 0) {
-    		inputrange_props.value = /*vertexLabelSize*/ ctx[7];
+    	if (/*vertexLabelSize*/ ctx[9] !== void 0) {
+    		inputrange_props.value = /*vertexLabelSize*/ ctx[9];
     	}
 
     	inputrange = new InputRange({ props: inputrange_props, $$inline: true });
@@ -3784,9 +3911,9 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const inputrange_changes = {};
 
-    			if (!updating_value && dirty[0] & /*vertexLabelSize*/ 128) {
+    			if (!updating_value && dirty[0] & /*vertexLabelSize*/ 512) {
     				updating_value = true;
-    				inputrange_changes.value = /*vertexLabelSize*/ ctx[7];
+    				inputrange_changes.value = /*vertexLabelSize*/ ctx[9];
     				add_flush_callback(() => updating_value = false);
     			}
 
@@ -3810,7 +3937,7 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(179:3) {#if showVertexLabel}",
+    		source: "(201:3) {#if showVertexLabel}",
     		ctx
     	});
 
@@ -3827,8 +3954,8 @@ var app = (function () {
 
     	canvas = new Canvas({
     			props: {
-    				onClick: /*graphClickHandler*/ ctx[10],
-    				onMouseDown: /*graphMouseDownHandler*/ ctx[11],
+    				onClick: /*graphClickHandler*/ ctx[12],
+    				onMouseDown: /*graphMouseDownHandler*/ ctx[13],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},
@@ -3852,9 +3979,9 @@ var app = (function () {
     			t = space();
     			div = element("div");
     			if_block.c();
-    			attr_dev(div, "class", "controls svelte-kjw3bp");
+    			attr_dev(div, "class", "controls svelte-9ys6l6");
     			toggle_class(div, "controls_opened", /*showSettings*/ ctx[0]);
-    			add_location(div, file, 91, 0, 2737);
+    			add_location(div, file, 95, 0, 2836);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3868,10 +3995,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const canvas_changes = {};
-    			if (dirty[0] & /*graphClickHandler*/ 1024) canvas_changes.onClick = /*graphClickHandler*/ ctx[10];
-    			if (dirty[0] & /*graphMouseDownHandler*/ 2048) canvas_changes.onMouseDown = /*graphMouseDownHandler*/ ctx[11];
+    			if (dirty[0] & /*graphClickHandler*/ 4096) canvas_changes.onClick = /*graphClickHandler*/ ctx[12];
+    			if (dirty[0] & /*graphMouseDownHandler*/ 8192) canvas_changes.onMouseDown = /*graphMouseDownHandler*/ ctx[13];
 
-    			if (dirty[0] & /*showFPS, $width, $height, vertexColorId, vertexSize, showVertexLabel, removeEdgesOnMoving, vertexLabelSize, vertexLabelColorId, vertexesGenerationCount, graphComponent*/ 197630 | dirty[1] & /*$$scope*/ 2) {
+    			if (dirty[0] & /*showFPS, $width, $height, vertexColorId, edgeColorId, vertexSize, edgeSize, showVertexLabel, removeEdgesOnMoving, vertexLabelSize, vertexLabelColorId, vertexesGenerationCount, graphComponent*/ 790526 | dirty[1] & /*$$scope*/ 64) {
     				canvas_changes.$$scope = { dirty, ctx };
     			}
 
@@ -3936,17 +4063,13 @@ var app = (function () {
     	return block;
     }
 
-    const click_handler_1 = () => {
-    	
-    };
-
     function instance($$self, $$props, $$invalidate) {
     	let $width;
     	let $height;
     	validate_store(width, 'width');
-    	component_subscribe($$self, width, $$value => $$invalidate(16, $width = $$value));
+    	component_subscribe($$self, width, $$value => $$invalidate(18, $width = $$value));
     	validate_store(height, 'height');
-    	component_subscribe($$self, height, $$value => $$invalidate(17, $height = $$value));
+    	component_subscribe($$self, height, $$value => $$invalidate(19, $height = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
 
@@ -3977,7 +4100,9 @@ var app = (function () {
     	let showVertexLabel = true;
     	let removeEdgesOnMoving = false;
     	let vertexColorId = 0;
+    	let edgeColorId = 0;
     	let vertexSize = 10;
+    	let edgeSize = 3;
     	let vertexLabelColorId = 9;
     	let vertexLabelSize = 8;
     	let vertexesGenerationCount = 30;
@@ -3990,27 +4115,27 @@ var app = (function () {
     	let graphFillEdgesInAddingOrderHandler;
 
     	onMount(function () {
-    		$$invalidate(10, graphClickHandler = function (ev) {
+    		$$invalidate(12, graphClickHandler = function (ev) {
     			graphComponent.handleClick(ev);
     		});
 
-    		$$invalidate(11, graphMouseDownHandler = function (ev) {
+    		$$invalidate(13, graphMouseDownHandler = function (ev) {
     			graphComponent.handleMouseDown(ev);
     		});
 
-    		$$invalidate(12, graphRemoveVertexesHandler = function () {
+    		$$invalidate(14, graphRemoveVertexesHandler = function () {
     			graphComponent.removeAllVertexes();
     		});
 
-    		$$invalidate(13, graphRemoveEdgesHandler = function () {
+    		$$invalidate(15, graphRemoveEdgesHandler = function () {
     			graphComponent.removeAllEdges();
     		});
 
-    		$$invalidate(14, graphGenerateVertexesHandler = function () {
+    		$$invalidate(16, graphGenerateVertexesHandler = function () {
     			graphComponent.generateVertexes();
     		});
 
-    		$$invalidate(15, graphFillEdgesInAddingOrderHandler = function () {
+    		$$invalidate(17, graphFillEdgesInAddingOrderHandler = function () {
     			graphComponent.fillEdgesInAddingOrder();
     		});
     	});
@@ -4024,11 +4149,15 @@ var app = (function () {
     	function graph_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			graphComponent = $$value;
-    			$$invalidate(9, graphComponent);
+    			$$invalidate(11, graphComponent);
     		});
     	}
 
-    	const click_handler = () => $$invalidate(0, showSettings = false);
+    	const click_handler = () => {
+    		alert("PCB drilling optimizator");
+    	};
+
+    	const click_handler_1 = () => $$invalidate(0, showSettings = false);
 
     	function checkbox0_checked_binding(value) {
     		removeEdgesOnMoving = value;
@@ -4037,17 +4166,22 @@ var app = (function () {
 
     	function inputrange0_value_binding(value) {
     		vertexesGenerationCount = value;
-    		$$invalidate(8, vertexesGenerationCount);
+    		$$invalidate(10, vertexesGenerationCount);
     	}
 
-    	function colorselector_selectedId_binding(value) {
+    	function colorselector0_selectedId_binding(value) {
     		vertexColorId = value;
     		$$invalidate(4, vertexColorId);
     	}
 
-    	function colorselector_selectedId_binding_1(value) {
+    	function colorselector_selectedId_binding(value) {
     		vertexLabelColorId = value;
-    		$$invalidate(6, vertexLabelColorId);
+    		$$invalidate(8, vertexLabelColorId);
+    	}
+
+    	function colorselector1_selectedId_binding(value) {
+    		edgeColorId = value;
+    		$$invalidate(5, edgeColorId);
     	}
 
     	function checkbox1_checked_binding(value) {
@@ -4062,12 +4196,17 @@ var app = (function () {
 
     	function inputrange1_value_binding(value) {
     		vertexSize = value;
-    		$$invalidate(5, vertexSize);
+    		$$invalidate(6, vertexSize);
+    	}
+
+    	function inputrange2_value_binding(value) {
+    		edgeSize = value;
+    		$$invalidate(7, edgeSize);
     	}
 
     	function inputrange_value_binding(value) {
     		vertexLabelSize = value;
-    		$$invalidate(7, vertexLabelSize);
+    		$$invalidate(9, vertexLabelSize);
     	}
 
     	const click_handler_2 = () => $$invalidate(0, showSettings = true);
@@ -4094,7 +4233,9 @@ var app = (function () {
     		showVertexLabel,
     		removeEdgesOnMoving,
     		vertexColorId,
+    		edgeColorId,
     		vertexSize,
+    		edgeSize,
     		vertexLabelColorId,
     		vertexLabelSize,
     		vertexesGenerationCount,
@@ -4110,23 +4251,25 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('lang' in $$props) $$invalidate(20, lang = $$props.lang);
+    		if ('lang' in $$props) $$invalidate(22, lang = $$props.lang);
     		if ('showSettings' in $$props) $$invalidate(0, showSettings = $$props.showSettings);
     		if ('showFPS' in $$props) $$invalidate(1, showFPS = $$props.showFPS);
     		if ('showVertexLabel' in $$props) $$invalidate(2, showVertexLabel = $$props.showVertexLabel);
     		if ('removeEdgesOnMoving' in $$props) $$invalidate(3, removeEdgesOnMoving = $$props.removeEdgesOnMoving);
     		if ('vertexColorId' in $$props) $$invalidate(4, vertexColorId = $$props.vertexColorId);
-    		if ('vertexSize' in $$props) $$invalidate(5, vertexSize = $$props.vertexSize);
-    		if ('vertexLabelColorId' in $$props) $$invalidate(6, vertexLabelColorId = $$props.vertexLabelColorId);
-    		if ('vertexLabelSize' in $$props) $$invalidate(7, vertexLabelSize = $$props.vertexLabelSize);
-    		if ('vertexesGenerationCount' in $$props) $$invalidate(8, vertexesGenerationCount = $$props.vertexesGenerationCount);
-    		if ('graphComponent' in $$props) $$invalidate(9, graphComponent = $$props.graphComponent);
-    		if ('graphClickHandler' in $$props) $$invalidate(10, graphClickHandler = $$props.graphClickHandler);
-    		if ('graphMouseDownHandler' in $$props) $$invalidate(11, graphMouseDownHandler = $$props.graphMouseDownHandler);
-    		if ('graphRemoveVertexesHandler' in $$props) $$invalidate(12, graphRemoveVertexesHandler = $$props.graphRemoveVertexesHandler);
-    		if ('graphRemoveEdgesHandler' in $$props) $$invalidate(13, graphRemoveEdgesHandler = $$props.graphRemoveEdgesHandler);
-    		if ('graphGenerateVertexesHandler' in $$props) $$invalidate(14, graphGenerateVertexesHandler = $$props.graphGenerateVertexesHandler);
-    		if ('graphFillEdgesInAddingOrderHandler' in $$props) $$invalidate(15, graphFillEdgesInAddingOrderHandler = $$props.graphFillEdgesInAddingOrderHandler);
+    		if ('edgeColorId' in $$props) $$invalidate(5, edgeColorId = $$props.edgeColorId);
+    		if ('vertexSize' in $$props) $$invalidate(6, vertexSize = $$props.vertexSize);
+    		if ('edgeSize' in $$props) $$invalidate(7, edgeSize = $$props.edgeSize);
+    		if ('vertexLabelColorId' in $$props) $$invalidate(8, vertexLabelColorId = $$props.vertexLabelColorId);
+    		if ('vertexLabelSize' in $$props) $$invalidate(9, vertexLabelSize = $$props.vertexLabelSize);
+    		if ('vertexesGenerationCount' in $$props) $$invalidate(10, vertexesGenerationCount = $$props.vertexesGenerationCount);
+    		if ('graphComponent' in $$props) $$invalidate(11, graphComponent = $$props.graphComponent);
+    		if ('graphClickHandler' in $$props) $$invalidate(12, graphClickHandler = $$props.graphClickHandler);
+    		if ('graphMouseDownHandler' in $$props) $$invalidate(13, graphMouseDownHandler = $$props.graphMouseDownHandler);
+    		if ('graphRemoveVertexesHandler' in $$props) $$invalidate(14, graphRemoveVertexesHandler = $$props.graphRemoveVertexesHandler);
+    		if ('graphRemoveEdgesHandler' in $$props) $$invalidate(15, graphRemoveEdgesHandler = $$props.graphRemoveEdgesHandler);
+    		if ('graphGenerateVertexesHandler' in $$props) $$invalidate(16, graphGenerateVertexesHandler = $$props.graphGenerateVertexesHandler);
+    		if ('graphFillEdgesInAddingOrderHandler' in $$props) $$invalidate(17, graphFillEdgesInAddingOrderHandler = $$props.graphFillEdgesInAddingOrderHandler);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -4139,7 +4282,9 @@ var app = (function () {
     		showVertexLabel,
     		removeEdgesOnMoving,
     		vertexColorId,
+    		edgeColorId,
     		vertexSize,
+    		edgeSize,
     		vertexLabelColorId,
     		vertexLabelSize,
     		vertexesGenerationCount,
@@ -4157,13 +4302,16 @@ var app = (function () {
     		lang,
     		graph_binding,
     		click_handler,
+    		click_handler_1,
     		checkbox0_checked_binding,
     		inputrange0_value_binding,
+    		colorselector0_selectedId_binding,
     		colorselector_selectedId_binding,
-    		colorselector_selectedId_binding_1,
+    		colorselector1_selectedId_binding,
     		checkbox1_checked_binding,
     		checkbox2_checked_binding,
     		inputrange1_value_binding,
+    		inputrange2_value_binding,
     		inputrange_value_binding,
     		click_handler_2
     	];

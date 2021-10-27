@@ -5,7 +5,7 @@
 	import Canvas from './Canvas.svelte'
 	import Background from './Background.svelte'
 	import DotGrid from './DotGrid.svelte'
-	import Graph, {removeAllEdges} from './Graph.svelte'
+	import Graph from './Graph.svelte'
 	import Text from './Text.svelte'
 	import FPS from './FPS.svelte'
 	import InputRange from "./InputRange.svelte"
@@ -38,7 +38,9 @@
 	let showVertexLabel = true
 	let removeEdgesOnMoving = false
 	let vertexColorId = 0
+	let edgeColorId = 0
 	let vertexSize = 10
+	let edgeSize = 3
 	let vertexLabelColorId = 9
 	let vertexLabelSize = 8
 	let vertexesGenerationCount = 30
@@ -83,7 +85,9 @@
 	<Graph
 			bind:this={graphComponent}
 			vertexColor={COLORS[vertexColorId]}
+			edgeColor={COLORS[edgeColorId]}
 			vertexSize={vertexSize}
+			edgeSize={edgeSize}
 			showVertexLabel={showVertexLabel}
 			removeEdgesOnMoving={removeEdgesOnMoving}
 			vertexLabelSize={vertexLabelSize}
@@ -104,11 +108,13 @@
 	{#if showSettings}
 		<div class="controls-block">
 			<div class="buttons-row">
+				<button on:click={() => {
+						alert("PCB drilling optimizator");
+				}}>
+					{getTranslation(lang, "about")}
+				</button>
 				<button on:click={() => (showSettings = false)}>
 					{getTranslation(lang, "hideSettings")}
-				</button>
-				<button on:click={() => {}}>
-					{getTranslation(lang, "copyLink")}
 				</button>
 			</div>
 		</div>
@@ -170,6 +176,15 @@
 		{/if}
 		<div class="controls-block">
 			<h2 class="controls-block__title">
+				{getTranslation(lang, "edgeColor")}
+			</h2>
+			<ColorSelector
+					colors={COLORS}
+					bind:selectedId={edgeColorId}
+			/>
+		</div>
+		<div class="controls-block">
+			<h2 class="controls-block__title">
 				{getTranslation(lang, "graphicalSettings")}
 			</h2>
 			<Checkbox
@@ -186,6 +201,13 @@
 					max={20}
 					step={0.3}
 					bind:value={vertexSize}
+			/>
+			<InputRange
+					name={getTranslation(lang, "edgeSize")}
+					min={1}
+					max={10}
+					step={0.3}
+					bind:value={edgeSize}
 			/>
 			{#if showVertexLabel}
 				<InputRange
@@ -225,7 +247,7 @@
 		position: fixed;
 		/* width: 300px; */
 		max-height: calc(100% - 40px);
-		left: 20px;
+		right: 20px;
 		top: 20px;
 		background-color: rgba(255, 255, 255, 0.5);
 		/* padding: 10px; */

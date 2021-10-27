@@ -7,9 +7,9 @@ export default {
     en: "Hide settings",
     ru: "Скрыть настройки"
   },
-  copyLink: {
-    en: "Copy link",
-    ru: "Копировать ссылку"
+  about: {
+    en: "About",
+    ru: "О программе"
   },
   graphicalSettings: {
     en: "Graphical settings",
@@ -23,9 +23,17 @@ export default {
     en: "Vertex color",
     ru: "Цвет вершин",
   },
+  edgeColor: {
+    en: "Edge color",
+    ru: "Цвет граней",
+  },
   vertexSize: {
     en: "Vertex size",
     ru: "Размер вершин",
+  },
+  edgeSize: {
+    en: "Edge size",
+    ru: "Размер грани",
   },
   showVertexLabel: {
     en: "Show vertex label",

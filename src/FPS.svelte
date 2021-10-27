@@ -29,9 +29,9 @@
 	{text}
 	fontSize=12
 	fontFamily='Courier New'
-	align='right'
+	align='left'
 	baseline='top'
-	x={$width - 20}
+	x={20}
 	y={20} />
 
 <!-- The following allows this component to nest children -->

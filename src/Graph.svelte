@@ -2,7 +2,9 @@
     import { renderable, width, height } from './game.js'
 
     export let vertexColor = '#ffe554'
+    export let edgeColor = '#ffe554'
     export let vertexSize = 10
+    export let edgeSize = 3
     export let showVertexLabel = true
     export let removeEdgesOnMoving = false
     export let vertexLabelColor = 'hsl(0, 0%, 100%)'
@@ -197,7 +199,8 @@
         context.beginPath()
         context.moveTo(vertexI.x, vertexI.y)
         context.lineTo(vertexJ.x, vertexJ.y)
-        context.strokeStyle = '#ff0000'
+        context.strokeStyle = edgeColor
+        context.lineWidth = edgeSize
         context.stroke();
     }
 
