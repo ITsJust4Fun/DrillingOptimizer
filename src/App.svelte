@@ -36,6 +36,7 @@
 	let showSettings = true
 	let showFPS = true
 	let showVertexLabel = true
+	let showEdgeLabel = true
 	let removeEdgesOnMoving = false
 	let vertexColorId = 0
 	let edgeColorId = 0
@@ -44,6 +45,9 @@
 	let vertexLabelColorId = 9
 	let vertexLabelSize = 8
 	let vertexesGenerationCount = 30
+	let edgeLabelDistance = 30
+	let edgeLabelSize = 8
+	let edgeLabelColorId = 9
 
 	let graphComponent
 	let graphClickHandler
@@ -93,6 +97,10 @@
 			vertexLabelSize={vertexLabelSize}
 			vertexLabelColor={COLORS[vertexLabelColorId]}
 			vertexesGenerationCount={vertexesGenerationCount}
+			showEdgeLabel={showEdgeLabel}
+			edgeLabelColor={COLORS[edgeLabelColorId]}
+			edgeLabelSize={edgeLabelSize}
+			edgeLabelDistance={edgeLabelDistance}
 	/>
 	<Text
 			text='Click to add vertex.'
@@ -183,6 +191,17 @@
 					bind:selectedId={edgeColorId}
 			/>
 		</div>
+		{#if showEdgeLabel}
+			<div class="controls-block">
+				<h2 class="controls-block__title">
+					{getTranslation(lang, "edgeLabelColor")}
+				</h2>
+				<ColorSelector
+						colors={COLORS}
+						bind:selectedId={edgeLabelColorId}
+				/>
+			</div>
+		{/if}
 		<div class="controls-block">
 			<h2 class="controls-block__title">
 				{getTranslation(lang, "graphicalSettings")}
@@ -194,6 +213,10 @@
 			<Checkbox
 					title={getTranslation(lang, "showVertexLabel")}
 					bind:checked={showVertexLabel}
+			/>
+			<Checkbox
+					title={getTranslation(lang, "showEdgeLabel")}
+					bind:checked={showEdgeLabel}
 			/>
 			<InputRange
 					name={getTranslation(lang, "vertexSize")}
@@ -216,6 +239,22 @@
 						max={16}
 						step={1}
 						bind:value={vertexLabelSize}
+				/>
+			{/if}
+			{#if showEdgeLabel}
+				<InputRange
+						name={getTranslation(lang, "edgeLabelDistance")}
+						min={0}
+						max={40}
+						step={0.3}
+						bind:value={edgeLabelDistance}
+				/>
+				<InputRange
+						name={getTranslation(lang, "edgeLabelSize")}
+						min={8}
+						max={16}
+						step={1}
+						bind:value={edgeLabelSize}
 				/>
 			{/if}
 		</div>

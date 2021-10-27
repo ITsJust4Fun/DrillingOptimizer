@@ -10,6 +10,10 @@
     export let vertexLabelColor = 'hsl(0, 0%, 100%)'
     export let vertexLabelSize = 8
     export let vertexesGenerationCount = 30
+    export let showEdgeLabel = true
+    export let edgeLabelDistance = 30
+    export let edgeLabelSize = 8
+    export let edgeLabelColor = 'hsl(0, 0%, 100%)'
 
     interface Vertex {
         x: number
@@ -211,22 +215,33 @@
             return
         }
 
+        if (!showEdgeLabel) {
+            return
+        }
+
         let label = String(Math.round(getDistance(vertexI, vertexJ)))
+
         let x = (vertexI.x + vertexJ.x) / 2
-        let y = (vertexI.y + vertexJ.y + 10) / 2
+        let y = (vertexI.y + vertexJ.y) / 2
+
+        let thetaVertexes = angle(vertexI.x, vertexI.y, vertexJ.x, vertexJ.y)
+
+        let radius = edgeLabelDistance
+        let resultX = radius * Math.cos(thetaVertexes + 3 * Math.PI / 2) + x
+        let resultY = radius * Math.sin(thetaVertexes + 3 * Math.PI / 2) + y
 
         let align = 'center'
         let baseline = 'top'
         let fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica'
 
         context.beginPath()
-        context.fillStyle = vertexLabelColor
-        context.font = `${vertexLabelSize}px ${fontFamily}`
+        context.fillStyle = edgeLabelColor
+        context.font = `${edgeLabelSize}px ${fontFamily}`
         context.textAlign = align
         context.textBaseline = baseline
         context.save()
-        context.translate(x, y)
-        context.rotate(angle(vertexI.x, vertexI.y, vertexJ.x, vertexJ.y))
+        context.translate(resultX, resultY)
+        context.rotate(thetaVertexes)
         context.fillText(label, 0, 0)
         context.restore()
     }
@@ -235,7 +250,7 @@
         let dy = ey - cy
         let dx = ex - cx
         let theta = Math.atan2(dy, dx) // range (-PI, PI]
-        return theta >= -(Math.PI/2) && theta <= (Math.PI/2) ? theta : theta + Math.PI
+        return theta >= -(Math.PI / 2) && theta <= (Math.PI / 2) ? theta : theta + Math.PI
     }
 
     function getDistance(vertexI: Vertex, vertexJ: Vertex): number {

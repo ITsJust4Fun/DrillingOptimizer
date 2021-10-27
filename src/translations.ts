@@ -74,5 +74,21 @@ export default {
   removeEdgesOnMoving: {
     en: "Remove edges on moving",
     ru: "Удалять грани при перемещении",
+  },
+  edgeLabelDistance: {
+    en: "Edge label distance",
+    ru: "Удалённость этикетки грани",
+  },
+  edgeLabelSize: {
+    en: "Edge label size",
+    ru: "Размер этикетки грани",
+  },
+  edgeLabelColor: {
+    en: "Edge label color",
+    ru: "Цвет этикетки грани",
+  },
+  showEdgeLabel: {
+    en: "Show edge label",
+    ru: "Показывать этекетку грани",
   }
 } as { [phrase: string]: { [lang: string]: string } };
