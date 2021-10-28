@@ -59,9 +59,19 @@
             context.lineWidth = 3
             context.arc(vertex.x, vertex.y, vertexSize, 0, Math.PI * 2)
             context.fill()
+        }
 
-            let text = `(${vertex.x}, ${vertex.y})`
-            drawVertexLabel({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })
+        if (showVertexLabel) {
+            for (let vertex of vertexes) {
+                let text = `(${vertex.x}, ${vertex.y})`
+                drawVertexLabel({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })
+            }
+        }
+
+        if (showEdgeLabel) {
+            for (let edge of edges) {
+                drawEdgeLabel(context, vertexes[edge.i], vertexes[edge.j])
+            }
         }
     })
 
@@ -178,10 +188,6 @@
     function drawVertexLabel(props) {
         const { context, text, x, y } = props
 
-        if (!showVertexLabel) {
-            return
-        }
-
         let align = 'center'
         let baseline = 'top'
         let fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica'
@@ -206,16 +212,10 @@
         context.strokeStyle = edgeColor
         context.lineWidth = edgeSize
         context.stroke()
-
-        drawEdgeLabel(context, vertexI, vertexJ)
     }
 
     function drawEdgeLabel(context, vertexI: Vertex, vertexJ: Vertex) {
         if (!context) {
-            return
-        }
-
-        if (!showEdgeLabel) {
             return
         }
 
