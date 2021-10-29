@@ -266,12 +266,12 @@
         return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     }
 
-    function getNearestVertex(x: number, y: number): {index: number, value: number} {
+    function getNearestVertex(x: number, y: number, vertexesList = vertexes): {index: number, value: number} {
         let nearestIndex: number = -1
         let nearestValue: number = -1
 
-        for (let i = 0; i < vertexes.length; i++) {
-            let vertex: Vertex = vertexes[i]
+        for (let i = 0; i < vertexesList.length; i++) {
+            let vertex: Vertex = vertexesList[i]
 
             let value: number = getDistance(vertex, { x, y })
 
