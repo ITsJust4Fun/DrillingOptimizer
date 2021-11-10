@@ -16,8 +16,6 @@
 	import TRANSLATIONS from "./translations"
 	import RadioButtons from "./RadioButtons.svelte"
 
-	import { disableBodyScroll } from 'body-scroll-lock'
-
 	function getTranslation(lang: string, key: string) {
 		const phrase: { [key: string]: string } = TRANSLATIONS[key]
 		return Object.keys(phrase).includes(lang) ? phrase[lang] : phrase["en"]
@@ -46,6 +44,7 @@
 	let showVertexLabel = true
 	let showEdgeLabel = true
 	let removeEdgesOnMoving = false
+	let isFullscreen = false
 	let vertexColorId = 0
 	let edgeColorId = 0
 	let vertexSize = 10
@@ -65,8 +64,6 @@
 	let graphRemoveEdgesHandler
 	let graphGenerateVertexesHandler
 	let graphFillEdgesInAddingOrderHandler
-
-	let canvas
 
 	onMount(function(){
 		graphClickHandler = function(ev) {
@@ -90,8 +87,6 @@
 		graphFillEdgesInAddingOrderHandler = function() {
 			graphComponent.fillEdgesInAddingOrder()
 		}
-
-		disableBodyScroll(canvas)
 	})
 
 	enum Windows {
@@ -130,10 +125,37 @@
 		windowsOrder[window] = 0
 	}
 
+	function switchFullscreen() {
+		if (document.fullscreenElement) {
+			document.exitFullscreen()
+				.then(function() {
+					// element has exited fullscreen mode
+				})
+				.catch(function(error) {
+					// element could not exit fullscreen mode
+					// error message
+					console.log(error.message);
+				})
+
+			isFullscreen = false
+		} else {
+			document.documentElement.requestFullscreen()
+				.then(function() {
+					// element has entered fullscreen mode successfully
+				})
+				.catch(function(error) {
+					// element could not enter fullscreen mode
+					// error message
+					console.log(error.message);
+				})
+
+			isFullscreen = true
+		}
+	}
+
 </script>
 
 <Canvas
-		bind:this={canvas}
 		onClick={graphClickHandler}
 		onMouseDown={graphMouseDownHandler}
 		onTouchStart={graphTouchStartHandler}
@@ -352,14 +374,16 @@
 		onClickHandler={() => { makeWindowActive(Windows.OtherSettings) }}
 		onCloseHandler={() => { makeWindowInactive(Windows.OtherSettings) }}
 >
-	<Checkbox
-			title={getTranslation(lang, "showFPS")}
-			bind:checked={showFPS}
-	/>
-	<Checkbox
-			title={getTranslation(lang, "showHint")}
-			bind:checked={showHint}
-	/>
+	<div class="controls-block">
+		<Checkbox
+				title={getTranslation(lang, "showFPS")}
+				bind:checked={showFPS}
+		/>
+		<Checkbox
+				title={getTranslation(lang, "showHint")}
+				bind:checked={showHint}
+		/>
+	</div>
 	<div class="controls-block">
 		<h2 class="controls-block__title">
 			{getTranslation(lang, 'language')}
@@ -371,6 +395,17 @@
 				getTranslation={getTranslation}
 				lang={lang}
 		/>
+	</div>
+	<div class="controls-block">
+		<div class="buttons-row">
+			<button on:click={switchFullscreen}>
+				{#if isFullscreen}
+					{getTranslation(lang, 'exitFullsceen')}
+				{:else}
+					{getTranslation(lang, 'enterFullsceen')}
+				{/if}
+			</button>
+		</div>
 	</div>
 </Window>
 <Window

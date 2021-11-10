@@ -138,5 +138,13 @@ export default {
   openOtherSettings: {
     en: "Open Other Settings",
     ru: "Открыть другие настройки"
+  },
+  exitFullsceen: {
+    en: "Exit fullscreen",
+    ru: "Выйти из полноэкранного режима"
+  },
+  enterFullsceen: {
+    en: "Enter fullscreen",
+    ru: "Развернуть на весь экран"
   }
 } as { [phrase: string]: { [lang: string]: string } };

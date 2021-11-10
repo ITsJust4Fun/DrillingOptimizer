@@ -27,7 +27,6 @@
     "typescript": "^4.0.0"
   },
   "dependencies": {
-    "body-scroll-lock": "^4.0.0-beta.0",
     "gh-pages": "^3.2.3",
     "gl-vec2": "^1.3.0",
     "livereload-js": "^3.3.2",
