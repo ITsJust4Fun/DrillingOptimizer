@@ -14,11 +14,15 @@
 	import Window from "./Window.svelte";
 
 	import TRANSLATIONS from "./translations"
+	import RadioButtons from "./RadioButtons.svelte";
 
 	function getTranslation(lang: string, key: string) {
 		const phrase: { [key: string]: string } = TRANSLATIONS[key]
 		return Object.keys(phrase).includes(lang) ? phrase[lang] : phrase["en"]
 	}
+
+	let languages = [{option: 'en', label: 'english', id: "en_radio"},
+					 {option: 'ru', label: 'russian', id: "ru_radio"}]
 
 	const COLORS = [
 		"#fa1414",
@@ -199,21 +203,21 @@
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">
-				{getTranslation(lang, "Settings")}
+				{getTranslation(lang, "settings")}
 			</h2>
 			<div class="buttons-row">
 				<button on:click={() => {makeWindowActive(Windows.VertexSettings)}}>
-					Open Vertex Settings
+					{getTranslation(lang, "openVertexSettings")}
 				</button>
 			</div>
 			<div class="buttons-row">
 				<button on:click={() => {makeWindowActive(Windows.EdgeSettings)}}>
-					Open Edge Settings
+					{getTranslation(lang, "openEdgeSettings")}
 				</button>
 			</div>
 			<div class="buttons-row" style="margin-bottom: 0;">
 				<button on:click={() => {makeWindowActive(Windows.OtherSettings)}}>
-					Open Other Settings
+					{getTranslation(lang, "openOtherSettings")}
 				</button>
 			</div>
 		</div>
@@ -337,6 +341,18 @@
 			title={getTranslation(lang, "showFPS")}
 			bind:checked={showFPS}
 	/>
+	<div class="controls-block">
+		<h2 class="controls-block__title">
+			{getTranslation(lang, 'language')}
+		</h2>
+		<RadioButtons
+				options={languages}
+				bind:group={lang}
+				groupName="lang"
+				getTranslation={getTranslation}
+				lang={lang}
+		/>
+	</div>
 </Window>
 
 <style>

@@ -1,4 +1,16 @@
 export default {
+  language: {
+    en: "Language",
+    ru: "Язык",
+  },
+  english: {
+    en: "English",
+    ru: "Английский",
+  },
+  russian: {
+    en: "Russian",
+    ru: "Русский",
+  },
   showSettings: {
     en: "Show settings",
     ru: "Показать настройки"
@@ -103,8 +115,20 @@ export default {
     en: "Other Settings",
     ru: "Другие Настройки",
   },
-  Settings: {
+  settings: {
     en: "Settings",
     ru: "Настройки",
+  },
+  openVertexSettings: {
+    en: "Open Vertex Settings",
+    ru: "Открыть настройки вершин"
+  },
+  openEdgeSettings: {
+    en: "Open Edge Settings",
+    ru: "Открыть настройки граней"
+  },
+  openOtherSettings: {
+    en: "Open Other Settings",
+    ru: "Открыть другие настройки"
   }
 } as { [phrase: string]: { [lang: string]: string } };
