@@ -90,5 +90,21 @@ export default {
   showEdgeLabel: {
     en: "Show edge label",
     ru: "Показывать этекетку грани",
+  },
+  vertexSettings: {
+    en: "Vertex Settings",
+    ru: "Настройка вершин",
+  },
+  edgeSettings: {
+    en: "Edge Settings",
+    ru: "Настройка граней",
+  },
+  otherSettings: {
+    en: "Other Settings",
+    ru: "Другие Настройки",
+  },
+  Settings: {
+    en: "Settings",
+    ru: "Настройки",
   }
 } as { [phrase: string]: { [lang: string]: string } };

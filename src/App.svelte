@@ -11,6 +11,7 @@
 	import InputRange from "./InputRange.svelte"
 	import Checkbox from "./Checkbox.svelte"
 	import ColorSelector from "./ColorSelector.svelte"
+	import Window from "./Window.svelte";
 
 	import TRANSLATIONS from "./translations"
 
@@ -79,6 +80,40 @@
 		}
 	})
 
+	enum Windows {
+		VertexSettings,
+		EdgeSettings,
+		OtherSettings,
+		Size,
+	}
+
+	let windowsOrder = [...Array(Windows.Size).keys()]
+	let windowsStatus = new Array<boolean>(Windows.Size)
+	windowsStatus.fill(false)
+
+	function makeWindowActive(window: Windows) {
+		windowsStatus[window] = true
+
+		for (let i = 0; i < windowsOrder.length; i++) {
+			if (windowsOrder[i] > windowsOrder[window]) {
+				windowsOrder[i] -= 1
+			}
+		}
+
+		windowsOrder[window] = Windows.Size - 1
+	}
+
+	function makeWindowInactive(window: Windows) {
+		windowsStatus[window] = false
+
+		for (let i = 0; i < windowsOrder.length; i++) {
+			if (windowsOrder[i] < windowsOrder[window]) {
+				windowsOrder[i] += 1
+			}
+		}
+
+		windowsOrder[window] = 0
+	}
 
 </script>
 
@@ -164,99 +199,23 @@
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">
-				{getTranslation(lang, "vertexColor")}
+				{getTranslation(lang, "Settings")}
 			</h2>
-			<ColorSelector
-					colors={COLORS}
-					bind:selectedId={vertexColorId}
-			/>
-		</div>
-		{#if showVertexLabel}
-			<div class="controls-block">
-				<h2 class="controls-block__title">
-					{getTranslation(lang, "vertexLabelColor")}
-				</h2>
-				<ColorSelector
-						colors={COLORS}
-						bind:selectedId={vertexLabelColorId}
-				/>
+			<div class="buttons-row">
+				<button on:click={() => {makeWindowActive(Windows.VertexSettings)}}>
+					Open Vertex Settings
+				</button>
 			</div>
-		{/if}
-		<div class="controls-block">
-			<h2 class="controls-block__title">
-				{getTranslation(lang, "edgeColor")}
-			</h2>
-			<ColorSelector
-					colors={COLORS}
-					bind:selectedId={edgeColorId}
-			/>
-		</div>
-		{#if showEdgeLabel}
-			<div class="controls-block">
-				<h2 class="controls-block__title">
-					{getTranslation(lang, "edgeLabelColor")}
-				</h2>
-				<ColorSelector
-						colors={COLORS}
-						bind:selectedId={edgeLabelColorId}
-				/>
+			<div class="buttons-row">
+				<button on:click={() => {makeWindowActive(Windows.EdgeSettings)}}>
+					Open Edge Settings
+				</button>
 			</div>
-		{/if}
-		<div class="controls-block">
-			<h2 class="controls-block__title">
-				{getTranslation(lang, "graphicalSettings")}
-			</h2>
-			<Checkbox
-					title={getTranslation(lang, "showFPS")}
-					bind:checked={showFPS}
-			/>
-			<Checkbox
-					title={getTranslation(lang, "showVertexLabel")}
-					bind:checked={showVertexLabel}
-			/>
-			<Checkbox
-					title={getTranslation(lang, "showEdgeLabel")}
-					bind:checked={showEdgeLabel}
-			/>
-			<InputRange
-					name={getTranslation(lang, "vertexSize")}
-					min={5}
-					max={20}
-					step={0.3}
-					bind:value={vertexSize}
-			/>
-			<InputRange
-					name={getTranslation(lang, "edgeSize")}
-					min={1}
-					max={10}
-					step={0.3}
-					bind:value={edgeSize}
-			/>
-			{#if showVertexLabel}
-				<InputRange
-						name={getTranslation(lang, "vertexLabelSize")}
-						min={8}
-						max={16}
-						step={1}
-						bind:value={vertexLabelSize}
-				/>
-			{/if}
-			{#if showEdgeLabel}
-				<InputRange
-						name={getTranslation(lang, "edgeLabelDistance")}
-						min={0}
-						max={40}
-						step={0.3}
-						bind:value={edgeLabelDistance}
-				/>
-				<InputRange
-						name={getTranslation(lang, "edgeLabelSize")}
-						min={8}
-						max={16}
-						step={1}
-						bind:value={edgeLabelSize}
-				/>
-			{/if}
+			<div class="buttons-row" style="margin-bottom: 0;">
+				<button on:click={() => {makeWindowActive(Windows.OtherSettings)}}>
+					Open Other Settings
+				</button>
+			</div>
 		</div>
 	{:else}
 		<button on:click={() => (showSettings = true)}>
@@ -264,6 +223,121 @@
 		</button>
 	{/if}
 </div>
+<Window
+		title="{getTranslation(lang, 'vertexSettings')}"
+		isOpened={windowsStatus[Windows.VertexSettings]}
+		zIndex={windowsOrder[Windows.VertexSettings]}
+		onClickHandler={() => { makeWindowActive(Windows.VertexSettings) }}
+		onCloseHandler={() => { makeWindowInactive(Windows.VertexSettings) }}
+>
+	<Checkbox
+			title={getTranslation(lang, "showVertexLabel")}
+			bind:checked={showVertexLabel}
+	/>
+	<InputRange
+			name={getTranslation(lang, "vertexSize")}
+			min={5}
+			max={20}
+			step={0.3}
+			bind:value={vertexSize}
+	/>
+	{#if showVertexLabel}
+		<InputRange
+				name={getTranslation(lang, "vertexLabelSize")}
+				min={8}
+				max={16}
+				step={1}
+				bind:value={vertexLabelSize}
+		/>
+	{/if}
+	<div class="controls-block">
+		<h2 class="controls-block__title">
+			{getTranslation(lang, "vertexColor")}
+		</h2>
+		<ColorSelector
+				colors={COLORS}
+				bind:selectedId={vertexColorId}
+		/>
+	</div>
+	{#if showVertexLabel}
+		<div class="controls-block">
+			<h2 class="controls-block__title">
+				{getTranslation(lang, "vertexLabelColor")}
+			</h2>
+			<ColorSelector
+					colors={COLORS}
+					bind:selectedId={vertexLabelColorId}
+			/>
+		</div>
+	{/if}
+</Window>
+<Window
+		title="{getTranslation(lang, 'edgeSettings')}"
+		isOpened={windowsStatus[Windows.EdgeSettings]}
+		zIndex={windowsOrder[Windows.EdgeSettings]}
+		onClickHandler={() => { makeWindowActive(Windows.EdgeSettings) }}
+		onCloseHandler={() => { makeWindowInactive(Windows.EdgeSettings) }}
+>
+	<Checkbox
+			title={getTranslation(lang, "showEdgeLabel")}
+			bind:checked={showEdgeLabel}
+	/>
+	<InputRange
+			name={getTranslation(lang, "edgeSize")}
+			min={1}
+			max={10}
+			step={0.3}
+			bind:value={edgeSize}
+	/>
+	{#if showEdgeLabel}
+		<InputRange
+				name={getTranslation(lang, "edgeLabelSize")}
+				min={8}
+				max={16}
+				step={1}
+				bind:value={edgeLabelSize}
+		/>
+		<InputRange
+				name={getTranslation(lang, "edgeLabelDistance")}
+				min={0}
+				max={40}
+				step={0.3}
+				bind:value={edgeLabelDistance}
+		/>
+	{/if}
+	<div class="controls-block">
+		<h2 class="controls-block__title">
+			{getTranslation(lang, "edgeColor")}
+		</h2>
+		<ColorSelector
+				colors={COLORS}
+				bind:selectedId={edgeColorId}
+		/>
+	</div>
+	{#if showEdgeLabel}
+		<div class="controls-block">
+			<h2 class="controls-block__title">
+				{getTranslation(lang, "edgeLabelColor")}
+			</h2>
+			<ColorSelector
+					colors={COLORS}
+					bind:selectedId={edgeLabelColorId}
+			/>
+		</div>
+	{/if}
+</Window>
+<Window
+		title="{getTranslation(lang, 'otherSettings')}"
+		isOpened={windowsStatus[Windows.OtherSettings]}
+		zIndex={windowsOrder[Windows.OtherSettings]}
+		onClickHandler={() => { makeWindowActive(Windows.OtherSettings) }}
+		onCloseHandler={() => { makeWindowInactive(Windows.OtherSettings) }}
+>
+	<Checkbox
+			title={getTranslation(lang, "showFPS")}
+			bind:checked={showFPS}
+	/>
+</Window>
 
 <style>
 	:global(body) {
