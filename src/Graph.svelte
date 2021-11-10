@@ -78,7 +78,7 @@
 
         if (showVertexLabel) {
             for (let vertex of vertexes) {
-                let text = `(${vertex.x}, ${vertex.y})`
+                let text = `(${Math.round(vertex.x)}, ${Math.round(vertex.y)})`
                 drawVertexLabel({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })
             }
         }

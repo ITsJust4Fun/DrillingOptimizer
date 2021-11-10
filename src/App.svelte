@@ -11,10 +11,12 @@
 	import InputRange from "./InputRange.svelte"
 	import Checkbox from "./Checkbox.svelte"
 	import ColorSelector from "./ColorSelector.svelte"
-	import Window from "./Window.svelte";
+	import Window from "./Window.svelte"
 
 	import TRANSLATIONS from "./translations"
-	import RadioButtons from "./RadioButtons.svelte";
+	import RadioButtons from "./RadioButtons.svelte"
+
+	import { disableBodyScroll } from 'body-scroll-lock'
 
 	function getTranslation(lang: string, key: string) {
 		const phrase: { [key: string]: string } = TRANSLATIONS[key]
@@ -64,6 +66,7 @@
 	let graphGenerateVertexesHandler
 	let graphFillEdgesInAddingOrderHandler
 
+	let canvas
 
 	onMount(function(){
 		graphClickHandler = function(ev) {
@@ -87,12 +90,15 @@
 		graphFillEdgesInAddingOrderHandler = function() {
 			graphComponent.fillEdgesInAddingOrder()
 		}
+
+		disableBodyScroll(canvas)
 	})
 
 	enum Windows {
 		VertexSettings,
 		EdgeSettings,
 		OtherSettings,
+		About,
 		Size,
 	}
 
@@ -127,6 +133,7 @@
 </script>
 
 <Canvas
+		bind:this={canvas}
 		onClick={graphClickHandler}
 		onMouseDown={graphMouseDownHandler}
 		onTouchStart={graphTouchStartHandler}
@@ -165,9 +172,7 @@
 	{#if showMenu}
 		<div class="controls-block">
 			<div class="buttons-row">
-				<button on:click={() => {
-						alert("PCB drilling optimizator");
-				}}>
+				<button on:click={() => {makeWindowActive(Windows.About)}}>
 					{getTranslation(lang, "about")}
 				</button>
 				<button on:click={() => (showMenu = false)}>
@@ -367,6 +372,15 @@
 				lang={lang}
 		/>
 	</div>
+</Window>
+<Window
+		title="{getTranslation(lang, 'about')}"
+		isOpened={windowsStatus[Windows.About]}
+		zIndex={windowsOrder[Windows.About]}
+		onClickHandler={() => { makeWindowActive(Windows.About) }}
+		onCloseHandler={() => { makeWindowInactive(Windows.About) }}
+>
+	<p>Developed using svelte</p>
 </Window>
 
 <style>
