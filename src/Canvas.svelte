@@ -16,6 +16,7 @@
 	export let attributes = {};
 	export let onClick = (ev) => {}
 	export let onMouseDown = (ev) => {}
+	export let onTouchStart = (ev) => {}
 	
 	let listeners = [];
 	let canvas;
@@ -101,6 +102,7 @@
 	bind:this={canvas}
 	on:click|preventDefault={onClick}
 	on:mousedown={onMouseDown}
+	on:touchstart={onTouchStart}
 	width={$width * $pixelRatio}
 	height={$height * $pixelRatio}
 	style="width: {$width}px; height: {$height}px;"></canvas>

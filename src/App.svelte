@@ -38,8 +38,9 @@
 	]
 
 	let lang = new URLSearchParams(location.search).get("lang") || "en"
-	let showSettings = true
+	let showMenu = true
 	let showFPS = true
+	let showHint = true
 	let showVertexLabel = true
 	let showEdgeLabel = true
 	let removeEdgesOnMoving = false
@@ -57,6 +58,7 @@
 	let graphComponent
 	let graphClickHandler
 	let graphMouseDownHandler
+	let graphTouchStartHandler
 	let graphRemoveVertexesHandler
 	let graphRemoveEdgesHandler
 	let graphGenerateVertexesHandler
@@ -64,22 +66,25 @@
 
 
 	onMount(function(){
-		graphClickHandler = function(ev){
+		graphClickHandler = function(ev) {
 			graphComponent.handleClick(ev)
 		}
-		graphMouseDownHandler = function(ev){
+		graphMouseDownHandler = function(ev) {
 			graphComponent.handleMouseDown(ev)
 		}
-		graphRemoveVertexesHandler = function(){
+		graphTouchStartHandler = function (ev) {
+			graphComponent.handleTouchStart(ev)
+		}
+		graphRemoveVertexesHandler = function() {
 			graphComponent.removeAllVertexes()
 		}
-		graphRemoveEdgesHandler = function(){
+		graphRemoveEdgesHandler = function() {
 			graphComponent.removeAllEdges()
 		}
-		graphGenerateVertexesHandler = function(){
+		graphGenerateVertexesHandler = function() {
 			graphComponent.generateVertexes()
 		}
-		graphFillEdgesInAddingOrderHandler = function(){
+		graphFillEdgesInAddingOrderHandler = function() {
 			graphComponent.fillEdgesInAddingOrder()
 		}
 	})
@@ -121,7 +126,11 @@
 
 </script>
 
-<Canvas onClick={graphClickHandler} onMouseDown={graphMouseDownHandler}>
+<Canvas
+		onClick={graphClickHandler}
+		onMouseDown={graphMouseDownHandler}
+		onTouchStart={graphTouchStartHandler}
+>
 	<Background color='hsl(0, 0%, 10%)'>
 		<DotGrid divisions={30} color='hsla(0, 0%, 100%, 0.5)' />
 	</Background>
@@ -142,7 +151,8 @@
 			edgeLabelDistance={edgeLabelDistance}
 	/>
 	<Text
-			text='Click to add vertex.'
+			show={showHint}
+			text={getTranslation(lang, 'addHint')}
 			fontSize={12}
 			align='right'
 			baseline='bottom'
@@ -151,8 +161,8 @@
 	/>
 	<FPS show={showFPS} />
 </Canvas>
-<div class="controls" class:controls_opened={showSettings}>
-	{#if showSettings}
+<div class="controls" class:controls_opened={showMenu}>
+	{#if showMenu}
 		<div class="controls-block">
 			<div class="buttons-row">
 				<button on:click={() => {
@@ -160,14 +170,14 @@
 				}}>
 					{getTranslation(lang, "about")}
 				</button>
-				<button on:click={() => (showSettings = false)}>
-					{getTranslation(lang, "hideSettings")}
+				<button on:click={() => (showMenu = false)}>
+					{getTranslation(lang, "hideMenu")}
 				</button>
 			</div>
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">
-				{getTranslation(lang, "graphSettings")}
+				{getTranslation(lang, "graphControls")}
 			</h2>
 			<Checkbox
 					title={getTranslation(lang, "removeEdgesOnMoving")}
@@ -222,8 +232,8 @@
 			</div>
 		</div>
 	{:else}
-		<button on:click={() => (showSettings = true)}>
-			{getTranslation(lang, "showSettings")}
+		<button on:click={() => (showMenu = true)}>
+			{getTranslation(lang, "showMenu")}
 		</button>
 	{/if}
 </div>
@@ -340,6 +350,10 @@
 	<Checkbox
 			title={getTranslation(lang, "showFPS")}
 			bind:checked={showFPS}
+	/>
+	<Checkbox
+			title={getTranslation(lang, "showHint")}
+			bind:checked={showHint}
 	/>
 	<div class="controls-block">
 		<h2 class="controls-block__title">

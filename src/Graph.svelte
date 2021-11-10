@@ -40,7 +40,22 @@
         const { context } = props
 
         if (mouseDown && movingVertexId !== -1 && Date.now() - time > CLICK_TIME_MS) {
-            vertexes[movingVertexId] = mouse
+            let x = mouse.x
+            let y = mouse.y
+
+            if (x > $width) {
+                x = $width
+            } else if (x < 0) {
+                x = 0
+            }
+
+            if (y > $height) {
+                y = $height
+            } else if (y < 0) {
+                y = 0
+            }
+
+            vertexes[movingVertexId] = { x, y }
 
             if (removeEdgesOnMoving) {
                 edges = []
@@ -109,31 +124,42 @@
         }
 
         movingVertexId = nearest.index
-        handleMouseMove(ev)
+        mouse = vertexes[movingVertexId]
         mouseDown = true
         time = Date.now()
     }
 
-    function handleMouseMove({ clientX, clientY }) {
-        if (clientX > $width) {
-            clientX = $width
-        } else if (clientX < 0) {
-            clientX = 0
+    function handleMouseMove(ev) {
+        if (!mouse) {
+            return
         }
 
-        if (clientY > $height) {
-            clientY = $height
-        } else if (clientY < 0) {
-            clientY = 0
-        }
-
-        mouse = { x: clientX, y: clientY }
+        mouse.x += ev.movementX
+        mouse.y += ev.movementY
     }
 
-    function handleMouseUp(ev) {
-        handleMouseMove(ev)
+    function handleMouseUp() {
         mouseDown = false
         movingVertexId = -1
+        previousTouch = null
+    }
+
+    export function handleTouchStart(ev) {
+        let touch = ev.touches[0]
+        handleMouseDown(touch)
+    }
+
+    let previousTouch = null
+    function handleTouchMove(ev) {
+        let touch = ev.touches[0]
+
+        if (previousTouch) {
+            touch.movementX = touch.pageX - previousTouch.pageX
+            touch.movementY = touch.pageY - previousTouch.pageY
+            handleMouseMove(touch)
+        }
+
+        previousTouch = touch
     }
 
     export function removeAllEdges() {
@@ -287,7 +313,11 @@
 
 <svelte:window
         on:mouseup={handleMouseUp}
-        on:mousemove={handleMouseMove} />
+        on:touchend={handleMouseUp}
+        on:mousemove={handleMouseMove}
+        on:touchmove={handleTouchMove}
+
+/>
 
 <!-- The following allows this component to nest children -->
 <slot></slot>

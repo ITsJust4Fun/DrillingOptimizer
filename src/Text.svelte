@@ -1,22 +1,24 @@
-<script>
-	import { renderable } from './game.js';
+<script lang="ts">
+	import { renderable } from './game.js'
+
+    export let show = true
 	
-	export let color = 'hsl(0, 0%, 100%)';
-	export let align = 'center';
-	export let baseline = 'middle';
+	export let color = 'hsl(0, 0%, 100%)'
+	export let align = 'center'
+	export let baseline = 'middle'
 	
-	export let text = '';
-	export let x = 0;
-	export let y = 0;
+	export let text = ''
+	export let x = 0
+	export let y = 0
 	
-	export let fontSize = 16;
-	export let fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica';
+	export let fontSize = 16
+	export let fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica'
 	
 	renderable(props => {
-		const { context, width, height } = props;
-		if (text) {
+		const { context, width, height } = props
+		if (text && show) {
 			context.fillStyle = color;
-			context.font = `${fontSize}px ${fontFamily}`;
+			context.font = `${fontSize}px ${fontFamily}`
 			context.textAlign = align;
 			context.textBaseline = baseline;		
 			context.fillText(text, x, y);

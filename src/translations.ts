@@ -11,13 +11,21 @@ export default {
     en: "Russian",
     ru: "Русский",
   },
-  showSettings: {
-    en: "Show settings",
-    ru: "Показать настройки"
+  showMenu: {
+    en: "Show Menu",
+    ru: "Показать меню"
   },
-  hideSettings: {
-    en: "Hide settings",
-    ru: "Скрыть настройки"
+  hideMenu: {
+    en: "Hide menu",
+    ru: "Скрыть меню"
+  },
+  addHint: {
+    en: 'Click to add vertex.',
+    ru: 'Нажмите чтобы добавить вершину.',
+  },
+  showHint: {
+    en: 'Show Hint',
+    ru: 'Показать подсказку'
   },
   about: {
     en: "About",
@@ -59,9 +67,9 @@ export default {
     en: "Vertex label color",
     ru: "Цвет шрифта координат вершины",
   },
-  graphSettings: {
-    en: "Graph settings",
-    ru: "Настройки графа",
+  graphControls: {
+    en: "Graph Controls",
+    ru: "Управление Графом",
   },
   removeAllVertexes: {
     en: "Remove all vertexes",

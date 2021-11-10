@@ -1,4 +1,9 @@
 <script lang="ts">
+    import {height, width} from "./game"
+    import {afterUpdate} from "svelte"
+
+    let window
+
     export let title = ''
     export let isOpened = true
     export let zIndex = 0
@@ -8,6 +13,26 @@
     export let y = 100
 
     let isMouseDown = false
+    let isFirstRender = true
+    let mouse: { x: Number, y: Number }
+    let outOfBoundLimitX = 100
+    let outOfBoundLimitY = 100
+
+    afterUpdate(() => {
+        if (isFirstRender && window) {
+            x = Math.floor($width / 2) - Math.floor(window.clientWidth / 2)
+            y = Math.floor($height / 2) - Math.floor(window.clientHeight / 2)
+
+            isFirstRender = false
+        }
+
+        if (window) {
+            outOfBoundLimitX = Math.floor(window.clientWidth / 2)
+            outOfBoundLimitY = Math.floor(window.clientHeight / 2)
+
+            checkPosition()
+        }
+    })
 
     function onClose() {
         isOpened = false
@@ -17,6 +42,39 @@
         }
     }
 
+    function checkPosition() {
+        if (x > $width - outOfBoundLimitX) {
+            x = $width - outOfBoundLimitX
+        } else if (x < -outOfBoundLimitX) {
+            x = -outOfBoundLimitX
+        }
+
+        if (y > $height - outOfBoundLimitY) {
+            y = $height - outOfBoundLimitY
+        } else if (y < -outOfBoundLimitY) {
+            y = -outOfBoundLimitY
+        }
+    }
+
+    function handleTouchStart(ev) {
+        let touch = ev.touches[0]
+
+        handleMouseDown(touch)
+    }
+
+    let previousTouch = null
+    function handleTouchMove(ev) {
+        let touch = ev.touches[0]
+
+        if (previousTouch) {
+            touch.movementX = touch.pageX - previousTouch.pageX
+            touch.movementY = touch.pageY - previousTouch.pageY
+            handleMouseMove(touch)
+        }
+
+        previousTouch = touch
+    }
+
     function handleMouseDown(ev) {
         const classes = ev.target.className
         const moveClasses = ['controls', 'controls-block', 'controls-block__title']
@@ -24,6 +82,7 @@
 
         if (moveClasses.some(classes.includes.bind(classes)) && dy < 50) {
             isMouseDown = true
+            mouse = { x, y }
         }
 
         if (onClickHandler) {
@@ -32,25 +91,35 @@
     }
 
     function handleMouseMove(ev) {
-        if (isMouseDown) {
-            x += ev.movementX;
-            y += ev.movementY;
+        if (isMouseDown && mouse) {
+            mouse.x += ev.movementX
+            mouse.y += ev.movementY
+            x = mouse.x
+            y = mouse.y
+
+            checkPosition()
         }
     }
 
     function handleMouseUp() {
         isMouseDown = false
+        previousTouch = null
     }
 </script>
 
 <svelte:window
         on:mouseup={handleMouseUp}
-        on:mousemove={handleMouseMove} />
+        on:touchend={handleMouseUp}
+        on:mousemove={handleMouseMove}
+        on:touchmove={handleTouchMove}
+/>
 
 {#if isOpened}
     <div class="controls"
          style="z-index: {zIndex + 1}; left: {x}px; top: {y}px;"
          on:mousedown={handleMouseDown}
+         on:touchstart={handleTouchStart}
+         bind:this={window}
     >
         <div class="controls-block">
             <h2 class="controls-block__title">
