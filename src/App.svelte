@@ -418,6 +418,10 @@
 	<p>Developed using svelte</p>
 </Window>
 
+<svelte:window
+		on:fullscreenchange={() => { isFullscreen = document.fullscreenElement !== null }}
+/>
+
 <style>
 	:global(body) {
 		margin: 0;
