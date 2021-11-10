@@ -397,7 +397,7 @@
 		/>
 	</div>
 	<div class="controls-block">
-		<div class="buttons-row">
+		<div class="buttons-row" style="margin-bottom: 0;">
 			<button on:click={switchFullscreen}>
 				{#if isFullscreen}
 					{getTranslation(lang, 'exitFullsceen')}
