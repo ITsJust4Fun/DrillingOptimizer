@@ -55,6 +55,8 @@
 	let edgeLabelDistance = 30
 	let edgeLabelSize = 8
 	let edgeLabelColorId = 9
+	let totalDistance = '0'
+	let totalDistanceWithStart = '0'
 
 	let graphComponent
 	let graphClickHandler
@@ -85,6 +87,7 @@
 			graphComponent.generateVertexes()
 		}
 		graphFillEdgesInAddingOrderHandler = function() {
+			makeWindowActive(Windows.TotalDistance)
 			graphComponent.fillEdgesInAddingOrder()
 		}
 	})
@@ -94,6 +97,7 @@
 		EdgeSettings,
 		OtherSettings,
 		About,
+		TotalDistance,
 		Size,
 	}
 
@@ -165,6 +169,8 @@
 	</Background>
 	<Graph
 			bind:this={graphComponent}
+			bind:totalDistance={totalDistance}
+			bind:totalDistanceWithStart={totalDistanceWithStart}
 			vertexColor={COLORS[vertexColorId]}
 			edgeColor={COLORS[edgeColorId]}
 			vertexSize={vertexSize}
@@ -415,7 +421,30 @@
 		onClickHandler={() => { makeWindowActive(Windows.About) }}
 		onCloseHandler={() => { makeWindowInactive(Windows.About) }}
 >
-	<p>Developed using svelte</p>
+	<p style="text-align: center">
+		{getTranslation(lang, 'pcbDrillingOptimazer')}<br>
+		<a
+				href="https://github.com/ITsJust4Fun/DrillingOptimizer"
+				target="_blank"
+		>
+			{getTranslation(lang, 'githubPage')}
+		</a>
+	</p>
+	<p style="text-align: center">{getTranslation(lang, 'developedUsingSvelte')}</p>
+</Window>
+<Window
+		title="{getTranslation(lang, 'distance')}"
+		isOpened={windowsStatus[Windows.TotalDistance]}
+		zIndex={windowsOrder[Windows.TotalDistance]}
+		onClickHandler={() => { makeWindowActive(Windows.TotalDistance) }}
+		onCloseHandler={() => { makeWindowInactive(Windows.TotalDistance) }}
+>
+	<div>
+		{getTranslation(lang, 'totalDistance')}: {totalDistance}
+	</div>
+	<div>
+		{getTranslation(lang, 'totalDistanceWithStart')}: {totalDistanceWithStart}
+	</div>
 </Window>
 
 <svelte:window

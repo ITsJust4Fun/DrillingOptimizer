@@ -146,5 +146,29 @@ export default {
   enterFullsceen: {
     en: "Enter fullscreen",
     ru: "Развернуть на весь экран"
+  },
+  pcbDrillingOptimazer: {
+    en: "PCB drilling optimazer",
+    ru: "Оптимизатор сверления печатных плат"
+  },
+  githubPage: {
+    en: "GitHub page",
+    ru: "Страница на GitHub"
+  },
+  developedUsingSvelte: {
+    en: "Developed using svelte",
+    ru: "Разработано с использованием svelte"
+  },
+  distance: {
+    en: "Distance",
+    ru: "Расстояние"
+  },
+  totalDistance: {
+    en: "Total distance",
+    ru: "Общее расстояние"
+  },
+  totalDistanceWithStart: {
+    en: "Total distance with start",
+    ru: "Общее расстояние со старта"
   }
 } as { [phrase: string]: { [lang: string]: string } };

@@ -14,6 +14,8 @@
     export let edgeLabelDistance = 30
     export let edgeLabelSize = 8
     export let edgeLabelColor = 'hsl(0, 0%, 100%)'
+    export let totalDistance = '0'
+    export let totalDistanceWithStart = '0'
 
     interface Vertex {
         x: number
@@ -28,6 +30,7 @@
     let vertexes: Vertex[] = []
     let edges: Edge[] = []
     let minDistance = 80
+    let startPosition = { x: 0, y: 0 }
 
     let mouse: Vertex = null
     let movingVertexId = -1
@@ -58,7 +61,9 @@
             vertexes[movingVertexId] = { x, y }
 
             if (removeEdgesOnMoving) {
-                edges = []
+                removeAllEdges()
+            } else {
+                calculateDistances()
             }
         }
 
@@ -97,7 +102,7 @@
         }
 
         time = -1
-        edges = []
+        removeAllEdges()
 
         let x = ev.clientX
         let y = ev.clientY
@@ -164,10 +169,13 @@
 
     export function removeAllEdges() {
         edges = []
+        totalDistance = '0'
+        totalDistanceWithStart = '0'
+        resetDistances()
     }
 
     export function removeAllVertexes() {
-        edges = []
+        removeAllEdges()
         vertexes = []
     }
 
@@ -200,7 +208,7 @@
     }
 
     export function fillEdgesInAddingOrder() {
-        edges = []
+        removeAllEdges()
 
         for (let i = 0; i < vertexes.length; i++) {
             let j = i + 1
@@ -209,6 +217,35 @@
                 edges = [...edges, { i, j }]
             }
         }
+
+        calculateDistances()
+    }
+
+    function calculateDistances() {
+        let totalDistanceCount = 0
+
+        for (let i = 0; i < vertexes.length; i++) {
+            let j = i + 1
+
+            if (j < vertexes.length) {
+                totalDistanceCount += getDistance(vertexes[i], vertexes[j])
+            }
+        }
+
+        let totalDistanceWithStartCount = totalDistanceCount
+
+        if (vertexes.length) {
+            totalDistanceWithStartCount += getDistance(startPosition, vertexes[0])
+            totalDistanceWithStartCount += getDistance(startPosition, vertexes.at(-1))
+        }
+
+        totalDistance = Math.round(totalDistanceCount).toString()
+        totalDistanceWithStart = Math.round(totalDistanceWithStartCount).toString()
+    }
+
+    function resetDistances() {
+        totalDistance = '0'
+        totalDistanceWithStart = '0'
     }
 
     function drawVertexLabel(props) {
