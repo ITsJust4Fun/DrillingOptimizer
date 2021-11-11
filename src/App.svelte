@@ -87,7 +87,6 @@
 			graphComponent.generateVertexes()
 		}
 		graphFillEdgesInAddingOrderHandler = function() {
-			makeWindowActive(Windows.TotalDistance)
 			graphComponent.fillEdgesInAddingOrder()
 		}
 	})
@@ -241,6 +240,11 @@
 			<div class="buttons-row">
 				<button on:click={graphFillEdgesInAddingOrderHandler}>
 					{getTranslation(lang, "fillEdgesInAddingOrder")}
+				</button>
+			</div>
+			<div class="buttons-row">
+				<button on:click={() => {makeWindowActive(Windows.TotalDistance)}}>
+					{getTranslation(lang, "showTotalDistance")}
 				</button>
 			</div>
 		</div>

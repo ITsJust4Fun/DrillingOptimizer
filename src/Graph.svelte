@@ -224,12 +224,8 @@
     function calculateDistances() {
         let totalDistanceCount = 0
 
-        for (let i = 0; i < vertexes.length; i++) {
-            let j = i + 1
-
-            if (j < vertexes.length) {
-                totalDistanceCount += getDistance(vertexes[i], vertexes[j])
-            }
+        for (let edge of edges) {
+            totalDistanceCount += getDistance(vertexes[edge.i], vertexes[edge.j])
         }
 
         let totalDistanceWithStartCount = totalDistanceCount

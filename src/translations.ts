@@ -170,5 +170,9 @@ export default {
   totalDistanceWithStart: {
     en: "Total distance with start",
     ru: "Общее расстояние со старта"
+  },
+  showTotalDistance: {
+    en: "Show total distance",
+    ru: "Показать общее расстояние"
   }
 } as { [phrase: string]: { [lang: string]: string } };
