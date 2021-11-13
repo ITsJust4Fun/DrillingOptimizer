@@ -57,7 +57,7 @@
 	let edgeSize = 3
 	let vertexLabelColorId = 9
 	let vertexLabelSize = 8
-	let vertexesGenerationCount = 30
+	let verticesGenerationCount = 30
 	let edgeLabelDistance = 30
 	let edgeLabelSize = 8
 	let edgeLabelColorId = 9
@@ -69,9 +69,9 @@
 	let graphClickHandler
 	let graphMouseDownHandler
 	let graphTouchStartHandler
-	let graphRemoveVertexesHandler
+	let graphRemoveVerticesHandler
 	let graphRemoveEdgesHandler
-	let graphGenerateVertexesHandler
+	let graphGenerateVerticesHandler
 	let graphConnectEdgesHandler
 
 	onMount(function(){
@@ -84,14 +84,14 @@
 		graphTouchStartHandler = function (ev) {
 			graphComponent.handleTouchStart(ev)
 		}
-		graphRemoveVertexesHandler = function() {
-			graphComponent.removeAllVertexes()
+		graphRemoveVerticesHandler = function() {
+			graphComponent.removeAllVertices()
 		}
 		graphRemoveEdgesHandler = function() {
 			graphComponent.removeAllEdges()
 		}
-		graphGenerateVertexesHandler = function() {
-			graphComponent.generateVertexes()
+		graphGenerateVerticesHandler = function() {
+			graphComponent.generateVertices()
 		}
 		graphConnectEdgesHandler = function() {
 			graphComponent.connectEdges()
@@ -104,7 +104,7 @@
 		OtherSettings,
 		About,
 		TotalDistance,
-		ConnectVertexes,
+		ConnectVertices,
 		Size,
 	}
 
@@ -186,7 +186,7 @@
 			removeEdgesOnMoving={removeEdgesOnMoving}
 			vertexLabelSize={vertexLabelSize}
 			vertexLabelColor={COLORS[vertexLabelColorId]}
-			vertexesGenerationCount={vertexesGenerationCount}
+			verticesGenerationCount={verticesGenerationCount}
 			showEdgeLabel={showEdgeLabel}
 			edgeLabelColor={COLORS[edgeLabelColorId]}
 			edgeLabelSize={edgeLabelSize}
@@ -225,8 +225,8 @@
 					bind:checked={removeEdgesOnMoving}
 			/>
 			<div class="buttons-row">
-				<button on:click={graphRemoveVertexesHandler}>
-					{getTranslation(lang, "removeAllVertexes")}
+				<button on:click={graphRemoveVerticesHandler}>
+					{getTranslation(lang, "removeAllVertices")}
 				</button>
 			</div>
 			<div class="buttons-row">
@@ -235,20 +235,20 @@
 				</button>
 			</div>
 			<div class="buttons-row">
-				<button on:click={graphGenerateVertexesHandler}>
-					{getTranslation(lang, "generateVertexes")}
+				<button on:click={graphGenerateVerticesHandler}>
+					{getTranslation(lang, "generateVertices")}
 				</button>
 			</div>
 			<InputRange
-					name={getTranslation(lang, "vertexesGenerationCount")}
+					name={getTranslation(lang, "verticesGenerationCount")}
 					min={2}
 					max={100}
 					step={1}
-					bind:value={vertexesGenerationCount}
+					bind:value={verticesGenerationCount}
 			/>
 			<div class="buttons-row">
-				<button on:click={() => {makeWindowActive(Windows.ConnectVertexes)}}>
-					{getTranslation(lang, "connectVertexes")}
+				<button on:click={() => {makeWindowActive(Windows.ConnectVertices)}}>
+					{getTranslation(lang, "connectVertices")}
 				</button>
 			</div>
 			<div class="buttons-row">
@@ -460,11 +460,11 @@
 	</div>
 </Window>
 <Window
-		title="{getTranslation(lang, 'connectVertexes')}"
-		isOpened={windowsStatus[Windows.ConnectVertexes]}
-		zIndex={windowsOrder[Windows.ConnectVertexes]}
-		onClickHandler={() => { makeWindowActive(Windows.ConnectVertexes) }}
-		onCloseHandler={() => { makeWindowInactive(Windows.ConnectVertexes) }}
+		title="{getTranslation(lang, 'connectVertices')}"
+		isOpened={windowsStatus[Windows.ConnectVertices]}
+		zIndex={windowsOrder[Windows.ConnectVertices]}
+		onClickHandler={() => { makeWindowActive(Windows.ConnectVertices) }}
+		onCloseHandler={() => { makeWindowInactive(Windows.ConnectVertices) }}
 >
 	<h2 class="controls-block__title">
 		{getTranslation(lang, 'algorithms')}

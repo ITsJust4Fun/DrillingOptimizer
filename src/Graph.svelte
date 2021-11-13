@@ -9,7 +9,7 @@
     export let removeEdgesOnMoving = false
     export let vertexLabelColor = 'hsl(0, 0%, 100%)'
     export let vertexLabelSize = 8
-    export let vertexesGenerationCount = 30
+    export let verticesGenerationCount = 30
     export let showEdgeLabel = true
     export let edgeLabelDistance = 30
     export let edgeLabelSize = 8
@@ -28,7 +28,7 @@
         j: number
     }
 
-    let vertexes: Vertex[] = []
+    let vertices: Vertex[] = []
     let edges: Edge[] = []
     let minDistance = 80
     let startPosition = { x: 0, y: 0 }
@@ -59,7 +59,7 @@
                 y = 0
             }
 
-            vertexes[movingVertexId] = { x, y }
+            vertices[movingVertexId] = { x, y }
 
             if (removeEdgesOnMoving) {
                 removeAllEdges()
@@ -69,10 +69,10 @@
         }
 
         for (let edge of edges) {
-            drawLine(context, vertexes[edge.i], vertexes[edge.j])
+            drawLine(context, vertices[edge.i], vertices[edge.j])
         }
 
-        for (let vertex of vertexes) {
+        for (let vertex of vertices) {
             context.lineCap = 'round'
             context.beginPath()
             context.fillStyle = vertexColor
@@ -83,7 +83,7 @@
         }
 
         if (showVertexLabel) {
-            for (let vertex of vertexes) {
+            for (let vertex of vertices) {
                 let text = `(${Math.round(vertex.x)}, ${Math.round(vertex.y)})`
                 drawVertexLabel({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })
             }
@@ -91,7 +91,7 @@
 
         if (showEdgeLabel) {
             for (let edge of edges) {
-                drawEdgeLabel(context, vertexes[edge.i], vertexes[edge.j])
+                drawEdgeLabel(context, vertices[edge.i], vertices[edge.j])
             }
         }
     })
@@ -111,12 +111,12 @@
         let nearest = getNearestVertex(x, y)
 
         if (nearest.value <= vertexSize && nearest.index !== -1) {
-            vertexes = [...vertexes.slice(0, nearest.index), ...vertexes.slice(nearest.index + 1, vertexes.length)]
+            vertices = [...vertices.slice(0, nearest.index), ...vertices.slice(nearest.index + 1, vertices.length)]
             return
         }
 
         let vertex: Vertex = { x, y }
-        vertexes = [...vertexes, vertex]
+        vertices = [...vertices, vertex]
     }
 
     export function handleMouseDown(ev) {
@@ -130,7 +130,7 @@
         }
 
         movingVertexId = nearest.index
-        mouse = vertexes[movingVertexId]
+        mouse = vertices[movingVertexId]
         mouseDown = true
         time = Date.now()
     }
@@ -175,20 +175,20 @@
         resetDistances()
     }
 
-    export function removeAllVertexes() {
+    export function removeAllVertices() {
         removeAllEdges()
-        vertexes = []
+        vertices = []
     }
 
     function getRandomInt(min: number, max:number): number {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
 
-    export function generateVertexes() {
-        removeAllVertexes()
+    export function generateVertices() {
+        removeAllVertices()
         let attempts = 0
 
-        while (vertexes.length !== vertexesGenerationCount && attempts !== 5000) {
+        while (vertices.length !== verticesGenerationCount && attempts !== 5000) {
             let x = getRandomInt(0, $width - 1)
             let y = getRandomInt(0, $height - 1)
 
@@ -200,21 +200,21 @@
             }
 
             let vertex: Vertex = { x, y }
-            vertexes = [...vertexes, vertex]
+            vertices = [...vertices, vertex]
 
             attempts = 0
         }
 
-        console.log(`Generated ${vertexes.length} vertexes`)
+        console.log(`Generated ${vertices.length} vertices`)
     }
 
     function fillEdges() {
         removeAllEdges()
 
-        for (let i = 0; i < vertexes.length; i++) {
+        for (let i = 0; i < vertices.length; i++) {
             let j = i + 1
 
-            if (j < vertexes.length) {
+            if (j < vertices.length) {
                 edges = [...edges, { i, j }]
             }
         }
@@ -266,14 +266,14 @@
         let totalDistanceCount = 0
 
         for (let edge of edges) {
-            totalDistanceCount += getDistance(vertexes[edge.i], vertexes[edge.j])
+            totalDistanceCount += getDistance(vertices[edge.i], vertices[edge.j])
         }
 
         let totalDistanceWithStartCount = totalDistanceCount
 
-        if (vertexes.length) {
-            totalDistanceWithStartCount += getDistance(startPosition, vertexes[0])
-            totalDistanceWithStartCount += getDistance(startPosition, vertexes.at(-1))
+        if (vertices.length) {
+            totalDistanceWithStartCount += getDistance(startPosition, vertices[0])
+            totalDistanceWithStartCount += getDistance(startPosition, vertices.at(-1))
         }
 
         totalDistance = Math.round(totalDistanceCount).toString()
@@ -324,11 +324,11 @@
         let x = (vertexI.x + vertexJ.x) / 2
         let y = (vertexI.y + vertexJ.y) / 2
 
-        let thetaVertexes = angle(vertexI.x, vertexI.y, vertexJ.x, vertexJ.y)
+        let thetaVertices = angle(vertexI.x, vertexI.y, vertexJ.x, vertexJ.y)
 
         let radius = edgeLabelDistance
-        let resultX = radius * Math.cos(thetaVertexes + 3 * Math.PI / 2) + x
-        let resultY = radius * Math.sin(thetaVertexes + 3 * Math.PI / 2) + y
+        let resultX = radius * Math.cos(thetaVertices + 3 * Math.PI / 2) + x
+        let resultY = radius * Math.sin(thetaVertices + 3 * Math.PI / 2) + y
 
         let align = 'center'
         let baseline = 'top'
@@ -341,7 +341,7 @@
         context.textBaseline = baseline
         context.save()
         context.translate(resultX, resultY)
-        context.rotate(thetaVertexes)
+        context.rotate(thetaVertices)
         context.fillText(label, 0, 0)
         context.restore()
     }
@@ -366,12 +366,12 @@
         return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     }
 
-    function getNearestVertex(x: number, y: number, vertexesList = vertexes): {index: number, value: number} {
+    function getNearestVertex(x: number, y: number, verticesList = vertices): {index: number, value: number} {
         let nearestIndex: number = -1
         let nearestValue: number = -1
 
-        for (let i = 0; i < vertexesList.length; i++) {
-            let vertex: Vertex = vertexesList[i]
+        for (let i = 0; i < verticesList.length; i++) {
+            let vertex: Vertex = verticesList[i]
 
             let value: number = getDistance(vertex, { x, y })
 

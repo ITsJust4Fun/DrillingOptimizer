@@ -71,20 +71,20 @@ export default {
     en: "Graph Controls",
     ru: "Управление Графом",
   },
-  removeAllVertexes: {
-    en: "Remove all vertexes",
+  removeAllVertices: {
+    en: "Remove all vertices",
     ru: "Удалить все вершины",
   },
   removeAllEdges: {
     en: "Remove all edges",
     ru: "Удалить все грани",
   },
-  generateVertexes: {
-    en: "Generate vertexes",
+  generateVertices: {
+    en: "Generate vertices",
     ru: "Генерировать вершины",
   },
-  vertexesGenerationCount: {
-    en: "Vertexes generation count",
+  verticesGenerationCount: {
+    en: "Vertices generation count",
     ru: "Количество генерируемых вершин",
   },
   removeEdgesOnMoving: {
@@ -171,8 +171,8 @@ export default {
     en: "Show total distance",
     ru: "Показать общее расстояние"
   },
-  connectVertexes: {
-    en: "Connect vertexes",
+  connectVertices: {
+    en: "Connect vertices",
     ru: "Соединить вершины"
   },
   connect: {
