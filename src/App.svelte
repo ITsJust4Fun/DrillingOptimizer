@@ -24,6 +24,12 @@
 	let languages = [{option: 'en', label: 'english', id: "en_radio"},
 					 {option: 'ru', label: 'russian', id: "ru_radio"}]
 
+	let connectAlgorithmsStrings = ['greedy', 'prim', 'salesman', 'spanningTree', 'lastOrder']
+
+	let connectAlgorithms = connectAlgorithmsStrings.map((algorithm) => {
+		return {option: algorithm, label: algorithm, id: algorithm + '_radio'}
+	})
+
 	const COLORS = [
 		"#fa1414",
 		"#c88c64",
@@ -57,6 +63,7 @@
 	let edgeLabelColorId = 9
 	let totalDistance = '0'
 	let totalDistanceWithStart = '0'
+	let connectAlgorithm = connectAlgorithmsStrings[0]
 
 	let graphComponent
 	let graphClickHandler
@@ -65,7 +72,7 @@
 	let graphRemoveVertexesHandler
 	let graphRemoveEdgesHandler
 	let graphGenerateVertexesHandler
-	let graphFillEdgesInAddingOrderHandler
+	let graphConnectEdgesHandler
 
 	onMount(function(){
 		graphClickHandler = function(ev) {
@@ -86,8 +93,8 @@
 		graphGenerateVertexesHandler = function() {
 			graphComponent.generateVertexes()
 		}
-		graphFillEdgesInAddingOrderHandler = function() {
-			graphComponent.fillEdgesInAddingOrder()
+		graphConnectEdgesHandler = function() {
+			graphComponent.connectEdges()
 		}
 	})
 
@@ -97,6 +104,7 @@
 		OtherSettings,
 		About,
 		TotalDistance,
+		ConnectVertexes,
 		Size,
 	}
 
@@ -183,6 +191,7 @@
 			edgeLabelColor={COLORS[edgeLabelColorId]}
 			edgeLabelSize={edgeLabelSize}
 			edgeLabelDistance={edgeLabelDistance}
+			connectAlgorithm={connectAlgorithm}
 	/>
 	<Text
 			show={showHint}
@@ -238,8 +247,8 @@
 					bind:value={vertexesGenerationCount}
 			/>
 			<div class="buttons-row">
-				<button on:click={graphFillEdgesInAddingOrderHandler}>
-					{getTranslation(lang, "fillEdgesInAddingOrder")}
+				<button on:click={() => {makeWindowActive(Windows.ConnectVertexes)}}>
+					{getTranslation(lang, "connectVertexes")}
 				</button>
 			</div>
 			<div class="buttons-row">
@@ -448,6 +457,31 @@
 	</div>
 	<div>
 		{getTranslation(lang, 'totalDistanceWithStart')}: {totalDistanceWithStart}
+	</div>
+</Window>
+<Window
+		title="{getTranslation(lang, 'connectVertexes')}"
+		isOpened={windowsStatus[Windows.ConnectVertexes]}
+		zIndex={windowsOrder[Windows.ConnectVertexes]}
+		onClickHandler={() => { makeWindowActive(Windows.ConnectVertexes) }}
+		onCloseHandler={() => { makeWindowInactive(Windows.ConnectVertexes) }}
+>
+	<h2 class="controls-block__title">
+		{getTranslation(lang, 'algorithms')}
+	</h2>
+	<RadioButtons
+			options={connectAlgorithms}
+			bind:group={connectAlgorithm}
+			groupName="connectAlgorithm"
+			getTranslation={getTranslation}
+			lang={lang}
+	/>
+	<div class="controls-block">
+		<div class="buttons-row" style="margin-bottom: 0;">
+			<button on:click={graphConnectEdgesHandler}>
+				{getTranslation(lang, 'connect')}
+			</button>
+		</div>
 	</div>
 </Window>
 

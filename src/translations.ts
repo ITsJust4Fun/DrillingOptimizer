@@ -87,10 +87,6 @@ export default {
     en: "Vertexes generation count",
     ru: "Количество генерируемых вершин",
   },
-  fillEdgesInAddingOrder: {
-    en: "Fill edges in adding order",
-    ru: "Заполнить грани по порядку",
-  },
   removeEdgesOnMoving: {
     en: "Remove edges on moving",
     ru: "Удалять грани при перемещении",
@@ -174,5 +170,37 @@ export default {
   showTotalDistance: {
     en: "Show total distance",
     ru: "Показать общее расстояние"
+  },
+  connectVertexes: {
+    en: "Connect vertexes",
+    ru: "Соединить вершины"
+  },
+  connect: {
+    en: "Connect",
+    ru: "Соединить"
+  },
+  algorithms: {
+    en: "Algorithms",
+    ru: "Алгоритмы"
+  },
+  greedy: {
+    en: "Greedy",
+    ru: "Жадный"
+  },
+  prim: {
+    en: "Prim",
+    ru: "Прима"
+  },
+  salesman: {
+    en: "Salesman",
+    ru: "Конвояжёры"
+  },
+  spanningTree: {
+    en: "Spanning tree",
+    ru: "Остановое дерево"
+  },
+  lastOrder: {
+    en: "Last order",
+    ru: "В текущем порядке"
   }
 } as { [phrase: string]: { [lang: string]: string } };

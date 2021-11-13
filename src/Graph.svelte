@@ -16,6 +16,7 @@
     export let edgeLabelColor = 'hsl(0, 0%, 100%)'
     export let totalDistance = '0'
     export let totalDistanceWithStart = '0'
+    export let connectAlgorithm = ''
 
     interface Vertex {
         x: number
@@ -207,7 +208,7 @@
         console.log(`Generated ${vertexes.length} vertexes`)
     }
 
-    export function fillEdgesInAddingOrder() {
+    function fillEdges() {
         removeAllEdges()
 
         for (let i = 0; i < vertexes.length; i++) {
@@ -219,6 +220,46 @@
         }
 
         calculateDistances()
+    }
+
+    export function connectEdges() {
+
+        switch (connectAlgorithm) {
+            case 'greedy':
+                greedy()
+                break
+            case 'prim':
+                prim()
+                break
+            case 'salesman':
+                salesman()
+                break
+            case 'spanningTree':
+                spanningTree()
+                break
+            case 'lastOrder':
+                fillEdges()
+        }
+    }
+
+    function greedy() {
+        console.log('greedy')
+        fillEdges()
+    }
+
+    function prim() {
+        console.log('prim')
+        fillEdges()
+    }
+
+    function salesman() {
+        console.log('salesman')
+        fillEdges()
+    }
+
+    function spanningTree() {
+        console.log('spanningTree')
+        fillEdges()
     }
 
     function calculateDistances() {
