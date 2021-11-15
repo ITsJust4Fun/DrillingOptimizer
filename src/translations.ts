@@ -202,5 +202,97 @@ export default {
   lastOrder: {
     en: "Last order",
     ru: "В текущем порядке"
+  },
+  simulationMode: {
+    en: "Simulation mode",
+    ru: "Режим симулятора"
+  },
+  simulationControls: {
+    en: "Simulation Controls",
+    ru: "Управление симулятором"
+  },
+  startSimulation: {
+    en: "Start simulation",
+    ru: "Запустить симуляцию"
+  },
+  moveDrillToStart: {
+    en: "Move drill to start",
+    ru: "Переместить дрель в начало"
+  },
+  simulationSettings: {
+    en: "Simulation Settings",
+    ru: "Настройки симуляции"
+  },
+  drillMoveSpeed: {
+    en: "Drill move speed",
+    ru: "Скорость перемещения дрели"
+  },
+  drillSpinSpeed: {
+    en: "Drill spin speed",
+    ru: "Скорость вращения дрели"
+  },
+  drillRotationsCount: {
+    en: "Drill rotations count",
+    ru: "Число вращений дрели"
+  },
+  drillColor: {
+    en: "Drill color",
+    ru: "Цвет дрели"
+  },
+  drillNormalColor: {
+    en: "Normal color",
+    ru: "Цвет нормали"
+  },
+  drillLabelSize: {
+    en: "Drill label size",
+    ru: "Размер этикетки дрели"
+  },
+  drillLabelColor: {
+    en: "Drill label color",
+    ru: "Цвет этикетки дрели"
+  },
+  showDrillLabel: {
+    en: "Show drill label",
+    ru: "Показывать этикетку дрели"
+  },
+  infiniteSimulation: {
+    en: "Infinite simulation",
+    ru: "Бесконечная симуляция"
+  },
+  showDrillingTime: {
+    en: "Show drilling time",
+    ru: "Показать время сверления"
+  },
+  drillingTime: {
+    en: "Drilling time",
+    ru: "Время сверления"
+  },
+  minutesShort: {
+    en: "m",
+    ru: "м"
+  },
+  secondsShort: {
+    en: "s",
+    ru: "с"
+  },
+  milliSecondsShort: {
+    en: "ms",
+    ru: "мс"
+  },
+  lastDrillingTime: {
+    en: "Last drilling time",
+    ru: "Последнее время сверления"
+  },
+  returnDrillToStart: {
+    en: "Return drill to start",
+    ru: "Вернуть дрель в начало"
+  },
+  drilledVertexColor: {
+    en: "Drilled vertex color",
+    ru: "Цвет высверленной вершины"
+  },
+  backgroundColor: {
+    en: "Background color",
+    ru: "Цвет фона"
   }
 } as { [phrase: string]: { [lang: string]: string } };

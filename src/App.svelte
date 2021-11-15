@@ -39,8 +39,9 @@
 		"#8200c8",
 		"#fa96d2",
 		"#828282",
-		"green",
+		"#417530",
 		"white",
+		"#1a1a1a",
 	]
 
 	let lang = new URLSearchParams(location.search).get("lang") || "en"
@@ -51,6 +52,7 @@
 	let showEdgeLabel = true
 	let removeEdgesOnMoving = false
 	let isFullscreen = false
+	let isSimulationMode = false
 	let vertexColorId = 0
 	let edgeColorId = 0
 	let vertexSize = 10
@@ -64,6 +66,21 @@
 	let totalDistance = '0'
 	let totalDistanceWithStart = '0'
 	let connectAlgorithm = connectAlgorithmsStrings[0]
+	let drillMoveSpeed = 0.1
+	let drillSpinSpeed = 0.5
+	let drillRotationsCount = 10
+	let drillColorId = 1
+	let drillNormalColorId = 0
+	let drillLabelSize = 8
+	let drillLabelColorId = 9
+	let isShowDrillLabel = true
+	let isInfiniteSimulation = false
+	let drillingTime = 0
+	let lastDrillingTime = 0
+	let isReturnDrillToStart = false
+	let isBlockDrillControls = false
+	let drilledVertexColorId = 9
+	let backgroundColorId = 10
 
 	let graphComponent
 	let graphClickHandler
@@ -73,6 +90,8 @@
 	let graphRemoveEdgesHandler
 	let graphGenerateVerticesHandler
 	let graphConnectEdgesHandler
+	let moveDrillToStartHandler
+	let startSimulationHandler
 
 	onMount(function(){
 		graphClickHandler = function(ev) {
@@ -96,6 +115,20 @@
 		graphConnectEdgesHandler = function() {
 			graphComponent.connectEdges()
 		}
+		moveDrillToStartHandler = function () {
+			if (!isSimulationMode) {
+				return
+			}
+
+			graphComponent.moveDrillToStart()
+		}
+		startSimulationHandler = function () {
+			if (!isSimulationMode) {
+				return
+			}
+
+			graphComponent.startSimulation()
+		}
 	})
 
 	enum Windows {
@@ -105,6 +138,8 @@
 		About,
 		TotalDistance,
 		ConnectVertices,
+		SimulationControls,
+		DrillingTime,
 		Size,
 	}
 
@@ -164,6 +199,17 @@
 		}
 	}
 
+	function msToStringTime(time) {
+		let seconds = Math.floor(time / 1000)
+		let minutes = Math.floor(seconds / 60)
+		seconds = seconds % 60
+		let milliseconds = time % 1000
+
+		return minutes + getTranslation(lang, 'minutesShort') + " " +
+				seconds + getTranslation(lang, 'secondsShort') + " " +
+				milliseconds + getTranslation(lang, 'milliSecondsShort')
+	}
+
 </script>
 
 <Canvas
@@ -171,13 +217,16 @@
 		onMouseDown={graphMouseDownHandler}
 		onTouchStart={graphTouchStartHandler}
 >
-	<Background color='hsl(0, 0%, 10%)'>
+	<Background color={COLORS[backgroundColorId]}>
 		<DotGrid divisions={30} color='hsla(0, 0%, 100%, 0.5)' />
 	</Background>
 	<Graph
 			bind:this={graphComponent}
 			bind:totalDistance={totalDistance}
 			bind:totalDistanceWithStart={totalDistanceWithStart}
+			bind:drillingTime={drillingTime}
+			bind:lastDrillingTime={lastDrillingTime}
+			bind:isBlockDrillControls={isBlockDrillControls}
 			vertexColor={COLORS[vertexColorId]}
 			edgeColor={COLORS[edgeColorId]}
 			vertexSize={vertexSize}
@@ -192,6 +241,18 @@
 			edgeLabelSize={edgeLabelSize}
 			edgeLabelDistance={edgeLabelDistance}
 			connectAlgorithm={connectAlgorithm}
+			isSimulationMode={isSimulationMode}
+			isShowDrillLabel={isShowDrillLabel}
+			drillLabelSize={drillLabelSize}
+			drillLabelColor={COLORS[drillLabelColorId]}
+			drillColor={COLORS[drillColorId]}
+			drillNormalColor={COLORS[drillNormalColorId]}
+			drillMoveSpeed={drillMoveSpeed}
+			drillSpinSpeed={drillSpinSpeed}
+			drillRotationsCount={drillRotationsCount}
+			isInfiniteSimulation={isInfiniteSimulation}
+			isReturnDrillToStart={isReturnDrillToStart}
+			drilledVertexColor={COLORS[drilledVertexColorId]}
 	/>
 	<Text
 			show={showHint}
@@ -224,21 +285,27 @@
 					title={getTranslation(lang, "removeEdgesOnMoving")}
 					bind:checked={removeEdgesOnMoving}
 			/>
-			<div class="buttons-row">
-				<button on:click={graphRemoveVerticesHandler}>
-					{getTranslation(lang, "removeAllVertices")}
-				</button>
-			</div>
-			<div class="buttons-row">
-				<button on:click={graphRemoveEdgesHandler}>
-					{getTranslation(lang, "removeAllEdges")}
-				</button>
-			</div>
-			<div class="buttons-row">
-				<button on:click={graphGenerateVerticesHandler}>
-					{getTranslation(lang, "generateVertices")}
-				</button>
-			</div>
+			<Checkbox
+					title={getTranslation(lang, "simulationMode")}
+					bind:checked={isSimulationMode}
+			/>
+			{#if !isSimulationMode}
+				<div class="buttons-row">
+					<button on:click={graphRemoveVerticesHandler}>
+						{getTranslation(lang, "removeAllVertices")}
+					</button>
+				</div>
+				<div class="buttons-row">
+					<button on:click={graphRemoveEdgesHandler}>
+						{getTranslation(lang, "removeAllEdges")}
+					</button>
+				</div>
+				<div class="buttons-row">
+					<button on:click={graphGenerateVerticesHandler}>
+						{getTranslation(lang, "generateVertices")}
+					</button>
+				</div>
+			{/if}
 			<InputRange
 					name={getTranslation(lang, "verticesGenerationCount")}
 					min={2}
@@ -256,6 +323,13 @@
 					{getTranslation(lang, "showTotalDistance")}
 				</button>
 			</div>
+			{#if isSimulationMode}
+				<div class="buttons-row">
+					<button on:click={() => {makeWindowActive(Windows.SimulationControls)}}>
+						{getTranslation(lang, "simulationControls")}
+					</button>
+				</div>
+			{/if}
 		</div>
 		<div class="controls-block">
 			<h2 class="controls-block__title">
@@ -426,6 +500,15 @@
 			</button>
 		</div>
 	</div>
+	<div class="controls-block">
+		<h2 class="controls-block__title">
+			{getTranslation(lang, "backgroundColor")}
+		</h2>
+		<ColorSelector
+				colors={COLORS}
+				bind:selectedId={backgroundColorId}
+		/>
+	</div>
 </Window>
 <Window
 		title="{getTranslation(lang, 'about')}"
@@ -484,6 +567,134 @@
 		</div>
 	</div>
 </Window>
+{#if isSimulationMode}
+	<Window
+			title="{getTranslation(lang, 'simulationControls')}"
+			isOpened={windowsStatus[Windows.SimulationControls]}
+			zIndex={windowsOrder[Windows.SimulationControls]}
+			onClickHandler={() => { makeWindowActive(Windows.SimulationControls) }}
+			onCloseHandler={() => { makeWindowInactive(Windows.SimulationControls) }}
+	>
+		<Checkbox
+				title={getTranslation(lang, "showDrillLabel")}
+				bind:checked={isShowDrillLabel}
+		/>
+		<Checkbox
+				title={getTranslation(lang, "infiniteSimulation")}
+				bind:checked={isInfiniteSimulation}
+		/>
+		<Checkbox
+				title={getTranslation(lang, "returnDrillToStart")}
+				bind:checked={isReturnDrillToStart}
+		/>
+		<div class="controls-block">
+			{#if !isBlockDrillControls}
+				<div class="buttons-row">
+					<button on:click={startSimulationHandler}>
+						{getTranslation(lang, 'startSimulation')}
+					</button>
+				</div>
+				<div class="buttons-row">
+					<button on:click={moveDrillToStartHandler}>
+						{getTranslation(lang, 'moveDrillToStart')}
+					</button>
+				</div>
+			{/if}
+			<div class="buttons-row" style="margin-bottom: 0;">
+				<button on:click={() => {makeWindowActive(Windows.DrillingTime)}}>
+					{getTranslation(lang, 'showDrillingTime')}
+				</button>
+			</div>
+		</div>
+		<div class="controls-block">
+			<h2 class="controls-block__title">
+				{getTranslation(lang, 'simulationSettings')}
+			</h2>
+			<InputRange
+					name={getTranslation(lang, "drillMoveSpeed")}
+					min={0.05}
+					max={1}
+					step={0.05}
+					bind:value={drillMoveSpeed}
+			/>
+			<InputRange
+					name={getTranslation(lang, "drillSpinSpeed")}
+					min={0.05}
+					max={1}
+					step={0.05}
+					bind:value={drillSpinSpeed}
+			/>
+			<InputRange
+					name={getTranslation(lang, "drillRotationsCount")}
+					min={1}
+					max={100}
+					step={1}
+					bind:value={drillRotationsCount}
+			/>
+			{#if isShowDrillLabel}
+				<InputRange
+						name={getTranslation(lang, "drillLabelSize")}
+						min={8}
+						max={16}
+						step={1}
+						bind:value={drillLabelSize}
+				/>
+			{/if}
+		</div>
+		<div class="controls-block">
+			<h2 class="controls-block__title">
+				{getTranslation(lang, "drillColor")}
+			</h2>
+			<ColorSelector
+					colors={COLORS}
+					bind:selectedId={drillColorId}
+			/>
+		</div>
+		<div class="controls-block">
+			<h2 class="controls-block__title">
+				{getTranslation(lang, "drillNormalColor")}
+			</h2>
+			<ColorSelector
+					colors={COLORS}
+					bind:selectedId={drillNormalColorId}
+			/>
+		</div>
+		{#if isShowDrillLabel}
+			<div class="controls-block">
+				<h2 class="controls-block__title">
+					{getTranslation(lang, "drillLabelColor")}
+				</h2>
+				<ColorSelector
+						colors={COLORS}
+						bind:selectedId={drillLabelColorId}
+				/>
+			</div>
+		{/if}
+		<div class="controls-block">
+			<h2 class="controls-block__title">
+				{getTranslation(lang, "drilledVertexColor")}
+			</h2>
+			<ColorSelector
+					colors={COLORS}
+					bind:selectedId={drilledVertexColorId}
+			/>
+		</div>
+	</Window>
+	<Window
+			title={getTranslation(lang, "drillingTime")}
+			isOpened={windowsStatus[Windows.DrillingTime]}
+			zIndex={windowsOrder[Windows.DrillingTime]}
+			onClickHandler={() => { makeWindowActive(Windows.DrillingTime) }}
+			onCloseHandler={() => { makeWindowInactive(Windows.DrillingTime) }}
+	>
+		<div>
+			{getTranslation(lang, "lastDrillingTime")}: {msToStringTime(lastDrillingTime)}
+		</div>
+		<div>
+			{getTranslation(lang, "drillingTime")}: {msToStringTime(drillingTime)}
+		</div>
+	</Window>
+{/if}
 
 <svelte:window
 		on:fullscreenchange={() => { isFullscreen = document.fullscreenElement !== null }}

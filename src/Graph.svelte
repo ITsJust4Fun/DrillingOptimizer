@@ -1,5 +1,6 @@
 <script lang="ts">
     import { renderable, width, height } from './game.js'
+    import Drill from "./Drill.svelte"
 
     export let vertexColor = '#ffe554'
     export let edgeColor = '#ffe554'
@@ -17,6 +18,22 @@
     export let totalDistance = '0'
     export let totalDistanceWithStart = '0'
     export let connectAlgorithm = ''
+    export let isSimulationMode = false
+    export let drillColor = '#419e5a'
+    export let drillNormalColor = '#ffe554'
+    export let drillLabelSize = 8
+    export let drillLabelColor = 'hsl(0, 0%, 100%)'
+    export let drillMoveSpeed = 0.1
+    export let drillSpinSpeed = 0.5
+    export let drillRotationsCount = 50
+    export let isShowDrillLabel = true
+    export let isDrillingFinished = true
+    export let isInfiniteSimulation = false
+    export let isReturnDrillToStart = true
+    export let drillingTime = 0
+    export let lastDrillingTime = 0
+    export let isBlockDrillControls = false
+    export let drilledVertexColor = 'hsl(0, 0%, 100%)'
 
     interface Vertex {
         x: number
@@ -29,6 +46,7 @@
     }
 
     let vertices: Vertex[] = []
+    let drilledVertices: number[] = []
     let edges: Edge[] = []
     let minDistance = 80
     let startPosition = { x: 0, y: 0 }
@@ -39,6 +57,14 @@
     let time = -1
 
     const CLICK_TIME_MS = 100
+
+    let isDrillingHoleFinished = true
+    let moveDrillTo = [ 0, 0 ]
+    let drillingEdgeIndex = -1
+    let isSpinEnabled = true
+    let isMovingToStart = false
+    let drillingStartTime = 0
+    let drilledVertex = -1
 
     renderable((props) => {
         const { context } = props
@@ -72,11 +98,17 @@
             drawLine(context, vertices[edge.i], vertices[edge.j])
         }
 
-        for (let vertex of vertices) {
+        for (let [index, vertex] of vertices.entries()) {
+            let vertexDrawColor = vertexColor
+
+            if (isSimulationMode && drilledVertices.includes(index)) {
+                vertexDrawColor = drilledVertexColor
+            }
+
             context.lineCap = 'round'
             context.beginPath()
-            context.fillStyle = vertexColor
-            context.strokeStyle = vertexColor
+            context.fillStyle = vertexDrawColor
+            context.strokeStyle = vertexDrawColor
             context.lineWidth = 3
             context.arc(vertex.x, vertex.y, vertexSize, 0, Math.PI * 2)
             context.fill()
@@ -94,9 +126,23 @@
                 drawEdgeLabel(context, vertices[edge.i], vertices[edge.j])
             }
         }
+
+        if (isMovingToStart) {
+            finishMovingToStart()
+        } else if (isSimulationMode) {
+            moveDrill()
+        }
+
+        if (drillingStartTime !== 0) {
+            drillingTime = Date.now() - drillingStartTime
+        }
     })
 
     export function handleClick(ev) {
+        if (isSimulationMode) {
+            return
+        }
+
         if (Date.now() - time > CLICK_TIME_MS && time !== -1) {
             time = -1
             return
@@ -120,6 +166,10 @@
     }
 
     export function handleMouseDown(ev) {
+        if (isSimulationMode) {
+            return
+        }
+
         let x = ev.clientX
         let y = ev.clientY
 
@@ -145,6 +195,10 @@
     }
 
     function handleMouseUp() {
+        if (isSimulationMode) {
+            return
+        }
+
         mouseDown = false
         movingVertexId = -1
         previousTouch = null
@@ -178,6 +232,7 @@
     export function removeAllVertices() {
         removeAllEdges()
         vertices = []
+        drilledVertices = []
     }
 
     function getRandomInt(min: number, max:number): number {
@@ -222,6 +277,45 @@
         calculateDistances()
     }
 
+    export function moveDrillToStart() {
+        moveDrillTo = [ 0, 0 ]
+        isSpinEnabled = false
+        isMovingToStart = true
+        isDrillingFinished = true
+        isDrillingHoleFinished = false
+        isBlockDrillControls = true
+    }
+
+    function finishMovingToStart() {
+        if (isDrillingHoleFinished) {
+            isSpinEnabled = true
+            isMovingToStart = false
+            isBlockDrillControls = false
+
+            if (isReturnDrillToStart) {
+                stopDrillingTime()
+            }
+        }
+    }
+
+    export function startSimulation() {
+        if (edges.length === 0 && vertices.length > 1) {
+            connectEdges()
+        }
+
+        if (vertices.length === 1) {
+            calculateDistances()
+        }
+
+        isSpinEnabled = true
+        isDrillingFinished = false
+        drillingEdgeIndex = -1
+        drillingStartTime = Date.now()
+        isBlockDrillControls = true
+        drilledVertex = -1
+        drilledVertices = []
+    }
+
     export function connectEdges() {
 
         switch (connectAlgorithm) {
@@ -248,6 +342,18 @@
     }
 
     function prim() {
+        if (vertices.length === 0) {
+            return
+        }
+
+        let keys: Number[] = []
+        let p: Number[] = []
+
+        for (let i = 0; i < vertices.length; i++) {
+            keys.push(Infinity)
+            p.push(-1)
+        }
+
         console.log('prim')
         fillEdges()
     }
@@ -383,6 +489,71 @@
 
         return { value: nearestValue, index: nearestIndex }
     }
+
+    function moveDrill() {
+        if (isDrillingFinished) {
+            if (!isInfiniteSimulation) {
+                drillingEdgeIndex = -1
+                isBlockDrillControls = false
+                return
+            }
+
+            if (drillingEdgeIndex !== -1) {
+                generateVertices()
+                startSimulation()
+            } else {
+                return
+            }
+        }
+
+        if (drillingEdgeIndex >= edges.length || vertices.length === 0) {
+            if (isDrillingHoleFinished) {
+                if (drilledVertex !== -1) {
+                    drilledVertices = [...drilledVertices, drilledVertex]
+                }
+
+                if (!isReturnDrillToStart) {
+                    isDrillingFinished = true
+                    stopDrillingTime()
+                } else {
+                    moveDrillToStart()
+                }
+            }
+
+            return
+        }
+
+        if (!isDrillingHoleFinished) {
+            return
+        }
+
+        if (drilledVertex !== -1) {
+            drilledVertices = [...drilledVertices, drilledVertex]
+        }
+
+        let moveToVertex
+
+        if (edges.length === 0) {
+            moveToVertex = vertices[0]
+            drilledVertex = 0
+        } else if (drillingEdgeIndex === -1) {
+            moveToVertex = vertices[edges[0].i]
+            drilledVertex = edges[0].i
+        } else {
+            moveToVertex = vertices[edges[drillingEdgeIndex].j]
+            drilledVertex = edges[drillingEdgeIndex].j
+        }
+
+        moveDrillTo = [ moveToVertex.x, moveToVertex.y ]
+        isDrillingHoleFinished = false
+        drillingEdgeIndex++
+    }
+
+    function stopDrillingTime() {
+        lastDrillingTime = drillingTime
+        drillingStartTime = 0
+        drillingTime = 0
+    }
 </script>
 
 <svelte:window
@@ -393,5 +564,20 @@
 
 />
 
-<!-- The following allows this component to nest children -->
-<slot></slot>
+<slot>
+    <Drill
+          bind:isFinished={isDrillingHoleFinished}
+          bind:moveTo={moveDrillTo}
+          isShow={isSimulationMode}
+          size={vertexSize}
+          drillColor={drillColor}
+          normalColor={drillNormalColor}
+          isSpinEnabled={isSpinEnabled}
+          moveSpeed={drillMoveSpeed}
+          spinSpeed={drillSpinSpeed}
+          rotationsCount={drillRotationsCount}
+          isShowLabel={isShowDrillLabel}
+          labelSize={drillLabelSize}
+          labelColor={drillLabelColor}
+    />
+</slot>
