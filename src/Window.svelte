@@ -14,7 +14,7 @@
 
     let isMouseDown = false
     let isFirstRender = true
-    let mouse: { x: Number, y: Number }
+    let mouse: { x: number, y: number }
     let outOfBoundLimitX = 100
     let outOfBoundLimitY = 100
 

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { renderable, width, height } from './game.js'
     import Drill from "./Drill.svelte"
+    import {PriorityQueue} from "./PriorityQueue"
 
     export let vertexColor = '#ffe554'
     export let edgeColor = '#ffe554'
@@ -337,7 +338,29 @@
     }
 
     function greedy() {
-        console.log('greedy')
+        if (vertices.length <= 1) {
+            return
+        }
+
+        let sortedVertices: Vertex[] = []
+        let searchVertexes: Vertex[] = vertices
+
+        let sortVertices = (index) => {
+            let vertex: Vertex = searchVertexes[index]
+            sortedVertices.push(vertex)
+            searchVertexes = vertices.filter(n => !sortedVertices.includes(n))
+
+            if (searchVertexes.length == 0) {
+                return sortedVertices
+            }
+
+            let nearestVertex = getNearestVertex(vertex.x, vertex.y, searchVertexes)
+            return sortVertices(nearestVertex.index)
+        }
+
+        let nearestToDrillVertex = getNearestVertex(moveDrillTo[0], moveDrillTo[1], vertices).index
+
+        vertices = sortVertices(nearestToDrillVertex)
         fillEdges()
     }
 
@@ -346,16 +369,76 @@
             return
         }
 
-        let keys: Number[] = []
-        let p: Number[] = []
+        let keys: number[] = []
+        let p: number[] = []
+        let queue = new PriorityQueue<number>()
+        let allEdges: Edge[] = []
 
         for (let i = 0; i < vertices.length; i++) {
             keys.push(Infinity)
             p.push(-1)
         }
 
-        console.log('prim')
-        fillEdges()
+        for (let i = 0; i < vertices.length; i++) {
+            for (let j = 0; j < i; j++) {
+                allEdges.push({ i, j })
+            }
+        }
+
+        for (let i = 0; i < vertices.length; i++) {
+            let minKey = Infinity
+
+            for (let j = 0; j < i; j++) {
+                let key = getDistance(vertices[i], vertices[j])
+
+                if (key < minKey) {
+                    minKey = key
+                }
+            }
+
+            queue.enqueue(i, minKey)
+        }
+
+        let nearestVertex = getNearestVertex(moveDrillTo[0], moveDrillTo[0], vertices)
+
+        if (nearestVertex.index === -1 || nearestVertex.value === -1) {
+            nearestVertex = { index: 0, value: 0 }
+        }
+
+        keys[nearestVertex.index]
+
+        while (!queue.isEmpty()) {
+            let v = queue.dequeue().value
+
+            for (let edge of allEdges) {
+                let u = -1
+
+                if (edge.i === v) {
+                    u = edge.j
+                }
+
+                if (edge.j === v) {
+                    u = edge.i
+                }
+
+                if (u !== -1) {
+                    let distance = getDistance(vertices[v], vertices[u])
+
+                    if (queue.data.includes(u) && keys[u] > distance) {
+                        p[u] = v
+                        keys[u] = distance
+                    }
+                }
+            }
+        }
+
+        removeAllEdges()
+
+        for (let i = 0; i < p.length; i++) {
+            if (p[i] !== -1) {
+                edges = [...edges, {i, j: p[i]}]
+            }
+        }
     }
 
     function salesman() {
