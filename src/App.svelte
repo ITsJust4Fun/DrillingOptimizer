@@ -24,7 +24,7 @@
 	let languages = [{option: 'en', label: 'english', id: "en_radio"},
 					 {option: 'ru', label: 'russian', id: "ru_radio"}]
 
-	let connectAlgorithmsStrings = ['greedy', 'spanningTreePrim', 'prim', 'salesman', 'lastOrder']
+	let connectAlgorithmsStrings = ['zAlgorithm', 'greedy', 'spanningTreePrim', 'prim', 'salesman', 'lastOrder']
 
 	let connectAlgorithms = connectAlgorithmsStrings.map((algorithm) => {
 		return {option: algorithm, label: algorithm, id: algorithm + '_radio'}
@@ -81,6 +81,7 @@
 	let isBlockDrillControls = false
 	let drilledVertexColorId = 9
 	let backgroundColorId = 10
+	let zAlgorithmRowSize = 30
 
 	let graphComponent
 	let graphClickHandler
@@ -253,6 +254,7 @@
 			isInfiniteSimulation={isInfiniteSimulation}
 			isReturnDrillToStart={isReturnDrillToStart}
 			drilledVertexColor={COLORS[drilledVertexColorId]}
+			zAlgorithmRowSize={zAlgorithmRowSize}
 	/>
 	<Text
 			show={showHint}
@@ -561,6 +563,15 @@
 			getTranslation={getTranslation}
 			lang={lang}
 	/>
+	{#if connectAlgorithm === 'zAlgorithm'}
+		<InputRange
+				name={getTranslation(lang, "zAlgorithmRowSize")}
+				min={0}
+				max={150}
+				step={1}
+				bind:value={zAlgorithmRowSize}
+		/>
+	{/if}
 	{#if !isSimulationMode}
 		<div class="controls-block">
 			<div class="buttons-row" style="margin-bottom: 0;">

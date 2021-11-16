@@ -35,6 +35,7 @@
     export let lastDrillingTime = 0
     export let isBlockDrillControls = false
     export let drilledVertexColor = 'hsl(0, 0%, 100%)'
+    export let zAlgorithmRowSize = 30
 
     interface Vertex {
         x: number
@@ -319,14 +320,19 @@
     export function connectEdges() {
 
         switch (connectAlgorithm) {
+            case 'zAlgorithm':
+                zAlgorithm()
+                break
             case 'greedy':
                 greedy()
                 break
             case 'spanningTreePrim':
                 if (!isSimulationMode) {
                     spanningTreePrim()
-                    break
+                } else {
+                    prim()
                 }
+                break
             case 'prim':
                 prim()
                 break
@@ -336,6 +342,29 @@
             case 'lastOrder':
                 fillEdges()
         }
+    }
+
+    function zAlgorithm() {
+        vertices.sort((a:Vertex, b:Vertex) => {
+            let isYEqual = Math.abs(a.y - b.y) < zAlgorithmRowSize
+            let isYLess = a.y - b.y < -zAlgorithmRowSize
+
+            if (isYLess) {
+                return -1
+            } else if (isYEqual) {
+                if (a.x < b.x) {
+                    return -1
+                } else if (a.x > b.x) {
+                    return 1
+                }
+            } else if (!isYLess) {
+                return 1
+            }
+
+            return 0
+        })
+
+        fillEdges()
     }
 
     function greedy() {

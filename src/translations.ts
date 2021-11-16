@@ -183,6 +183,10 @@ export default {
     en: "Algorithms",
     ru: "Алгоритмы"
   },
+  zAlgorithm: {
+    en: "Z-algorithm",
+    ru: "Z-алгоритм"
+  },
   greedy: {
     en: "Greedy",
     ru: "Жадный"
@@ -294,5 +298,9 @@ export default {
   backgroundColor: {
     en: "Background color",
     ru: "Цвет фона"
+  },
+  zAlgorithmRowSize: {
+    en: "Z-algorithm row size",
+    ru: "Размер ряда для z-алгоритма"
   }
 } as { [phrase: string]: { [lang: string]: string } };
