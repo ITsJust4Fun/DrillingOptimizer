@@ -187,6 +187,10 @@ export default {
     en: "Greedy",
     ru: "Жадный"
   },
+  spanningTreePrim: {
+    en: "Prim (Spanning tree)",
+    ru: "Прима (Остановое дерево)"
+  },
   prim: {
     en: "Prim",
     ru: "Прима"
@@ -194,10 +198,6 @@ export default {
   salesman: {
     en: "Salesman",
     ru: "Конвояжёры"
-  },
-  spanningTree: {
-    en: "Spanning tree",
-    ru: "Остановое дерево"
   },
   lastOrder: {
     en: "Last order",

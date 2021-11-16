@@ -24,7 +24,7 @@
 	let languages = [{option: 'en', label: 'english', id: "en_radio"},
 					 {option: 'ru', label: 'russian', id: "ru_radio"}]
 
-	let connectAlgorithmsStrings = ['greedy', 'prim', 'salesman', 'spanningTree', 'lastOrder']
+	let connectAlgorithmsStrings = ['greedy', 'spanningTreePrim', 'prim', 'salesman', 'lastOrder']
 
 	let connectAlgorithms = connectAlgorithmsStrings.map((algorithm) => {
 		return {option: algorithm, label: algorithm, id: algorithm + '_radio'}
@@ -285,10 +285,12 @@
 					title={getTranslation(lang, "removeEdgesOnMoving")}
 					bind:checked={removeEdgesOnMoving}
 			/>
-			<Checkbox
-					title={getTranslation(lang, "simulationMode")}
-					bind:checked={isSimulationMode}
-			/>
+			{#if !isBlockDrillControls}
+				<Checkbox
+						title={getTranslation(lang, "simulationMode")}
+						bind:checked={isSimulationMode}
+				/>
+			{/if}
 			{#if !isSimulationMode}
 				<div class="buttons-row">
 					<button on:click={graphRemoveVerticesHandler}>
@@ -559,13 +561,15 @@
 			getTranslation={getTranslation}
 			lang={lang}
 	/>
-	<div class="controls-block">
-		<div class="buttons-row" style="margin-bottom: 0;">
-			<button on:click={graphConnectEdgesHandler}>
-				{getTranslation(lang, 'connect')}
-			</button>
+	{#if !isSimulationMode}
+		<div class="controls-block">
+			<div class="buttons-row" style="margin-bottom: 0;">
+				<button on:click={graphConnectEdgesHandler}>
+					{getTranslation(lang, 'connect')}
+				</button>
+			</div>
 		</div>
-	</div>
+	{/if}
 </Window>
 {#if isSimulationMode}
 	<Window

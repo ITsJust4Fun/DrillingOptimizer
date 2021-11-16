@@ -300,13 +300,12 @@
     }
 
     export function startSimulation() {
-        if (edges.length === 0 && vertices.length > 1) {
-            connectEdges()
+        if (vertices.length === 0) {
+            generateVertices()
         }
 
-        if (vertices.length === 1) {
-            calculateDistances()
-        }
+        connectEdges()
+        calculateDistances()
 
         isSpinEnabled = true
         isDrillingFinished = false
@@ -323,14 +322,16 @@
             case 'greedy':
                 greedy()
                 break
+            case 'spanningTreePrim':
+                if (!isSimulationMode) {
+                    spanningTreePrim()
+                    break
+                }
             case 'prim':
                 prim()
                 break
             case 'salesman':
                 salesman()
-                break
-            case 'spanningTree':
-                spanningTree()
                 break
             case 'lastOrder':
                 fillEdges()
@@ -364,7 +365,7 @@
         fillEdges()
     }
 
-    function prim() {
+    function spanningTreePrim() {
         if (vertices.length === 0) {
             return
         }
@@ -441,17 +442,96 @@
         }
     }
 
+    function prim() {
+        if (vertices.length === 0) {
+            return
+        }
+
+        spanningTreePrim()
+        spanningTreeToPath()
+    }
+
+    function spanningTreeToPath() {
+        let getChildren = (index: number, edgesList: Edge[]) => {
+            let children: Edge[] = []
+
+            for (let edge of edgesList) {
+                if (edge.i === index) {
+                    children.push(edge)
+                }
+            }
+
+            for (let edge of edgesList) {
+                if (edge.j === index) {
+                    children.push({ i: edge.j, j: edge.i })
+                }
+            }
+
+            return children
+        }
+
+        let nearestVertex = getNearestVertex(moveDrillTo[0], moveDrillTo[0], vertices)
+
+        if (nearestVertex.index === -1 || nearestVertex.value === -1) {
+            nearestVertex = { index: 0, value: 0 }
+        }
+
+        let edgesList = edges
+
+        let transformToPath = (startIndex: number) => {
+            if (edgesList.length === 0) {
+                return [startIndex]
+            }
+
+            let isEdgeEqual = (edge) => {
+                return (element) => {
+                    return element.i === edge.i && element.j === edge.j
+                }
+            }
+
+            let children = getChildren(startIndex, edgesList)
+            let path = [startIndex]
+
+            for (let child of children) {
+
+                let childIndex = edgesList.findIndex(isEdgeEqual(child))
+                let reversedChildIndex = edgesList.findIndex(isEdgeEqual({ i: child.j, j: child.i }))
+
+                if (childIndex > -1) {
+                    edgesList.splice(childIndex, 1)
+                } else if (reversedChildIndex > -1) {
+                    edgesList.splice(reversedChildIndex, 1)
+                }
+
+                path.push(...transformToPath(child.j))
+            }
+
+            return path
+        }
+
+        let verticesIndexes = transformToPath(nearestVertex.index)
+
+        let newVertices: Vertex[] = []
+
+        for (let verticesIndex of verticesIndexes) {
+            newVertices.push(vertices[verticesIndex])
+        }
+
+        vertices = newVertices
+
+        fillEdges()
+    }
+
     function salesman() {
         console.log('salesman')
         fillEdges()
     }
 
-    function spanningTree() {
-        console.log('spanningTree')
-        fillEdges()
-    }
-
     function calculateDistances() {
+        if (!isSimulationMode && connectAlgorithm.includes('spanningTree')) {
+            return
+        }
+
         let totalDistanceCount = 0
 
         for (let edge of edges) {
