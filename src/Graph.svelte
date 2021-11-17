@@ -3,6 +3,8 @@
     import Drill from "./Drill.svelte"
     import {PriorityQueue} from "./PriorityQueue"
 
+    import salesmanAlgorithm from './salesman'
+
     export let vertexColor = '#ffe554'
     export let edgeColor = '#ffe554'
     export let vertexSize = 10
@@ -301,6 +303,8 @@
     }
 
     export function startSimulation() {
+        drillingStartTime = Date.now()
+
         if (vertices.length === 0) {
             generateVertices()
         }
@@ -311,7 +315,6 @@
         isSpinEnabled = true
         isDrillingFinished = false
         drillingEdgeIndex = -1
-        drillingStartTime = Date.now()
         isBlockDrillControls = true
         drilledVertex = -1
         drilledVertices = []
@@ -552,7 +555,33 @@
     }
 
     function salesman() {
-        console.log('salesman')
+        let points = []
+
+        for (let vertex of vertices) {
+            points.push(new salesmanAlgorithm.Point(vertex.x, vertex.y))
+        }
+
+        //  let orderedVertices = salesmanAlgorithm.solve(points, 1-5e-7).map(i => vertices[i]) - take time but better
+        let orderedVertices  = salesmanAlgorithm.solve(points).map(i => vertices[i])
+        let nearestVertex = getNearestVertex(moveDrillTo[0], moveDrillTo[1], orderedVertices)
+
+        if (nearestVertex.index === -1) {
+            vertices = orderedVertices
+            fillEdges()
+
+            return
+        }
+
+        vertices = []
+
+        for (let i = nearestVertex.index; i < orderedVertices.length; i++) {
+            vertices.push(orderedVertices[i])
+        }
+
+        for (let i = 0; i < nearestVertex.index; i++) {
+            vertices.push(orderedVertices[i])
+        }
+
         fillEdges()
     }
 
