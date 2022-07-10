@@ -11,6 +11,60 @@
 	<link rel='stylesheet' href='./build/bundle.css'>
 
 	<script defer src='./build/bundle.js'></script>
+
+	<!-- Path to manifest.json -->
+	<link rel="manifest" href="/manifest.json">
+
+	<!-- Add to homescreen for Chrome on Android -->
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="application-name" content="PCB DS">
+
+
+	<!-- Chrome for Android theme color -->
+	<meta name="theme-color" content="#000000">
+
+	<!-- Add to homescreen for Safari on iOS -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="PCB DS">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+
+
+	<link rel="apple-touch-icon" href="images/micon_x128.png" sizes="">
+	<link rel="apple-touch-icon" href="images/micon_x192.png" sizes="">
+	<link rel="apple-touch-icon" href="images/micon_x384.png" sizes="">
+	<link rel="apple-touch-icon" href="images/micon_x512.png" sizes="">
+	<link
+			href="images/splash.png"
+			media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+			rel="apple-touch-startup-image"
+	/>
+
+
+
+	<!-- Tile for Win8 -->
+	<meta name="msapplication-TileColor" content="#ffffff">
+
+	<meta name="msapplication-TileImage" content="images/micon_x512.png">
+
+
+	<link rel="icon" sizes="" href="images/micon_x512.png">
+
+
+	<script type="text/javascript">
+		// Initialize the service worker
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/sw.js', {
+				scope: '/'
+			}).then(function (registration) {
+				// Registration was successful
+
+			}, function (err) {
+				// registration failed :(
+
+			});
+		}
+	</script>
 </head>
 
 <body>
