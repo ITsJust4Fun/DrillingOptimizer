@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { renderable, width, height } from './game.js'
+    import { renderable, width, height } from './game.ts'
+    import { showVertexLabel } from './stores/graph.ts'
     import Drill from "./Drill.svelte"
     import {PriorityQueue} from "./PriorityQueue"
 
@@ -9,7 +10,6 @@
     export let edgeColor = '#ffe554'
     export let vertexSize = 10
     export let edgeSize = 3
-    export let showVertexLabel = true
     export let removeEdgesOnMoving = false
     export let vertexLabelColor = 'hsl(0, 0%, 100%)'
     export let vertexLabelSize = 8
@@ -118,7 +118,7 @@
             context.fill()
         }
 
-        if (showVertexLabel) {
+        if ($showVertexLabel) {
             for (let vertex of vertices) {
                 let text = `(${Math.round(vertex.x)}, ${Math.round(vertex.y)})`
                 drawVertexLabel({ context, text, x: vertex.x, y: vertex.y + vertexSize + 10 })

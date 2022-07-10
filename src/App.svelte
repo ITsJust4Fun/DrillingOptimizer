@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { width, height } from './game.ts'
+	import { showVertexLabel } from './stores/graph.ts'
 
 	import { onMount } from 'svelte'
 	import Canvas from './Canvas.svelte'
@@ -48,7 +49,6 @@
 	let showMenu = true
 	let showFPS = true
 	let showHint = true
-	let showVertexLabel = true
 	let showEdgeLabel = true
 	let removeEdgesOnMoving = false
 	let isFullscreen = false
@@ -232,7 +232,6 @@
 			edgeColor={COLORS[edgeColorId]}
 			vertexSize={vertexSize}
 			edgeSize={edgeSize}
-			showVertexLabel={showVertexLabel}
 			removeEdgesOnMoving={removeEdgesOnMoving}
 			vertexLabelSize={vertexLabelSize}
 			vertexLabelColor={COLORS[vertexLabelColorId]}
@@ -370,7 +369,7 @@
 >
 	<Checkbox
 			title={getTranslation(lang, "showVertexLabel")}
-			bind:checked={showVertexLabel}
+			bind:checked={$showVertexLabel}
 	/>
 	<InputRange
 			name={getTranslation(lang, "vertexSize")}
@@ -379,7 +378,7 @@
 			step={0.3}
 			bind:value={vertexSize}
 	/>
-	{#if showVertexLabel}
+	{#if $showVertexLabel}
 		<InputRange
 				name={getTranslation(lang, "vertexLabelSize")}
 				min={8}
@@ -397,7 +396,7 @@
 				bind:selectedId={vertexColorId}
 		/>
 	</div>
-	{#if showVertexLabel}
+	{#if $showVertexLabel}
 		<div class="controls-block">
 			<h2 class="controls-block__title">
 				{getTranslation(lang, "vertexLabelColor")}
