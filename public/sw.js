@@ -1,6 +1,6 @@
 var staticCacheName = "pcb-ds-pwa-v" + new Date().getTime();
 var filesToCache = [
-    '/',
+    '/DrillingOptimizer/',
     'build/bundle.css',
     'build/bundle.js',
     'images/micon_x128.png',
