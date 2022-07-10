@@ -1,8 +1,8 @@
 <script>
 	import Text from './Text.svelte'
-	import { width, renderable } from './game.js'
+	import { width, renderable } from './game'
 
-	export let show = true
+	import { showFPS } from './stores/ui'
 
 	let text = ''
 	let frames = 0
@@ -19,7 +19,7 @@
 			frames = 0
 		}
 
-		if (!show) {
+		if (!$showFPS) {
 			text = ''
 		}
 	})

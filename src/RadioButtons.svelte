@@ -1,16 +1,16 @@
 <script lang="ts">
+    import { lang, getTranslation } from './stores/translation'
+
     export let options: {option: any, label: string, id: string}[]
     export let group: any = null
     export let groupName: string = ""
-    export let lang = 'en'
-    export let getTranslation = (lang: string, key: string) => { return key }
 </script>
 
 {#each options as { option, label, id }}
     <div class="input_row">
         <div class="option">
             <input id="{id}" type=radio bind:group={group} name="{groupName}" value={option}>
-            <label for="{id}">{getTranslation(lang, label)}</label>
+            <label for="{id}">{getTranslation($lang, label)}</label>
         </div>
     </div>
 {/each}

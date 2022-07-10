@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { COLORS } from './stores/ui'
 
-  export let colors: string[] = []
   export let selectedId: number = 0
 
   let checkmarkColor = 'white'
 
   onMount(function(){
-    checkmarkColor = invertColor(colors[selectedId])
+    checkmarkColor = invertColor(COLORS[selectedId])
   })
 
   function invertColor(hex) {
@@ -39,7 +39,7 @@
 </script>
 
 <div class="wrapper">
-  {#each Array(...colors.entries()) as idAndColor}
+  {#each Array(...COLORS.entries()) as idAndColor}
     <button
       class="{selectedId === idAndColor[0] ? 'selected' : ''} {checkmarkColor}"
       name="color"
@@ -47,7 +47,7 @@
       style={`background-color: ${idAndColor[1]};`}
       on:click={() => {
         selectedId = idAndColor[0]
-        checkmarkColor = invertColor(colors[selectedId])
+        checkmarkColor = invertColor(COLORS[selectedId])
       }}
     />
   {/each}

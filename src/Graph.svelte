@@ -1,27 +1,24 @@
 <script lang="ts">
-    import { renderable, width, height } from './game.ts'
-    import { showVertexLabel } from './stores/graph.ts'
+    import { renderable, width, height } from './game'
+    import { showVertexLabel, showEdgeLabel, removeEdgesOnMoving,
+             isSimulationMode, vertexColorId, edgeColorId } from './stores/graph'
+    import { COLORS } from './stores/ui'
     import Drill from "./Drill.svelte"
     import {PriorityQueue} from "./PriorityQueue"
 
     import salesmanAlgorithm from './salesman'
 
-    export let vertexColor = '#ffe554'
-    export let edgeColor = '#ffe554'
     export let vertexSize = 10
     export let edgeSize = 3
-    export let removeEdgesOnMoving = false
     export let vertexLabelColor = 'hsl(0, 0%, 100%)'
     export let vertexLabelSize = 8
     export let verticesGenerationCount = 30
-    export let showEdgeLabel = true
     export let edgeLabelDistance = 30
     export let edgeLabelSize = 8
     export let edgeLabelColor = 'hsl(0, 0%, 100%)'
     export let totalDistance = '0'
     export let totalDistanceWithStart = '0'
     export let connectAlgorithm = ''
-    export let isSimulationMode = false
     export let drillColor = '#419e5a'
     export let drillNormalColor = '#ffe554'
     export let drillLabelSize = 8
@@ -91,7 +88,7 @@
 
             vertices[movingVertexId] = { x, y }
 
-            if (removeEdgesOnMoving) {
+            if ($removeEdgesOnMoving) {
                 removeAllEdges()
             } else {
                 calculateDistances()
@@ -103,9 +100,9 @@
         }
 
         for (let [index, vertex] of vertices.entries()) {
-            let vertexDrawColor = vertexColor
+            let vertexDrawColor = COLORS[$vertexColorId]
 
-            if (isSimulationMode && drilledVertices.includes(index)) {
+            if ($isSimulationMode && drilledVertices.includes(index)) {
                 vertexDrawColor = drilledVertexColor
             }
 
@@ -125,7 +122,7 @@
             }
         }
 
-        if (showEdgeLabel) {
+        if ($showEdgeLabel) {
             for (let edge of edges) {
                 drawEdgeLabel(context, vertices[edge.i], vertices[edge.j])
             }
@@ -133,7 +130,7 @@
 
         if (isMovingToStart) {
             finishMovingToStart()
-        } else if (isSimulationMode) {
+        } else if ($isSimulationMode) {
             moveDrill()
         }
 
@@ -143,7 +140,7 @@
     })
 
     export function handleClick(ev) {
-        if (isSimulationMode) {
+        if ($isSimulationMode) {
             return
         }
 
@@ -170,7 +167,7 @@
     }
 
     export function handleMouseDown(ev) {
-        if (isSimulationMode) {
+        if ($isSimulationMode) {
             return
         }
 
@@ -199,7 +196,7 @@
     }
 
     function handleMouseUp() {
-        if (isSimulationMode) {
+        if ($isSimulationMode) {
             return
         }
 
@@ -330,7 +327,7 @@
                 greedy()
                 break
             case 'spanningTreePrim':
-                if (!isSimulationMode) {
+                if (!$isSimulationMode) {
                     spanningTreePrim()
                 } else {
                     prim()
@@ -586,7 +583,7 @@
     }
 
     function calculateDistances() {
-        if (!isSimulationMode && connectAlgorithm.includes('spanningTree')) {
+        if (!$isSimulationMode && connectAlgorithm.includes('spanningTree')) {
             return
         }
 
@@ -636,7 +633,7 @@
         context.beginPath()
         context.moveTo(vertexI.x, vertexI.y)
         context.lineTo(vertexJ.x, vertexJ.y)
-        context.strokeStyle = edgeColor
+        context.strokeStyle = COLORS[$edgeColorId]
         context.lineWidth = edgeSize
         context.stroke()
     }
@@ -789,7 +786,7 @@
     <Drill
           bind:isFinished={isDrillingHoleFinished}
           bind:moveTo={moveDrillTo}
-          isShow={isSimulationMode}
+          isShow={$isSimulationMode}
           size={vertexSize}
           drillColor={drillColor}
           normalColor={drillNormalColor}
