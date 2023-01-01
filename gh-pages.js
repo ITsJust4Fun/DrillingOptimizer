@@ -4,10 +4,10 @@ ghpages.publish(
     'public', // path to public directory
     {
         branch: 'gh-pages',
-        repo: 'https://github.com/ITsJust4Fun/DrillingOptimizer.git', // Update to point to your repository  
+        repo: 'https://github.com/rodimov/DrillingOptimizer.git', // Update to point to your repository
         user: {
-            name: 'ITsJust4Fun', // update to use your name
-            email: 'artyomrodimov@yandex.ru' // Update to use your email
+            name: 'rodimov', // update to use your name
+            email: 'rodimov.art@gmail.com' // Update to use your email
         }
     },
     () => {
