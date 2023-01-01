@@ -482,7 +482,7 @@
 	<p style="text-align: center">
 		{getTranslation($lang, 'pcbDrillingOptimazer')}<br>
 		<a
-				href="https://github.com/ITsJust4Fun/DrillingOptimizer"
+				href="https://github.com/rodimov/DrillingOptimizer"
 				target="_blank"
 		>
 			{getTranslation($lang, 'githubPage')}
